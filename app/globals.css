@@ -57,3 +57,7 @@
     background: linear-gradient(90deg, transparent, var(--color-brass) 20%, var(--color-brass-hi) 50%, var(--color-brass) 80%, transparent);
   }
 }
+
+@layer utilities {
+  .scrollbar-none::-webkit-scrollbar { display: none; }
+}

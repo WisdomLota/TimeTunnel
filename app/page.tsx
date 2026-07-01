@@ -4,6 +4,7 @@ import { useState } from "react";
 import { AnimatePresence } from "framer-motion";
 import Hero from "@/components/Hero";
 import CarWall from "@/components/CarWall";
+import CarGallery from "@/components/CarGallery";
 import Nav from "@/components/Nav";
 
 export default function Page() {
@@ -14,6 +15,7 @@ export default function Page() {
       <section id="collection">
         <CarWall />
       </section>
+      <CarGallery />
 
       <AnimatePresence>
         {entered && <Nav key="nav" onReturn={() => setEntered(false)} />}

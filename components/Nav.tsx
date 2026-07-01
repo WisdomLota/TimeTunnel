@@ -6,6 +6,7 @@ type Props = { onReturn: () => void };
 
 const LINKS = [
   { label: "Collection", href: "#collection" },
+  { label: "Machines", href: "#gallery" },
   // later: { label: "Nevruz", href: "#nevruz" }, { label: "Ask", href: "#ask" },
 ];
 
