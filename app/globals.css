@@ -1,26 +1,66 @@
 @import "tailwindcss";
 
+/* Fonts loaded via next/font in layout.tsx, exposed as CSS vars there */
+
+@theme {
+  --color-void: #0B0F0E;
+  --color-patina: #14201D;
+  --color-brass-hi: #F0D9A8;
+  --color-brass: #C69A4B;
+  --color-oxblood: #5A1E22;
+  --color-bone: #E8E4DA;
+
+  --font-display: var(--font-chakra), ui-sans-serif, system-ui;
+  --font-body: var(--font-inter), ui-sans-serif, system-ui;
+}
+
+/* Class-toggle dark mode: dark is default, .light opts out */
+@custom-variant light (&:where(.light, .light *));
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --bg: var(--color-void);
+  --surface: var(--color-patina);
+  --text: var(--color-bone);
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+.light {
+  --bg: #E8E4DA;
+  --surface: #F2EFE7;
+  --text: #1A1613;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@layer base {
+  html {
+    background: var(--bg);
+    color: var(--text);
+  }
+  body {
+    font-family: var(--font-body);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+  h1, h2, h3, .display {
+    font-family: var(--font-display);
+    letter-spacing: -0.01em;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      transition-duration: 0.01ms !important;
+    }
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* The lit-metal signature: brass as struck gradient, never flat */
+@layer utilities {
+  .brass-text {
+    background: linear-gradient(135deg, var(--color-brass-hi) 0%, var(--color-brass) 45%, var(--color-oxblood) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .brass-rule {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--color-brass) 20%, var(--color-brass-hi) 50%, var(--color-brass) 80%, transparent);
+  }
 }
