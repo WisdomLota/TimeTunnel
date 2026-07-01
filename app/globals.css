@@ -1,7 +1,5 @@
 @import "tailwindcss";
 
-/* Fonts loaded via next/font in layout.tsx, exposed as CSS vars there */
-
 @theme {
   --color-void: #0B0F0E;
   --color-patina: #14201D;
@@ -14,7 +12,6 @@
   --font-body: var(--font-inter), ui-sans-serif, system-ui;
 }
 
-/* Class-toggle dark mode: dark is default, .light opts out */
 @custom-variant light (&:where(.light, .light *));
 
 :root {
@@ -24,15 +21,26 @@
 }
 
 .light {
-  --bg: #E8E4DA;
-  --surface: #F2EFE7;
-  --text: #1A1613;
+  --bg: #EDE8DC;
+  --surface: #F5F1E8;
+  --text: #241E18;
+  --color-brass-hi: #A9803C;
+  --color-brass: #7A5423;
+  --color-oxblood: #6E2A24;
 }
 
 @layer base {
   html {
-    background: var(--bg);
     color: var(--text);
+    background:
+      radial-gradient(ellipse 80% 60% at 50% 40%, #12211D 0%, var(--bg) 70%),
+      var(--bg);
+    background-attachment: fixed;
+  }
+  .light html {
+    background:
+      radial-gradient(ellipse 80% 60% at 50% 40%, #F5F1E8 0%, var(--bg) 70%),
+      var(--bg);
   }
   body {
     font-family: var(--font-body);
@@ -51,10 +59,9 @@
   }
 }
 
-/* The lit-metal signature: brass as struck gradient, never flat */
 @layer utilities {
   .brass-text {
-    background: linear-gradient(135deg, var(--color-brass-hi) 0%, var(--color-brass) 45%, var(--color-oxblood) 100%);
+    background: linear-gradient(105deg, var(--color-brass-hi) 0%, var(--color-brass) 30%, var(--color-brass-hi) 50%, var(--color-brass) 70%, var(--color-oxblood) 100%);
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
