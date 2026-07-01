@@ -20,15 +20,6 @@
   --text: var(--color-bone);
 }
 
-.light {
-  --bg: #EDE8DC;
-  --surface: #F5F1E8;
-  --text: #241E18;
-  --color-brass-hi: #A9803C;
-  --color-brass: #7A5423;
-  --color-oxblood: #6E2A24;
-}
-
 @layer base {
   html {
     color: var(--text);
@@ -36,11 +27,6 @@
       radial-gradient(ellipse 80% 60% at 50% 40%, #12211D 0%, var(--bg) 70%),
       var(--bg);
     background-attachment: fixed;
-  }
-  .light html {
-    background:
-      radial-gradient(ellipse 80% 60% at 50% 40%, #F5F1E8 0%, var(--bg) 70%),
-      var(--bg);
   }
   body {
     font-family: var(--font-body);

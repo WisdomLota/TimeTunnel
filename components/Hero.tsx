@@ -83,7 +83,7 @@ export default function Hero() {
           <motion.div
             animate={{ y: [0, 8, 0] }}
             transition={{ repeat: Infinity, duration: 1.8, ease: "easeInOut" }}
-            className="w-px h-8 bg-gradient-to-b from-brass to-transparent"
+            className="w-px h-8 bg-linear-to-b from-brass to-transparent"
           />
         </motion.div>
       </motion.div>
