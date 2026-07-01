@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import TunnelReveal from "@/components/TunnelReveal";
 
 type Car = { id: string; name: string; year: string; story: string; src: string };
 
@@ -101,8 +102,18 @@ export default function CarWall() {
               className="fixed z-50 left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[90vw] max-w-2xl h-[70vh] rounded-sm overflow-hidden"
               style={{ boxShadow: "inset 0 0 0 1px var(--color-brass), 0 40px 100px rgba(0,0,0,0.8)" }}
             >
+              {/* pristine photo beneath */}
               <div className="absolute inset-0" style={{ background: `url(${active.src}) center/cover` }} />
-              <div className="absolute inset-0 bg-linear-to-t from-void via-transparent to-transparent" />
+              {/* beat + scratch, mounted after the morph lands */}
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.9 }}
+                className="absolute inset-0"
+              >
+                <TunnelReveal src={active.src} story={active.story} year={active.year} name={active.name} />
+              </motion.div>
+              <div className="absolute inset-0 bg-linear-to-t from-void via-transparent to-transparent pointer-events-none" />
 
               {/* content fades up AFTER the card lands */}
               <motion.button
