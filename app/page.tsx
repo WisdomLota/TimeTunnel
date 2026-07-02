@@ -5,6 +5,7 @@ import { AnimatePresence } from "framer-motion";
 import Hero from "@/components/Hero";
 import CarWall from "@/components/CarWall";
 import CarGallery from "@/components/CarGallery";
+import DeepZoom from "@/components/DeepZoom";
 import Nav from "@/components/Nav";
 
 export default function Page() {
@@ -16,6 +17,7 @@ export default function Page() {
         <CarWall />
       </section>
       <CarGallery />
+      <DeepZoom src="/nevruz-sample.jpg" title="Nevruz" />
 
       <AnimatePresence>
         {entered && <Nav key="nav" onReturn={() => setEntered(false)} />}
