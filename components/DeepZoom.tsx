@@ -230,7 +230,7 @@ export default function DeepZoom({ src, title = "Nevruz" }: { src: string; title
             onPointerDown={onPointerDown}
             onPointerMove={onPointerMove}
             onPointerUp={onPointerUp}
-            className="relative w-full aspect-[21/9] overflow-hidden rounded-sm cursor-grab active:cursor-grabbing select-none"
+            className="relative w-full aspect-21/9 overflow-hidden rounded-sm cursor-grab active:cursor-grabbing select-none"
             style={{ boxShadow: "inset 0 0 0 1px var(--color-brass), 0 40px 100px rgba(0,0,0,0.6)" }}
           >
             <motion.div
