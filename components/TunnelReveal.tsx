@@ -7,9 +7,16 @@ import CastButton from "@/components/CastButton";
 
 type Props = { src: string; story: string; year: string; name: string };
 
+function mintSession() {
+  return Math.random().toString(36).slice(2, 10);
+}
+
 export default function TunnelReveal({ src, story, year, name }: Props) {
   const [beat, setBeat] = useState(true);
   const [sessionId, setSessionId] = useState<string | null>(null);
+  const [url, setUrl] = useState("");
+  const [qrOpen, setQrOpen] = useState(false);
+  const [connected, setConnected] = useState(false);
   const [shimmer, setShimmer] = useState(false);
 
   // hold the "entered the tunnel" beat, then dissolve
@@ -18,12 +25,21 @@ export default function TunnelReveal({ src, story, year, name }: Props) {
     return () => clearTimeout(t);
   }, []);
 
-  // when a phone connects (session set), pulse a brass shimmer across the plate
-  const handleSessionStart = (id: string) => {
+  const startCast = () => {
+    const id = mintSession();
     setSessionId(id);
+    setUrl(`${window.location.origin}/scratch/${id}`);
+    setQrOpen(true);
+    setConnected(false);
   };
 
-  // fire a shimmer the first time remote progress registers
+  // ReceiverCanvas tells us the phone connected → close QR, flip label
+  const handleConnected = () => {
+    setConnected(true);
+    setQrOpen(false);
+  };
+
+  // first remote progress → brass shimmer sweep
   const handleProgress = (ratio: number) => {
     if (sessionId && ratio > 0.02 && !shimmer) {
       setShimmer(true);
@@ -33,7 +49,6 @@ export default function TunnelReveal({ src, story, year, name }: Props) {
 
   return (
     <div className="absolute inset-0">
-      {/* pristine photo already sits beneath in the parent; this layer holds the coating */}
       <AnimatePresence>
         {beat && (
           <motion.div
@@ -57,10 +72,12 @@ export default function TunnelReveal({ src, story, year, name }: Props) {
 
       {!beat && (
         <>
-          {/* session-aware scratch surface: touch by default, receive-only when cast */}
-          <ReceiverCanvas sessionId={sessionId} onProgress={handleProgress} />
+          <ReceiverCanvas
+            sessionId={sessionId}
+            onProgress={handleProgress}
+            onConnected={handleConnected}
+          />
 
-          {/* brass shimmer pulse on remote connect */}
           <AnimatePresence>
             {shimmer && (
               <motion.div
@@ -74,9 +91,14 @@ export default function TunnelReveal({ src, story, year, name }: Props) {
             )}
           </AnimatePresence>
 
-          {/* discreet cast control — reads like an exhibit-label affordance */}
           <div className="absolute bottom-4 right-4 z-40">
-            <CastButton onSessionStart={handleSessionStart} />
+            <CastButton
+              url={url}
+              open={qrOpen}
+              connected={connected}
+              onStart={startCast}
+              onClose={() => setQrOpen(false)}
+            />
           </div>
         </>
       )}

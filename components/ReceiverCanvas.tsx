@@ -4,18 +4,20 @@ import { useEffect, useRef, useState } from "react";
 import { supabase } from "@/lib/supabase";
 
 type Props = {
-  sessionId: string | null; // null = no live session → local scratch mode
+  sessionId: string | null;        // null = no live session → local scratch
   onProgress?: (ratio: number) => void;
+  onConnected?: () => void;         // fires when the phone sends its hello ping
 };
 
-// Paints the tarnished plate; scratches locally by touch UNLESS a live
-// session is active, in which case it becomes receive-only and paints
-// incoming scratch coords from the phone controller.
-export default function ReceiverCanvas({ sessionId, onProgress }: Props) {
+// Sole owner of the session channel. Scratches locally by touch until a
+// session is live, then becomes receive-only and paints the phone's strokes.
+export default function ReceiverCanvas({ sessionId, onProgress, onConnected }: Props) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const drawing = useRef(false);
   const cleared = useRef(false);
   const lastCheck = useRef(0);
+  const lastLocal = useRef<{ x: number; y: number } | null>(null);
+  const lastRemote = useRef<{ x: number; y: number } | null>(null);
   const [live, setLive] = useState(false);
 
   // paint the coating once
@@ -46,16 +48,34 @@ export default function ReceiverCanvas({ sessionId, onProgress }: Props) {
     ctx.fillText("SCRATCH TO RESTORE", width / 2, height / 2);
   }, []);
 
-  // erase a circle at canvas pixel coords
-  const erase = (px: number, py: number) => {
+  // line-based brush stroke between last point and current
+  const stroke = (
+    px: number,
+    py: number,
+    lastRef: React.MutableRefObject<{ x: number; y: number } | null>
+  ) => {
     const canvas = canvasRef.current;
     if (!canvas || cleared.current) return;
     const ctx = canvas.getContext("2d", { willReadFrequently: true });
     if (!ctx) return;
+
     ctx.globalCompositeOperation = "destination-out";
-    ctx.beginPath();
-    ctx.arc(px, py, 22, 0, Math.PI * 2);
-    ctx.fill();
+    ctx.lineCap = "round";
+    ctx.lineJoin = "round";
+    ctx.lineWidth = 26;
+
+    const prev = lastRef.current;
+    if (prev) {
+      ctx.beginPath();
+      ctx.moveTo(prev.x, prev.y);
+      ctx.lineTo(px, py);
+      ctx.stroke();
+    } else {
+      ctx.beginPath();
+      ctx.arc(px, py, 13, 0, Math.PI * 2);
+      ctx.fill();
+    }
+    lastRef.current = { x: px, y: py };
 
     const now = performance.now();
     if (now - lastCheck.current > 200) {
@@ -77,7 +97,7 @@ export default function ReceiverCanvas({ sessionId, onProgress }: Props) {
     }
   };
 
-  // subscribe to the session channel when one is live
+  // subscribe to the session channel (ALL .on before subscribe)
   useEffect(() => {
     if (!sessionId) {
       setLive(false);
@@ -86,29 +106,38 @@ export default function ReceiverCanvas({ sessionId, onProgress }: Props) {
     const channel = supabase.channel(`scratch:${sessionId}`, {
       config: { broadcast: { self: false } },
     });
+
+    channel.on("broadcast", { event: "hello" }, () => {
+      onConnected?.();
+    });
+
     channel.on("broadcast", { event: "scratch" }, ({ payload }) => {
       const canvas = canvasRef.current;
       if (!canvas) return;
       const rect = canvas.getBoundingClientRect();
-      // map normalized phone coords → this canvas's pixel space
-      erase(payload.nx * rect.width, payload.ny * rect.height);
+      if (payload.lift) {
+        lastRemote.current = null;
+        return;
+      }
+      stroke(payload.nx * rect.width, payload.ny * rect.height, lastRemote);
     });
+
     channel.subscribe((status) => {
       if (status === "SUBSCRIBED") setLive(true);
     });
+
     return () => {
       supabase.removeChannel(channel);
       setLive(false);
     };
   }, [sessionId]);
 
-  // local touch scratching — disabled while a session is live (receive-only)
   const localScratch = (e: React.PointerEvent) => {
-    if (live) return; // receive-only
+    if (live) return;
     const canvas = canvasRef.current;
     if (!canvas) return;
     const rect = canvas.getBoundingClientRect();
-    erase(e.clientX - rect.left, e.clientY - rect.top);
+    stroke(e.clientX - rect.left, e.clientY - rect.top, lastLocal);
   };
 
   return (
@@ -118,11 +147,15 @@ export default function ReceiverCanvas({ sessionId, onProgress }: Props) {
       onPointerDown={(e) => {
         if (live) return;
         drawing.current = true;
+        lastLocal.current = null;
         e.currentTarget.setPointerCapture(e.pointerId);
         localScratch(e);
       }}
       onPointerMove={(e) => !live && drawing.current && localScratch(e)}
-      onPointerUp={() => (drawing.current = false)}
+      onPointerUp={() => {
+        drawing.current = false;
+        lastLocal.current = null;
+      }}
     />
   );
 }

@@ -13,13 +13,18 @@ export default function ScratchController({
   const drawing = useRef(false);
   const channelRef = useRef<ReturnType<typeof supabase.channel> | null>(null);
   const lastSend = useRef(0);
+  const lastPt = useRef<{ x: number; y: number } | null>(null);
 
-  // join the session channel
+  // join channel; on subscribe, send a hello ping so the screen's QR closes
   useEffect(() => {
     const channel = supabase.channel(`scratch:${sessionId}`, {
       config: { broadcast: { self: false } },
     });
-    channel.subscribe();
+    channel.subscribe((status) => {
+      if (status === "SUBSCRIBED") {
+        channel.send({ type: "broadcast", event: "hello", payload: {} });
+      }
+    });
     channelRef.current = channel;
     return () => {
       supabase.removeChannel(channel);
@@ -56,17 +61,28 @@ export default function ScratchController({
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
     const rect = canvas.getBoundingClientRect();
-    // normalized 0..1 coords so the big screen can map to its own size
-    const nx = (clientX - rect.left) / rect.width;
-    const ny = (clientY - rect.top) / rect.height;
+    const lx = clientX - rect.left;
+    const ly = clientY - rect.top;
+    const nx = lx / rect.width;
+    const ny = ly / rect.height;
 
-    // paint locally
     ctx.globalCompositeOperation = "destination-out";
-    ctx.beginPath();
-    ctx.arc(clientX - rect.left, clientY - rect.top, 20, 0, Math.PI * 2);
-    ctx.fill();
+    ctx.lineCap = "round";
+    ctx.lineJoin = "round";
+    ctx.lineWidth = 26;
+    const prev = lastPt.current;
+    if (prev) {
+      ctx.beginPath();
+      ctx.moveTo(prev.x, prev.y);
+      ctx.lineTo(lx, ly);
+      ctx.stroke();
+    } else {
+      ctx.beginPath();
+      ctx.arc(lx, ly, 13, 0, Math.PI * 2);
+      ctx.fill();
+    }
+    lastPt.current = { x: lx, y: ly };
 
-    // broadcast, throttled ~50ms
     const now = performance.now();
     if (now - lastSend.current > 50 && channelRef.current) {
       lastSend.current = now;
@@ -78,11 +94,19 @@ export default function ScratchController({
     }
   };
 
+  const endStroke = () => {
+    drawing.current = false;
+    lastPt.current = null;
+    channelRef.current?.send({ type: "broadcast", event: "scratch", payload: { lift: true } });
+  };
+
   const pos = (e: React.PointerEvent) => scratch(e.clientX, e.clientY);
 
   return (
-    <main className="min-h-screen flex flex-col items-center justify-center p-6 gap-6"
-          style={{ background: "var(--color-void, #0B0F0E)" }}>
+    <main
+      className="min-h-screen flex flex-col items-center justify-center p-6 gap-6"
+      style={{ background: "#0B0F0E" }}
+    >
       <div className="text-center">
         <p className="text-xs tracking-[0.3em] uppercase" style={{ color: "#C69A4B" }}>
           NEU Time Tunnel
@@ -96,14 +120,18 @@ export default function ScratchController({
         className="relative w-full max-w-md aspect-[4/3] rounded-sm overflow-hidden touch-none"
         style={{ boxShadow: "inset 0 0 0 1px #C69A4B" }}
       >
-        <div className="absolute inset-0"
-             style={{ background: "linear-gradient(135deg,#C69A4B,#5A1E22)" }} />
+        <div className="absolute inset-0" style={{ background: "linear-gradient(135deg,#C69A4B,#5A1E22)" }} />
         <canvas
           ref={canvasRef}
           className="absolute inset-0 w-full h-full touch-none cursor-crosshair"
-          onPointerDown={(e) => { drawing.current = true; e.currentTarget.setPointerCapture(e.pointerId); pos(e); }}
+          onPointerDown={(e) => {
+            drawing.current = true;
+            lastPt.current = null;
+            e.currentTarget.setPointerCapture(e.pointerId);
+            pos(e);
+          }}
           onPointerMove={(e) => drawing.current && pos(e)}
-          onPointerUp={() => (drawing.current = false)}
+          onPointerUp={endStroke}
         />
       </div>
 
