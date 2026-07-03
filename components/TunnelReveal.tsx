@@ -1,89 +1,39 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import ReceiverCanvas from "@/components/ReceiverCanvas";
+import CastButton from "@/components/CastButton";
 
 type Props = { src: string; story: string; year: string; name: string };
 
 export default function TunnelReveal({ src, story, year, name }: Props) {
-  const [beat, setBeat] = useState(true); // "entered the tunnel" beat
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  const drawing = useRef(false);
-  const cleared = useRef(false);
-  const lastCheck = useRef(0);
-  const [revealed, setRevealed] = useState(false);
+  const [beat, setBeat] = useState(true);
+  const [sessionId, setSessionId] = useState<string | null>(null);
+  const [shimmer, setShimmer] = useState(false);
 
-  // hold the beat, then dissolve to the scratch
+  // hold the "entered the tunnel" beat, then dissolve
   useEffect(() => {
     const t = setTimeout(() => setBeat(false), 1600);
     return () => clearTimeout(t);
   }, []);
 
-  // paint the tarnished plate once the beat is gone
-  useEffect(() => {
-    if (beat) return;
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext("2d", { willReadFrequently: true });
-    if (!ctx) return;
+  // when a phone connects (session set), pulse a brass shimmer across the plate
+  const handleSessionStart = (id: string) => {
+    setSessionId(id);
+  };
 
-    const dpr = window.devicePixelRatio || 1;
-    const { width, height } = canvas.getBoundingClientRect();
-    canvas.width = width * dpr;
-    canvas.height = height * dpr;
-    ctx.scale(dpr, dpr);
-
-    const g = ctx.createLinearGradient(0, 0, width, height);
-    g.addColorStop(0, "#3a3226");
-    g.addColorStop(0.5, "#5c4a2e");
-    g.addColorStop(1, "#2e2a20");
-    ctx.fillStyle = g;
-    ctx.fillRect(0, 0, width, height);
-
-    for (let i = 0; i < 1400; i++) {
-      ctx.fillStyle = `rgba(${180 + Math.random() * 40},${140 + Math.random() * 40},${80 + Math.random() * 30},${Math.random() * 0.08})`;
-      ctx.fillRect(Math.random() * width, Math.random() * height, 2, 2);
-    }
-    ctx.fillStyle = "rgba(240,217,168,0.45)";
-    ctx.font = "600 13px sans-serif";
-    ctx.textAlign = "center";
-    ctx.fillText("SCRATCH TO RESTORE", width / 2, height / 2);
-  }, [beat]);
-
-  const scratch = (x: number, y: number) => {
-    const canvas = canvasRef.current;
-    if (!canvas || cleared.current) return;
-    const ctx = canvas.getContext("2d", { willReadFrequently: true });
-    if (!ctx) return;
-    const rect = canvas.getBoundingClientRect();
-    ctx.globalCompositeOperation = "destination-out";
-    ctx.beginPath();
-    ctx.arc(x - rect.left, y - rect.top, 22, 0, Math.PI * 2);
-    ctx.fill();
-
-    const now = performance.now();
-    if (now - lastCheck.current > 200) {
-      lastCheck.current = now;
-      const { width, height } = canvas;
-      const data = ctx.getImageData(0, 0, width, height).data;
-      let clear = 0, total = 0;
-      for (let i = 3; i < data.length; i += 4 * 20) {
-        total++;
-        if (data[i] === 0) clear++;
-      }
-      if (clear / total > 0.6 && !cleared.current) {
-        cleared.current = true;
-        setRevealed(true);
-        canvas.style.transition = "opacity 0.9s ease";
-        canvas.style.opacity = "0";
-      }
+  // fire a shimmer the first time remote progress registers
+  const handleProgress = (ratio: number) => {
+    if (sessionId && ratio > 0.02 && !shimmer) {
+      setShimmer(true);
+      setTimeout(() => setShimmer(false), 1200);
     }
   };
 
-  const pos = (e: React.PointerEvent) => scratch(e.clientX, e.clientY);
-
   return (
     <div className="absolute inset-0">
+      {/* pristine photo already sits beneath in the parent; this layer holds the coating */}
       <AnimatePresence>
         {beat && (
           <motion.div
@@ -96,7 +46,7 @@ export default function TunnelReveal({ src, story, year, name }: Props) {
             <motion.p
               initial={{ letterSpacing: "0.1em", opacity: 0 }}
               animate={{ letterSpacing: "0.35em", opacity: 1 }}
-              transition={{ duration: 2, ease: [0.26, 1, 0.3, 1] }}
+              transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
               className="display text-2xl md:text-3xl brass-text uppercase text-center px-6"
             >
               You&apos;ve entered the tunnel
@@ -106,17 +56,29 @@ export default function TunnelReveal({ src, story, year, name }: Props) {
       </AnimatePresence>
 
       {!beat && (
-        <canvas
-          ref={canvasRef}
-          className="absolute inset-0 w-full h-full touch-none cursor-crosshair z-10"
-          onPointerDown={(e) => {
-            drawing.current = true;
-            e.currentTarget.setPointerCapture(e.pointerId);
-            pos(e);
-          }}
-          onPointerMove={(e) => drawing.current && pos(e)}
-          onPointerUp={() => (drawing.current = false)}
-        />
+        <>
+          {/* session-aware scratch surface: touch by default, receive-only when cast */}
+          <ReceiverCanvas sessionId={sessionId} onProgress={handleProgress} />
+
+          {/* brass shimmer pulse on remote connect */}
+          <AnimatePresence>
+            {shimmer && (
+              <motion.div
+                initial={{ x: "-30%", opacity: 0 }}
+                animate={{ x: "130%", opacity: [0, 0.6, 0] }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 1.1, ease: "easeOut" }}
+                className="absolute top-0 h-full w-1/3 z-30 pointer-events-none"
+                style={{ background: "linear-gradient(90deg, transparent, rgba(240,217,168,0.35), transparent)" }}
+              />
+            )}
+          </AnimatePresence>
+
+          {/* discreet cast control — reads like an exhibit-label affordance */}
+          <div className="absolute bottom-4 right-4 z-40">
+            <CastButton onSessionStart={handleSessionStart} />
+          </div>
+        </>
       )}
     </div>
   );
