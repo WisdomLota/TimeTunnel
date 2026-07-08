@@ -6,7 +6,8 @@ export const runtime = "nodejs";
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY! });
 
 // Build Prof Dux's scoped instruction for a given artwork
-function systemPrompt(art: NonNullable<ReturnType<typeof getArtwork>>) {
+function systemPrompt(art: NonNullable<ReturnType<typeof getArtwork>>, lang: string) {
+  const langName = lang === "tr" ? "Turkish" : "English";
   return `You are Prof Dux, the friendly AI guide of Near East University's museums.
 You are standing with a visitor in front of this artwork at the Cyprus Museum of Modern Arts:
 
@@ -24,12 +25,13 @@ Grounding rules:
 - You may add helpful general context about the medium, region, era, or art history to enrich the answer — but make clear when you're giving general context versus specific facts about this piece.
 - If asked something you truly can't know about this specific work, say so honestly and offer what you can.
 - Keep replies concise unless the visitor asks to go deeper.
-- Never invent specific facts (prices, provenance, hidden meanings) about this exact piece that aren't in the material above.`;
+- Never invent specific facts (prices, provenance, hidden meanings) about this exact piece that aren't in the material above.
+IMPORTANT: Respond entirely in ${langName}, in a natural, fluent register. If the visitor writes in another language, still reply in ${langName} unless they explicitly ask otherwise.`;
 }
 
 export async function POST(req: Request) {
   try {
-    const { artworkId, messages } = await req.json();
+    const { artworkId, messages, lang } = await req.json();
     const art = getArtwork(artworkId);
     if (!art) {
       return new Response(JSON.stringify({ error: "Unknown artwork" }), { status: 404 });
@@ -37,7 +39,7 @@ export async function POST(req: Request) {
 
     // build the OpenAI message list: system prompt + prior turns
     const chatMessages = [
-      { role: "system" as const, content: systemPrompt(art) },
+      { role: "system" as const, content: systemPrompt(art, lang || "en") },
       ...(messages as { role: "user" | "assistant"; content: string }[]).map((m) => ({
         role: m.role,
         content: m.content,

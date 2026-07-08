@@ -11,6 +11,7 @@ export default function ProfDuxChat({ artworkId, artworkTitle }: { artworkId: st
   const [input, setInput] = useState("");
   const [busy, setBusy] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
+  const [lang, setLang] = useState<"en" | "tr">("en");
 
   const scrollDown = () => {
     requestAnimationFrame(() => {
@@ -34,7 +35,7 @@ export default function ProfDuxChat({ artworkId, artworkTitle }: { artworkId: st
       const res = await fetch("/api/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ artworkId, messages: next }),
+        body: JSON.stringify({ artworkId, messages: next, lang }),
       });
       if (!res.body) throw new Error("no stream");
       const reader = res.body.getReader();
@@ -99,15 +100,31 @@ export default function ProfDuxChat({ artworkId, artworkTitle }: { artworkId: st
                   <p className="display text-brass text-sm tracking-[0.2em] uppercase">Prof Dux</p>
                   <p className="text-bone/40 text-xs mt-0.5">on “{artworkTitle}”</p>
                 </div>
-                <button onClick={() => setOpen(false)} className="text-bone/50 hover:text-brass text-xs tracking-widest">CLOSE</button>
+                <div className="flex items-center gap-3">
+                  <div className="flex rounded-full overflow-hidden border border-brass/30">
+                    {(["en", "tr"] as const).map((l) => (
+                      <button
+                        key={l}
+                        onClick={() => setLang(l)}
+                        className={`px-3 py-1 text-[10px] tracking-widest uppercase transition-colors ${
+                          lang === l ? "bg-brass/25 text-brass" : "text-bone/40 hover:text-brass"
+                        }`}
+                      >
+                        {l === "en" ? "EN" : "TR"}
+                      </button>
+                    ))}
+                  </div>
+                  <button onClick={() => setOpen(false)} className="text-bone/50 hover:text-brass text-xs tracking-widest">CLOSE</button>
+                </div>
               </div>
 
               {/* messages */}
               <div ref={scrollRef} className="flex-1 overflow-y-auto px-6 py-5 space-y-4">
                 {messages.length === 0 && (
                   <p className="text-bone/40 text-sm leading-relaxed">
-                    Hello — I'm Prof Dux. Ask me anything about this piece: the artist, the story behind it,
-                    the technique, or what to look for.
+                    {lang === "tr"
+                      ? "Merhaba — ben Prof Dux. Bu eser hakkında istediğinizi sorun: sanatçı, hikâyesi, tekniği ya da nelere dikkat etmeniz gerektiği."
+                      : "Hello — I'm Prof Dux. Ask me anything about this piece: the artist, the story behind it, the technique, or what to look for."}
                   </p>
                 )}
                 {messages.map((m, i) => (
