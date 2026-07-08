@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
 type Msg = { role: "user" | "assistant"; content: string };
@@ -12,11 +12,57 @@ export default function ProfDuxChat({ artworkId, artworkTitle }: { artworkId: st
   const [busy, setBusy] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
   const [lang, setLang] = useState<"en" | "tr">("en");
+  const [muted, setMuted] = useState(false);
+  const [listening, setListening] = useState(false);
+  const recognitionRef = useRef<any>(null);
 
   const scrollDown = () => {
     requestAnimationFrame(() => {
       scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" });
     });
+  };
+
+  const speak = (text: string) => {
+    if (muted || typeof window === "undefined" || !window.speechSynthesis) return;
+    const synth = window.speechSynthesis;
+    synth.cancel();
+    const u = new SpeechSynthesisUtterance(text);
+    u.lang = lang === "tr" ? "tr-TR" : "en-US";
+    const voices = synth.getVoices();
+    const match = voices.find((v) => v.lang.toLowerCase().startsWith(lang === "tr" ? "tr" : "en"));
+    if (match) u.voice = match; // optional; lang alone usually works
+    synth.speak(u);
+  };
+
+  const toggleMic = () => {
+    if (typeof window === "undefined") return;
+    const SR = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+    if (!SR) {
+      alert("Voice input isn't supported in this browser. Try Chrome.");
+      return;
+    }
+    // already listening → stop
+    if (listening && recognitionRef.current) {
+      recognitionRef.current.stop();
+      return;
+    }
+    const rec = new SR();
+    rec.lang = lang === "tr" ? "tr-TR" : "en-US";
+    rec.interimResults = true;
+    rec.continuous = false;
+
+    rec.onresult = (e: any) => {
+      const transcript = Array.from(e.results)
+        .map((r: any) => r[0].transcript)
+        .join("");
+      setInput(transcript);
+    };
+    rec.onend = () => setListening(false);
+    rec.onerror = () => setListening(false);
+
+    recognitionRef.current = rec;
+    setListening(true);
+    rec.start();
   };
 
   const send = async () => {
@@ -40,20 +86,20 @@ export default function ProfDuxChat({ artworkId, artworkTitle }: { artworkId: st
       if (!res.body) throw new Error("no stream");
       const reader = res.body.getReader();
       const decoder = new TextDecoder();
+      let full = "";
       while (true) {
         const { done, value } = await reader.read();
         if (done) break;
         const chunk = decoder.decode(value, { stream: true });
+        full += chunk;
         setMessages((m) => {
           const copy = [...m];
-          copy[copy.length - 1] = {
-            role: "assistant",
-            content: copy[copy.length - 1].content + chunk,
-          };
+          copy[copy.length - 1] = { role: "assistant", content: full };
           return copy;
         });
         scrollDown();
       }
+      speak(full); // read the completed reply aloud
     } catch {
       setMessages((m) => {
         const copy = [...m];
@@ -65,6 +111,15 @@ export default function ProfDuxChat({ artworkId, artworkTitle }: { artworkId: st
       scrollDown();
     }
   };
+
+  useEffect(() => {
+    if (typeof window === "undefined" || !window.speechSynthesis) return;
+    // trigger voice loading
+    window.speechSynthesis.getVoices();
+    const handler = () => window.speechSynthesis.getVoices();
+    window.speechSynthesis.addEventListener("voiceschanged", handler);
+    return () => window.speechSynthesis.removeEventListener("voiceschanged", handler);
+  }, []);
 
   return (
     <>
@@ -114,7 +169,19 @@ export default function ProfDuxChat({ artworkId, artworkTitle }: { artworkId: st
                       </button>
                     ))}
                   </div>
-                  <button onClick={() => setOpen(false)} className="text-bone/50 hover:text-brass text-xs tracking-widest">CLOSE</button>
+                  <button
+                    onClick={() => {
+                      setMuted((mtd) => {
+                        if (!mtd) window.speechSynthesis?.cancel(); // muting → stop now
+                        return !mtd;
+                      });
+                    }}
+                    className="text-[10px] tracking-widest uppercase text-bone/40 hover:text-brass transition-colors"
+                    aria-label={muted ? "Unmute Prof Dux" : "Mute Prof Dux"}
+                  >
+                    {muted ? "🔇" : "🔊"}
+                  </button>
+                  <button onClick={() => { window.speechSynthesis?.cancel(); setOpen(false); }} className="text-bone/50 hover:text-brass text-xs tracking-widest">CLOSE</button>
                 </div>
               </div>
 
@@ -143,12 +210,23 @@ export default function ProfDuxChat({ artworkId, artworkTitle }: { artworkId: st
               </div>
 
               {/* input */}
-              <div className="px-4 py-3 border-t border-brass/20 flex gap-2">
+              <div className="px-4 py-3 border-t border-brass/20 flex gap-2 items-center">
+                <button
+                  onClick={toggleMic}
+                  className={`shrink-0 w-10 h-10 rounded-full flex items-center justify-center transition-colors ${
+                    listening
+                      ? "bg-brass/40 text-brass animate-pulse"
+                      : "bg-void/50 text-bone/50 hover:text-brass"
+                  }`}
+                  aria-label={listening ? "Stop listening" : "Speak your question"}
+                >
+                  🎤
+                </button>
                 <input
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
                   onKeyDown={(e) => e.key === "Enter" && send()}
-                  placeholder="Ask about this artwork…"
+                  placeholder={listening ? "Listening…" : "Ask about this artwork…"}
                   className="flex-1 bg-void/50 rounded-full px-4 py-2 text-sm text-bone placeholder:text-bone/30 focus:outline-none focus:ring-1 focus:ring-brass/50"
                 />
                 <button
