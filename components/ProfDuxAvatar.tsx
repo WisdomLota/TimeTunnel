@@ -102,7 +102,7 @@ export default function ProfDuxAvatar({
             />
 
             {/* chrome glint — clipped to the silhouette */}
-            <div
+            {/* <div
               className="absolute inset-0 pointer-events-none overflow-hidden"
               style={{
                 maskImage: "url(/prof-dux.png)",
@@ -125,7 +125,7 @@ export default function ProfDuxAvatar({
                     "linear-gradient(105deg, transparent 42%, rgba(255,255,255,0.4) 50%, transparent 58%)",
                 }}
               />
-            </div>
+            </div> */}
           </div>
         </motion.div>
 

@@ -78,6 +78,10 @@ export default function ProfDuxChat({ artworkId, artworkTitle }: { artworkId: st
   };
 
   const send = async () => {
+    if (typeof window !== "undefined" && window.speechSynthesis) {
+      const warm = new SpeechSynthesisUtterance("");
+      window.speechSynthesis.speak(warm);
+    }
     const text = input.trim();
     if (!text || busy) return;
     setInput("");
