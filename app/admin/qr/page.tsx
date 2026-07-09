@@ -43,7 +43,7 @@ export default function QRAdminPage() {
                   {url ? (
                     <QRCodeSVG value={url} size={150} bgColor="#E8E4DA" fgColor="#0B0F0E" />
                   ) : (
-                    <div className="w-[150px] h-[150px]" />
+                    <div className="w-37.5 h-37.5" />
                   )}
                 </div>
                 <div>

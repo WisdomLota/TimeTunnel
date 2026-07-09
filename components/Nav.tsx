@@ -42,6 +42,12 @@ export default function Nav({ onReturn }: Props) {
             {l.label}
           </button>
         ))}
+        <a
+        href="/admin/qr"
+          className="text-xs tracking-[0.25em] uppercase text-bone/50 hover:text-brass transition-colors"
+        >
+          QR Codes
+        </a>
       </div>
     </motion.nav>
   );
