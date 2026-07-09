@@ -2,6 +2,7 @@
 
 import { useRef, useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import ProfDuxAvatar from "@/components/ProfDuxAvatar";
 
 type Msg = { role: "user" | "assistant"; content: string };
 
@@ -15,6 +16,8 @@ export default function ProfDuxChat({ artworkId, artworkTitle }: { artworkId: st
   const [muted, setMuted] = useState(false);
   const [listening, setListening] = useState(false);
   const recognitionRef = useRef<any>(null);
+  const [settled, setSettled] = useState(false); // false = big intro, true = compact header
+  const [avatarState, setAvatarState] = useState<"idle" | "thinking" | "speaking">("idle");
 
   const scrollDown = () => {
     requestAnimationFrame(() => {
@@ -22,15 +25,24 @@ export default function ProfDuxChat({ artworkId, artworkTitle }: { artworkId: st
     });
   };
 
-  const speak = (text: string) => {
+  const speakWithState = (text: string) => {
     if (muted || typeof window === "undefined" || !window.speechSynthesis) return;
     const synth = window.speechSynthesis;
     synth.cancel();
     const u = new SpeechSynthesisUtterance(text);
     u.lang = lang === "tr" ? "tr-TR" : "en-US";
     const voices = synth.getVoices();
-    const match = voices.find((v) => v.lang.toLowerCase().startsWith(lang === "tr" ? "tr" : "en"));
-    if (match) u.voice = match; // optional; lang alone usually works
+    const prefix = lang === "tr" ? "tr" : "en";
+    const langVoices = voices.filter((v) => v.lang.toLowerCase().startsWith(prefix));
+    // prefer a voice that looks male by name; fall back to any lang match
+    const maleHint = /male|david|james|george|daniel|mark|paul|fred|alex|guy|eric|zira?off|erkek|baş?ar|tolga/i;
+    const femaleHint = /female|zira|susan|karen|linda|hazel|kadın|yelda|filiz/i;
+    const male = langVoices.find((v) => maleHint.test(v.name) && !femaleHint.test(v.name));
+    u.voice = male || langVoices[0];
+    // deepen slightly for a more masculine timbre
+    u.pitch = 0.85;
+    u.onstart = () => setAvatarState("speaking");
+    u.onend = () => setAvatarState("idle");
     synth.speak(u);
   };
 
@@ -72,6 +84,7 @@ export default function ProfDuxChat({ artworkId, artworkTitle }: { artworkId: st
     const next: Msg[] = [...messages, { role: "user", content: text }];
     setMessages(next);
     setBusy(true);
+    setAvatarState("thinking");
     scrollDown();
 
     // add an empty assistant message we'll stream into
@@ -99,7 +112,8 @@ export default function ProfDuxChat({ artworkId, artworkTitle }: { artworkId: st
         });
         scrollDown();
       }
-      speak(full); // read the completed reply aloud
+      setAvatarState("idle");
+      speakWithState(full); // read the completed reply aloud
     } catch {
       setMessages((m) => {
         const copy = [...m];
@@ -120,6 +134,14 @@ export default function ProfDuxChat({ artworkId, artworkTitle }: { artworkId: st
     window.speechSynthesis.addEventListener("voiceschanged", handler);
     return () => window.speechSynthesis.removeEventListener("voiceschanged", handler);
   }, []);
+
+  useEffect(() => {
+    if (open) {
+      setSettled(false);
+      const t = setTimeout(() => setSettled(true), 2200);
+      return () => clearTimeout(t);
+    }
+  }, [open]);
 
   return (
     <>
@@ -149,11 +171,51 @@ export default function ProfDuxChat({ artworkId, artworkTitle }: { artworkId: st
               className="w-full max-w-lg h-[80vh] md:h-[70vh] flex flex-col rounded-t-2xl md:rounded-2xl overflow-hidden"
               style={{ background: "var(--color-patina)", boxShadow: "0 -20px 80px rgba(0,0,0,0.7), inset 0 0 0 1px var(--color-brass)" }}
             >
-              {/* header */}
+              {/* BIG INTRO — Prof Dux arrives, then settles */}
+              <AnimatePresence>
+                {!settled && (
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    className="absolute inset-0 z-20 flex flex-col items-center justify-center gap-6"
+                    style={{ background: "var(--color-patina)" }}
+                  >
+                    <motion.div
+                      initial={{ scale: 0.8, y: 20, opacity: 0 }}
+                      animate={{ scale: 1, y: 0, opacity: 1 }}
+                      transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
+                    >
+                      <ProfDuxAvatar state="idle" size={220} />
+                    </motion.div>
+                    <motion.p
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 0.5, duration: 0.7 }}
+                      className="display text-brass text-lg tracking-wide text-center px-8"
+                    >
+                      {lang === "tr"
+                        ? "Merhaba! Ben AI arkadaşınız, Profesör Dux."
+                        : "Hello! I'm your AI friend, Professor Dux."}
+                    </motion.p>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+
+              {/* header with compact avatar (after settle) */}
               <div className="flex items-center justify-between px-6 py-4 border-b border-brass/20">
-                <div>
-                  <p className="display text-brass text-sm tracking-[0.2em] uppercase">Prof Dux</p>
-                  <p className="text-bone/40 text-xs mt-0.5">on “{artworkTitle}”</p>
+                <div className="flex items-center gap-3">
+                  <motion.div
+                    initial={false}
+                    animate={{ opacity: settled ? 1 : 0, scale: settled ? 1 : 0.8 }}
+                    transition={{ duration: 0.5 }}
+                  >
+                    <ProfDuxAvatar state={avatarState} size={48} />
+                  </motion.div>
+                  <div>
+                    <p className="display text-brass text-sm tracking-[0.2em] uppercase">Prof Dux</p>
+                    <p className="text-bone/40 text-xs mt-0.5">on “{artworkTitle}”</p>
+                  </div>
                 </div>
                 <div className="flex items-center gap-3">
                   <div className="flex rounded-full overflow-hidden border border-brass/30">
@@ -172,16 +234,22 @@ export default function ProfDuxChat({ artworkId, artworkTitle }: { artworkId: st
                   <button
                     onClick={() => {
                       setMuted((mtd) => {
-                        if (!mtd) window.speechSynthesis?.cancel(); // muting → stop now
+                        if (!mtd) window.speechSynthesis?.cancel();
                         return !mtd;
                       });
+                      setAvatarState("idle");
                     }}
                     className="text-[10px] tracking-widest uppercase text-bone/40 hover:text-brass transition-colors"
                     aria-label={muted ? "Unmute Prof Dux" : "Mute Prof Dux"}
                   >
                     {muted ? "🔇" : "🔊"}
                   </button>
-                  <button onClick={() => { window.speechSynthesis?.cancel(); setOpen(false); }} className="text-bone/50 hover:text-brass text-xs tracking-widest">CLOSE</button>
+                  <button
+                    onClick={() => { window.speechSynthesis?.cancel(); setAvatarState("idle"); setOpen(false); }}
+                    className="text-bone/50 hover:text-brass text-xs tracking-widest"
+                  >
+                    CLOSE
+                  </button>
                 </div>
               </div>
 
