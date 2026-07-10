@@ -31,6 +31,9 @@ export default async function ArtworkPage({
         </div>
 
         <div className="brass-rule w-32" />
+        <div className="mt-3">
+          <ProfDuxChat artworkId={art.num} artworkTitle={art.title} />
+        </div>
 
         <div className="text-bone/70 text-sm space-y-1">
           <p><span className="text-brass">{art.category}</span></p>
@@ -54,9 +57,6 @@ export default async function ArtworkPage({
                 Ask Prof Dux anything — the story, the artist, the technique. By voice or text.
               </p>
             </div>
-          </div>
-          <div className="mt-3">
-            <ProfDuxChat artworkId={art.num} artworkTitle={art.title} />
           </div>
         </div>
       </div>

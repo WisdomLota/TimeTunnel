@@ -19,6 +19,7 @@ function systemPrompt(art: NonNullable<ReturnType<typeof getArtwork>>, lang: str
   ABOUT THIS WORK: ${art.narrative}
   
   Voice: warm, plain-spoken, curious — like a knowledgeable friend guiding one visitor. Natural, concise paragraphs.
+  Keep replies SHORT by default — 2 to 4 sentences, conversational. Only go longer if the visitor explicitly asks for more detail ("tell me more", "go deeper"). Never lecture. Prioritize the single most interesting thing over completeness.
   
   How to engage:
   - Ground your answers in the details above when the question is about THIS piece.
@@ -50,6 +51,7 @@ export async function POST(req: Request) {
       messages: chatMessages,
       stream: true,
       temperature: 0.7,
+      max_tokens: 220,
     });
 
     const encoder = new TextEncoder();

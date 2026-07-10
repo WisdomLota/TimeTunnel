@@ -78,10 +78,12 @@ export default function ProfDuxChat({ artworkId, artworkTitle }: { artworkId: st
   };
 
   const send = async () => {
-    if (typeof window !== "undefined" && window.speechSynthesis) {
-      const warm = new SpeechSynthesisUtterance("");
-      window.speechSynthesis.speak(warm);
-    }
+    try {
+      if (typeof window !== "undefined" && window.speechSynthesis) {
+        const warm = new SpeechSynthesisUtterance(" ");
+        window.speechSynthesis.speak(warm);
+      }
+    } catch {}
     const text = input.trim();
     if (!text || busy) return;
     setInput("");
@@ -150,12 +152,15 @@ export default function ProfDuxChat({ artworkId, artworkTitle }: { artworkId: st
   return (
     <>
       {/* trigger */}
-      <button
+      <motion.button
         onClick={() => setOpen(true)}
-        className="mt-4 self-start text-xs tracking-[0.2em] uppercase text-brass border border-brass/40 hover:border-brass rounded-full px-5 py-3 transition-colors"
+        animate={{ y: [0, -6, 0] }}
+        transition={{ duration: 1.4, repeat: Infinity, ease: "easeInOut" }}
+        className="self-start text-xs tracking-[0.2em] uppercase text-brass border border-brass/50 hover:border-brass rounded-full px-5 py-3 transition-colors"
+        style={{ boxShadow: "0 0 20px rgba(198,154,75,0.25)" }}
       >
         Ask Prof Dux about this work
-      </button>
+      </motion.button>
 
       <AnimatePresence>
         {open && (
