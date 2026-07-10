@@ -34,6 +34,7 @@ export default function QRAdminPage() {
           return (
             <div
               key={art.id}
+              id={`plaque-${art.num}`}
               className="plaque relative bg-white text-neutral-900 rounded-md p-5 break-inside-avoid"
               style={{ boxShadow: "0 10px 30px rgba(0,0,0,0.15)" }}
             >
@@ -58,8 +59,6 @@ export default function QRAdminPage() {
 
                   <p className="text-sm italic leading-tight">{art.title}</p>
                   <p className="text-xs text-neutral-600 mt-1">{art.category}</p>
-                  {/* slots for data not in the source tables */}
-                  <p className="text-[11px] text-neutral-400 mt-1">Year · Medium · Dimensions</p>
                 </div>
 
                 {/* QR + nudge */}
@@ -67,7 +66,7 @@ export default function QRAdminPage() {
                   {url ? (
                     <QRCodeSVG value={url} size={92} bgColor="#ffffff" fgColor="#0B0F0E" />
                   ) : (
-                    <div className="w-[92px] h-[92px]" />
+                    <div className="w-92px h-92px" />
                   )}
                   <p className="text-[8px] tracking-wide text-center mt-1 font-semibold" style={{ color: "#0E7C9B" }}>
                     SCAN · ASK PROF DUX
@@ -80,10 +79,12 @@ export default function QRAdminPage() {
               {/* per-plaque print button (screen only) */}
               <button
                 onClick={() => {
-                  document.body.classList.add("print-one");
-                  (window as any).__printId = art.id;
+                  const el = document.getElementById(`plaque-${art.num}`);
+                  document.querySelectorAll(".plaque").forEach((p) => p.classList.add("print-hide"));
+                  el?.classList.remove("print-hide");
+                  el?.classList.add("print-only");
                   window.print();
-                  document.body.classList.remove("print-one");
+                  document.querySelectorAll(".plaque").forEach((p) => p.classList.remove("print-hide", "print-only"));
                 }}
                 className="print:hidden absolute -top-2 -right-2 text-[9px] tracking-widest uppercase bg-brass text-void rounded-full px-2 py-1"
               >
