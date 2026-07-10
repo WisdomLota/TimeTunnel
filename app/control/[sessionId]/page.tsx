@@ -15,6 +15,46 @@ export default function ControlPage({
 
   const [picked, setPicked] = useState<string | null>(null);
 
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const drawing = useRef(false);
+  const lastSend = useRef(0);
+  const lastPt = useRef<{ x: number; y: number } | null>(null);
+
+  useEffect(() => {
+    if (!picked) return;
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+    const dpr = window.devicePixelRatio || 1;
+    const { width, height } = canvas.getBoundingClientRect();
+    canvas.width = width * dpr; canvas.height = height * dpr; ctx.scale(dpr, dpr);
+    const g = ctx.createLinearGradient(0, 0, width, height);
+    g.addColorStop(0, "#3a3226"); g.addColorStop(0.5, "#5c4a2e"); g.addColorStop(1, "#2e2a20");
+    ctx.fillStyle = g; ctx.fillRect(0, 0, width, height);
+    ctx.fillStyle = "rgba(240,217,168,0.5)"; ctx.font = "600 15px sans-serif";
+    ctx.textAlign = "center"; ctx.fillText("SCRATCH HERE", width / 2, height / 2);
+  }, [picked]);
+
+  const scratch = (cx: number, cy: number) => {
+    const canvas = canvasRef.current; if (!canvas) return;
+    const ctx = canvas.getContext("2d"); if (!ctx) return;
+    const r = canvas.getBoundingClientRect();
+    const lx = cx - r.left, ly = cy - r.top;
+    ctx.globalCompositeOperation = "destination-out";
+    ctx.lineCap = "round"; ctx.lineJoin = "round"; ctx.lineWidth = 30;
+    const p = lastPt.current;
+    if (p) { ctx.beginPath(); ctx.moveTo(p.x, p.y); ctx.lineTo(lx, ly); ctx.stroke(); }
+    else { ctx.beginPath(); ctx.arc(lx, ly, 15, 0, Math.PI * 2); ctx.fill(); }
+    lastPt.current = { x: lx, y: ly };
+    const now = performance.now();
+    if (now - lastSend.current > 45) {
+      lastSend.current = now;
+      channelRef.current?.send({ type: "broadcast", event: "scratch",
+        payload: { nx: lx / r.width, ny: ly / r.height } });
+    }
+  };
+
   const pick = (num: string) => {
     setPicked(num);
     channelRef.current?.send({ type: "broadcast", event: "select", payload: { num } });
@@ -49,7 +89,7 @@ export default function ControlPage({
               <button
                 key={art.id}
                 onClick={() => pick(art.num)}
-                className="relative aspect-[3/4] rounded-sm flex flex-col items-center justify-center active:scale-95 transition-transform"
+                className="relative aspect-3/4 rounded-sm flex flex-col items-center justify-center active:scale-95 transition-transform"
                 style={{ background: "linear-gradient(160deg, var(--color-patina), var(--color-void))",
                          boxShadow: "inset 0 0 0 1px var(--color-brass)" }}
               >
@@ -62,9 +102,22 @@ export default function ControlPage({
       )}
 
       {connected && picked && (
-        <div className="flex flex-col items-center mt-10 gap-3">
-          <p className="display text-2xl brass-text">Card {String(FEATURED.findIndex((a) => a.num === picked) + 1).padStart(2, "0")} opened</p>
-          <p className="text-bone/50 text-sm text-center max-w-xs">Look at the screen — then get ready to scratch. (Scratch surface next.)</p>
+        <div className="flex flex-col items-center w-full max-w-sm gap-4 mt-2">
+          <h1 className="display text-xl brass-text text-center">
+            Scratch to reveal — watch the screen
+          </h1>
+          <div className="relative w-full aspect-3/4 rounded-sm overflow-hidden touch-none"
+               style={{ boxShadow: "inset 0 0 0 1px #C69A4B" }}>
+            <div className="absolute inset-0" style={{ background: "linear-gradient(135deg,#C69A4B,#5A1E22)" }} />
+            <canvas ref={canvasRef}
+              className="absolute inset-0 w-full h-full touch-none cursor-crosshair"
+              onPointerDown={(e) => { drawing.current = true; lastPt.current = null; e.currentTarget.setPointerCapture(e.pointerId); scratch(e.clientX, e.clientY); }}
+              onPointerMove={(e) => drawing.current && scratch(e.clientX, e.clientY)}
+              onPointerUp={() => { drawing.current = false; lastPt.current = null;
+                channelRef.current?.send({ type: "broadcast", event: "scratch", payload: { lift: true } }); }}
+            />
+          </div>
+          <p className="text-bone/40 text-xs text-center">Keep scratching until the work appears.</p>
         </div>
       )}
     </main>
