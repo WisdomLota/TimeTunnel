@@ -6,9 +6,6 @@ type Props = { onReturn: () => void };
 
 const LINKS = [
   { label: "Collection", href: "#collection" },
-  { label: "Machines", href: "#gallery" },
-  { label: "Nevruz", href: "#art" },
-  // later: { label: "Nevruz", href: "#nevruz" }, { label: "Ask", href: "#ask" },
 ];
 
 export default function Nav({ onReturn }: Props) {

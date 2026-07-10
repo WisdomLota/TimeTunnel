@@ -63,7 +63,7 @@ export default function Hero({ onEnter }: { onEnter: () => void }) {
         <p className="text-xs tracking-[0.4em] text-brass/70 uppercase mb-6">Near East University</p>
         <h1 className="display text-6xl md:text-8xl lg:text-9xl brass-text leading-[0.9]">Time Tunnel</h1>
         <p className="mt-6 max-w-md mx-auto text-bone/60 leading-relaxed">
-          A passage through a century of machines and art — from a lone 1899 survivor to ten metres of silk and ink.
+          A passage through the Günsel Art Museum — a living collection of paintings and sculpture from across the Turkic world and beyond.
         </p>
       </motion.div>
 

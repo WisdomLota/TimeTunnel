@@ -3,10 +3,8 @@
 import { useState } from "react";
 import { AnimatePresence } from "framer-motion";
 import Hero from "@/components/Hero";
-import CarWall from "@/components/CarWall";
-import CarGallery from "@/components/CarGallery";
-import DeepZoom from "@/components/DeepZoom";
 import Nav from "@/components/Nav";
+import ArtCollection from "@/components/ArtCollection";
 
 export default function Page() {
   const [entered, setEntered] = useState(false);
@@ -14,10 +12,8 @@ export default function Page() {
   return (
     <>
       <section id="collection">
-        <CarWall />
+        <ArtCollection />
       </section>
-      <CarGallery />
-      <DeepZoom src="/nevruz-sample.jpg" title="Nevruz" />
 
       <AnimatePresence>
         {entered && <Nav key="nav" onReturn={() => setEntered(false)} />}
