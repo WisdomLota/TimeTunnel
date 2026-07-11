@@ -14,6 +14,7 @@ export default function ControlPage({
   const channelRef = useRef<ReturnType<typeof supabase.channel> | null>(null);
 
   const [picked, setPicked] = useState<string | null>(null);
+  const [revealed, setRevealed] = useState(false);
 
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const drawing = useRef(false);
@@ -64,6 +65,9 @@ export default function ControlPage({
     const channel = supabase.channel(channelName(sessionId), {
       config: { broadcast: { self: false } },
     });
+    channel.on("broadcast", { event: "stage" }, ({ payload }) => {
+      if (payload.stage === "revealed") setRevealed(true);
+    });
     channel.subscribe((status) => {
       if (status === "SUBSCRIBED") {
         channel.send({ type: "broadcast", event: "hello", payload: {} });
@@ -101,7 +105,7 @@ export default function ControlPage({
         </>
       )}
 
-      {connected && picked && (
+      {connected && picked && !revealed && (
         <div className="flex flex-col items-center w-full max-w-sm gap-4 mt-2">
           <h1 className="display text-xl brass-text text-center">
             Scratch to reveal — watch the screen
@@ -118,6 +122,13 @@ export default function ControlPage({
             />
           </div>
           <p className="text-bone/40 text-xs text-center">Keep scratching until the work appears.</p>
+        </div>
+      )}
+
+      {connected && picked && revealed && (
+        <div className="flex flex-col items-center mt-16 gap-3">
+          <p className="display text-3xl brass-text text-center">Revealed!</p>
+          <p className="text-bone/60 text-sm text-center">Look up at the big screen 👀</p>
         </div>
       )}
     </main>

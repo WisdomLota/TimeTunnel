@@ -59,6 +59,7 @@ export default function ScreenPage() {
         canvas.style.transition = "opacity 1s ease";
         canvas.style.opacity = "0";
         setStage("revealed");
+        channelRef.current?.send({ type: "broadcast", event: "stage", payload: { stage: "revealed" } });
       }
     });
     channel.subscribe();
@@ -101,6 +102,11 @@ export default function ScreenPage() {
   return (
     <main className="fixed inset-0 overflow-hidden flex flex-col items-center justify-center"
       style={{ background: "radial-gradient(ellipse 80% 60% at 50% 45%, #12211D 0%, var(--color-void) 70%), var(--color-void)" }}>
+
+      {/* preload artwork images so reveal is instant */}
+      {stage === "connected" && FEATURED.map((a) => (
+        <img key={a.num} src={`/artworks/${a.num}.jpg`} alt="" className="hidden" aria-hidden />
+      ))}
 
       {/* breathing tunnel rings */}
       <div className="absolute inset-0 flex items-center justify-center" aria-hidden>

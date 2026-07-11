@@ -19,6 +19,13 @@ export const metadata: Metadata = {
     "A cinematic journey through Near East University's Classic & Sports Car Museum and Günsel Art Museum.",
 };
 
+export const viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
+};
+
 export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
