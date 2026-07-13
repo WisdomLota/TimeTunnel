@@ -7,6 +7,8 @@ import { joinAsVisitor } from "@/lib/museums/presence";
 import { supabase } from "@/lib/supabase";
 import { useDuxVoice } from "@/lib/museums/useDuxVoice";
 import type { MemoryLayer, MuseumWork } from "@/lib/museums/types";
+import DuxChat from "@/components/museum/DuxChat";
+import VideoOverlay from "@/components/museum/VideoOverlay";
 
 type Stage =
   | "connecting"
@@ -471,43 +473,15 @@ export default function MuseumControlPage({
 
         {/* ─── CHAT (stub — built in task e/f) ─── */}
         {stage === "chat" && activeWork && activeLayer && (
-          <motion.div
-            key="chat"
-            className="flex-1 flex flex-col items-center justify-center px-6"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-          >
-            <button
-              onClick={() => setStage("revealed")}
-              className="absolute top-4 left-4 z-50 text-xs tracking-widest uppercase px-3 py-1.5 rounded"
-              style={{
-                color: activeLayer.color,
-                border: `1px solid ${activeLayer.color}44`,
-              }}
-            >
-              ← {lang === "en" ? "Back" : "Geri"}
-            </button>
-
-            <p
-              className="text-lg font-bold tracking-widest uppercase"
-              style={{ color: config.branding.colors.accent }}
-            >
-              Prof Dux
-            </p>
-            <p
-              className="text-xs tracking-widest mt-2"
-              style={{ color: `${config.branding.colors.accent}66` }}
-            >
-              {lang === "en"
-                ? `Chat about: ${activeWork.title.en}`
-                : `Hakkında sohbet: ${activeWork.title.tr}`}
-            </p>
-            <p
-              className="text-xs mt-6"
-              style={{ color: `${config.branding.colors.accent}44` }}
-            >
-              {lang === "en" ? "Chat UI coming soon" : "Sohbet arayüzü yakında"}
-            </p>
+          <motion.div key="chat" className="flex-1 flex flex-col pt-14 pb-4 h-dvh" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+            <DuxChat
+              museumSlug={config.slug}
+              workId={activeWork.id}
+              lang={lang}
+              accentColor={activeLayer.color}
+              voidColor={config.branding.colors.void}
+              onClose={() => setStage("revealed")}
+            />
           </motion.div>
         )}
       </AnimatePresence>
@@ -515,43 +489,9 @@ export default function MuseumControlPage({
       {/* ─── VIDEO OVERLAY (stub — built in task f) ─── */}
       <AnimatePresence>
         {showVideo && (
-          <motion.div
-            className="fixed inset-0 z-100 flex items-center justify-center"
-            style={{ background: `${config.branding.colors.void}f5` }}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-          >
-            <div className="text-center">
-              <p
-                className="text-lg font-bold tracking-widest uppercase"
-                style={{ color: config.branding.colors.accent }}
-              >
-                {lang === "en"
-                  ? `Get to know ${config.name}`
-                  : `${config.name}'ı Tanıyın`}
-              </p>
-              <p
-                className="text-xs tracking-widest mt-2"
-                style={{ color: `${config.branding.colors.accent}44` }}
-              >
-                {lang === "en" ? "Video overlay coming soon" : "Video yakında"}
-              </p>
-              <button
-                onClick={() => setShowVideo(false)}
-                className="mt-6 px-5 py-2 text-xs tracking-widest uppercase rounded"
-                style={{
-                  color: config.branding.colors.accent,
-                  border: `1px solid ${config.branding.colors.accent}44`,
-                }}
-              >
-                {lang === "en" ? "Close" : "Kapat"}
-              </button>
-            </div>
-          </motion.div>
+          <VideoOverlay config={config} lang={lang} onClose={() => setShowVideo(false)} />
         )}
       </AnimatePresence>
-      <button onClick={() => speak("Welcome aboard HMAS Teal. I am Professor Dux, your guide.", lang)} className="fixed bottom-4 left-4 z-999 px-4 py-2 bg-white text-black text-xs rounded">Test Voice</button>
     </main>
   );
 }
