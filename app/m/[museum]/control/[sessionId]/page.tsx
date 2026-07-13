@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useMuseum } from "@/lib/museums/context";
 import { joinAsVisitor } from "@/lib/museums/presence";
 import { supabase } from "@/lib/supabase";
+import { useDuxVoice } from "@/lib/museums/useDuxVoice";
 import type { MemoryLayer, MuseumWork } from "@/lib/museums/types";
 
 type Stage =
@@ -31,6 +32,7 @@ export default function MuseumControlPage({
   const [activeWork, setActiveWork] = useState<MuseumWork | null>(null);
   const [revealedIds, setRevealedIds] = useState<Set<string>>(new Set());
   const [showVideo, setShowVideo] = useState(false);
+  const { speak } = useDuxVoice();
 
   const presenceRef = useRef<ReturnType<typeof joinAsVisitor> | null>(null);
 
@@ -549,6 +551,7 @@ export default function MuseumControlPage({
           </motion.div>
         )}
       </AnimatePresence>
+      <button onClick={() => speak("Welcome aboard HMAS Teal. I am Professor Dux, your guide.", lang)} className="fixed bottom-4 left-4 z-999 px-4 py-2 bg-white text-black text-xs rounded">Test Voice</button>
     </main>
   );
 }

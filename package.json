@@ -12,6 +12,7 @@
     "@google/generative-ai": "^0.24.1",
     "@supabase/supabase-js": "^2.110.0",
     "framer-motion": "^12.42.2",
+    "msedge-tts": "^2.0.7",
     "next": "16.2.9",
     "openai": "^6.45.0",
     "qrcode.react": "^4.2.0",
@@ -28,5 +29,10 @@
     "tailwindcss": "^4",
     "typescript": "^5"
   },
-  "browserslist": ["chrome 111", "edge 111", "firefox 111", "safari 14"]
+  "browserslist": [
+    "chrome 111",
+    "edge 111",
+    "firefox 111",
+    "safari 14"
+  ]
 }
