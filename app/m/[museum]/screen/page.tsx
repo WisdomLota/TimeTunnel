@@ -29,40 +29,56 @@ export default function MuseumScreenPage() {
     <div
       className="relative flex h-dvh w-full items-center justify-center overflow-hidden"
       style={{
-        background: `radial-gradient(ellipse at center, ${config.branding.colors.void}ee 0%, ${config.branding.colors.void} 70%)`,
         fontFamily: config.branding.font || "Chakra Petch",
       }}
     >
+      {/* Background image + tint */}
+      <div
+        className="absolute inset-0"
+        style={{
+          backgroundImage: "url(/museums/teal/teal-background.jpg)",
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+        }}
+      />
+      <div
+        className="absolute inset-0"
+        style={{
+          background: `radial-gradient(ellipse at center, ${config.branding.colors.void}dd 50%, ${config.branding.colors.void}f5 100%)`,
+        }}
+      />
+
       {/* Museum name */}
-      <div className="absolute top-8 left-1/2 -translate-x-1/2 flex items-center gap-4">
-        {config.branding.logo && (
-          <img
-            src={config.branding.logo}
-            alt={config.name}
-            className="h-14 w-auto object-contain"
-          />
-        )}
-        <div>
-          <h1
-            className="text-2xl font-bold tracking-widest uppercase"
-            style={{ color: config.branding.colors.accent }}
-          >
-            {config.name}
-          </h1>
-          <p className="text-xs tracking-[0.3em] uppercase opacity-40 text-white">
-            Scan to be drawn into our time tunnel
-          </p>
-          <p className="text-[10px] tracking-[0.3em] uppercase opacity-25 text-white mt-0.5">
-            Zaman tünelimize çekilmek için tarayın
-          </p>
-        </div>
+      {/* Logo — bottom left */}
+      {config.branding.logo && (
+        <img
+          src={config.branding.logo}
+          alt={config.name}
+          className="absolute bottom-6 left-8 h-16 w-auto object-contain z-10"
+        />
+      )}
+
+      {/* Info — bottom right */}
+      <div className="absolute bottom-6 right-8 text-right z-10">
+        <h1
+          className="text-2xl font-bold tracking-widest uppercase"
+          style={{ color: config.branding.colors.accent }}
+        >
+          {config.name}
+        </h1>
+        <p className="text-xs tracking-[0.3em] uppercase opacity-50 text-white mt-1">
+          Scan to be drawn into our time tunnel
+        </p>
+        <p className="text-[10px] tracking-[0.3em] uppercase opacity-30 text-white mt-0.5">
+          Zaman tünelimize çekilmek için tarayın
+        </p>
       </div>
 
       {/* Layer rings — each ring = one memory layer */}
       <div className="relative flex items-center justify-center">
         {config.layers.map((layer, i) => {
           const isActive = activeLayers.has(layer.id);
-          const size = 300 + i * 90;
+          const size = 420 + i * 120;
           const radius = size / 2;
 
           return (
@@ -92,8 +108,8 @@ export default function MuseumScreenPage() {
                   r={radius - 3}
                   fill="none"
                   stroke={layer.color}
-                  strokeWidth={isActive ? 5 : 2.5}
-                  opacity={isActive ? 1 : 0.2}
+                  strokeWidth={isActive ? 8 : 4}
+                  opacity={isActive ? 1 : 0.35}
                   filter={isActive ? `drop-shadow(0 0 12px ${layer.color})` : "none"}
                 />
 
@@ -107,8 +123,8 @@ export default function MuseumScreenPage() {
                 </defs>
                 <text
                   fill={layer.color}
-                  opacity={isActive ? 1 : 0.5}
-                  fontSize={16}
+                  opacity={isActive ? 1 : 0.65}
+                  fontSize={22}
                   fontFamily={config.branding.font || "Chakra Petch"}
                   fontWeight={600}
                   letterSpacing="0.2em"
@@ -140,7 +156,7 @@ export default function MuseumScreenPage() {
         >
           <QRCodeSVG
             value={controlUrl}
-            size={180}
+            size={220}
             bgColor="transparent"
             fgColor={config.branding.colors.accent}
             level="M"
@@ -148,13 +164,6 @@ export default function MuseumScreenPage() {
         </motion.div>
         )}
       </div>
-
-      {/* Powered by line */}
-      <p
-        className="absolute bottom-12 left-1/2 -translate-x-1/2 text-xs tracking-[0.25em] uppercase opacity-20 text-white"
-      >
-        Time Tunnel Experience · Zaman Tüneli Deneyimi
-      </p>
     </div>
   );
 }

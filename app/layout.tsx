@@ -14,9 +14,9 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "NEU Time Tunnel",
+  title: "Time Tunnel",
   description:
-    "A cinematic journey through Near East University's Classic & Sports Car Museum and Günsel Art Museum.",
+    "A cinematic journey through Time's museum, exploring the evolution of art and culture across centuries.",
 };
 
 export const viewport = {
