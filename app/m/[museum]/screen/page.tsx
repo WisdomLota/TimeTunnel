@@ -42,7 +42,7 @@ export default function MuseumScreenPage() {
         }}
       />
       <div
-        className="absolute inset-0"
+        className="absolute"
         style={{
           background: `radial-gradient(ellipse at center, ${config.branding.colors.void}dd 50%, ${config.branding.colors.void}f5 100%)`,
         }}
