@@ -44,7 +44,7 @@ export default function MuseumScreenPage() {
       <div
         className="absolute"
         style={{
-          background: `radial-gradient(ellipse at center, ${config.branding.colors.void}dd 50%, ${config.branding.colors.void}f5 100%)`,
+          background: `radial-gradient(ellipse at center, ${config.branding.colors.void}aa 0%, ${config.branding.colors.void}cc 100%)`,
         }}
       />
 
@@ -61,15 +61,15 @@ export default function MuseumScreenPage() {
       {/* Info — bottom right */}
       <div className="absolute bottom-6 right-8 text-right z-10">
         <h1
-          className="text-2xl font-bold tracking-widest uppercase"
+          className="text-2xl font-bold tracking-widest uppercase drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]"
           style={{ color: config.branding.colors.accent }}
         >
           {config.name}
         </h1>
-        <p className="text-xs tracking-[0.3em] uppercase opacity-50 text-white mt-1">
+        <p className="text-xs tracking-[0.3em] uppercase opacity-70 text-white mt-1 drop-shadow-[0_1px_3px_rgba(0,0,0,0.8)]">
           Scan to be drawn into our time tunnel
         </p>
-        <p className="text-[10px] tracking-[0.3em] uppercase opacity-30 text-white mt-0.5">
+        <p className="text-[10px] tracking-[0.3em] uppercase opacity-50 text-white mt-0.5 drop-shadow-[0_1px_3px_rgba(0,0,0,0.8)]">
           Zaman tünelimize çekilmek için tarayın
         </p>
       </div>
@@ -78,7 +78,7 @@ export default function MuseumScreenPage() {
       <div className="relative flex items-center justify-center">
         {config.layers.map((layer, i) => {
           const isActive = activeLayers.has(layer.id);
-          const size = 420 + i * 120;
+          const size = 480 + i * 130;
           const radius = size / 2;
 
           return (
@@ -108,7 +108,7 @@ export default function MuseumScreenPage() {
                   r={radius - 3}
                   fill="none"
                   stroke={layer.color}
-                  strokeWidth={isActive ? 8 : 4}
+                  strokeWidth={isActive ? 12 : 6}
                   opacity={isActive ? 1 : 0.35}
                   filter={isActive ? `drop-shadow(0 0 12px ${layer.color})` : "none"}
                 />
@@ -124,7 +124,8 @@ export default function MuseumScreenPage() {
                 <text
                   fill={layer.color}
                   opacity={isActive ? 1 : 0.65}
-                  fontSize={22}
+                  style={{ filter: "drop-shadow(0 0 6px rgba(0,0,0,0.8))" }}
+                  fontSize={28}
                   fontFamily={config.branding.font || "Chakra Petch"}
                   fontWeight={600}
                   letterSpacing="0.2em"
@@ -156,7 +157,7 @@ export default function MuseumScreenPage() {
         >
           <QRCodeSVG
             value={controlUrl}
-            size={220}
+            size={170}
             bgColor="transparent"
             fgColor={config.branding.colors.accent}
             level="M"

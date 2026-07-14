@@ -10,14 +10,7 @@ import type { MemoryLayer, MuseumWork } from "@/lib/museums/types";
 import DuxChat from "@/components/museum/DuxChat";
 import VideoOverlay from "@/components/museum/VideoOverlay";
 
-type Stage =
-  | "connecting"
-  | "layers"
-  | "tunnel"
-  | "works"
-  | "scratching"
-  | "revealed"
-  | "chat";
+type Stage = "connecting" | "layers" | "tunnel" | "works" | "revealed" | "chat";
 
 export default function MuseumControlPage({
   params,
@@ -32,7 +25,6 @@ export default function MuseumControlPage({
   const [layersSettled, setLayersSettled] = useState(false);
   const [activeLayer, setActiveLayer] = useState<MemoryLayer | null>(null);
   const [activeWork, setActiveWork] = useState<MuseumWork | null>(null);
-  const [revealedIds, setRevealedIds] = useState<Set<string>>(new Set());
   const [showVideo, setShowVideo] = useState(false);
   const { speak } = useDuxVoice();
 
@@ -46,9 +38,18 @@ export default function MuseumControlPage({
     // Small delay for cinematic entry
     const t = setTimeout(() => setStage("layers"), 600);
 
+    const cleanup = () => {
+      presence.updateLayer(null);
+      presence.channel.unsubscribe();
+    };
+    window.addEventListener("beforeunload", cleanup);
+    window.addEventListener("pagehide", cleanup);
+
     return () => {
       clearTimeout(t);
-      presence.channel.unsubscribe();
+      window.removeEventListener("beforeunload", cleanup);
+      window.removeEventListener("pagehide", cleanup);
+      cleanup();
     };
   }, [config.slug, sessionId]);
 
@@ -78,16 +79,10 @@ export default function MuseumControlPage({
     setStage("layers");
   }, []);
 
-  const startScratch = useCallback((work: MuseumWork) => {
+  const selectWork = useCallback((work: MuseumWork) => {
     setActiveWork(work);
-    setStage("scratching");
-  }, []);
-
-  const onRevealed = useCallback(() => {
-    if (!activeWork) return;
-    setRevealedIds((prev) => new Set(prev).add(activeWork.id));
     setStage("revealed");
-  }, [activeWork]);
+  }, []);
 
   const layerWorks = activeLayer
     ? config.works.filter((w) => w.layerId === activeLayer.id)
@@ -150,7 +145,7 @@ export default function MuseumControlPage({
             exit={{ opacity: 0 }}
           >
             <motion.h1
-              className="text-xl font-bold tracking-widest uppercase text-center mb-1"
+              className="text-2xl font-bold tracking-widest uppercase text-center mb-1"
               style={{ color: config.branding.colors.accent }}
               initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -159,13 +154,13 @@ export default function MuseumControlPage({
               {config.name}
             </motion.h1>
             <motion.p
-              className="text-xs tracking-[0.25em] uppercase mb-8"
+              className="text-sm tracking-[0.25em] mb-8"
               style={{ color: `${config.branding.colors.accent}77` }}
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.4 }}
             >
-              {lang === "en" ? "Choose a memory layer" : "Bir hafıza katmanı seçin"}
+              {lang === "en" ? "CHOOSE A MEMORY LAYER" : "BİR HAFIZA KATMANI SEÇİN"}
             </motion.p>
 
             {/* Stacking layer cards */}
@@ -201,13 +196,13 @@ export default function MuseumControlPage({
                   />
 
                   <p
-                    className="text-sm font-bold tracking-wider uppercase"
+                    className="text-base font-bold tracking-wider uppercase"
                     style={{ color: layer.color }}
                   >
                     {t(layer.label)}
                   </p>
                   <p
-                    className="text-xs mt-0.5 tracking-widest"
+                    className="text-sm mt-0.5 tracking-widest"
                     style={{ color: `${layer.color}88` }}
                   >
                     {layer.yearRange[0]} — {layer.yearRange[1]}
@@ -216,7 +211,7 @@ export default function MuseumControlPage({
               ))}
             </div>
 
-            {/* Get to know Teal button */}
+            {/* Get to know HMS Jackton – Teal button */}
             {layersSettled && config.video && (
               <motion.button
                 onClick={() => setShowVideo(true)}
@@ -234,6 +229,24 @@ export default function MuseumControlPage({
                 {lang === "en"
                   ? `Get to know ${config.name}`
                   : `${config.name}'ı Tanıyın`}
+              </motion.button>
+            )}
+
+            {layersSettled && (
+              <motion.button
+                onClick={() => { setActiveWork(null); setStage("chat"); }}
+                className="mt-3 px-6 py-3 rounded-lg text-sm font-semibold tracking-wider uppercase"
+                style={{
+                  border: `1.5px solid ${config.branding.colors.accent}55`,
+                  color: config.branding.colors.accent,
+                  background: `${config.branding.colors.accent}10`,
+                }}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: config.layers.length * 0.2 + 0.5 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                {lang === "en" ? "Ask Prof Dux" : "Prof Dux'a Sor"}
               </motion.button>
             )}
           </motion.div>
@@ -274,111 +287,39 @@ export default function MuseumControlPage({
             </p>
 
             <div className="grid grid-cols-2 gap-4 w-full max-w-sm">
-              {layerWorks.map((work, i) => {
-                const isRevealed = revealedIds.has(work.id);
-                return (
-                  <motion.button
-                    key={work.id}
-                    onClick={() => !isRevealed && startScratch(work)}
-                    className="relative aspect-3/4 rounded-lg overflow-hidden"
+              {layerWorks.map((work, i) => (
+                <motion.button
+                  key={work.id}
+                  onClick={() => selectWork(work)}
+                  className="relative aspect-3/4 rounded-lg overflow-hidden"
+                  style={{
+                    border: `1.5px solid ${activeLayer.color}44`,
+                  }}
+                  initial={{ opacity: 0, y: 30 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: i * 0.15, duration: 0.4 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  <div
+                    className="absolute inset-0"
+                    style={{ background: `url(${work.image}) center/cover` }}
+                  />
+                  <div
+                    className="absolute bottom-0 left-0 right-0 p-2"
                     style={{
-                      border: `1.5px solid ${isRevealed ? activeLayer.color : activeLayer.color + "44"}`,
+                      background: `linear-gradient(transparent, ${config.branding.colors.void}ee)`,
                     }}
-                    initial={{ opacity: 0, y: 30 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: i * 0.15, duration: 0.4 }}
-                    whileTap={!isRevealed ? { scale: 0.95 } : {}}
                   >
-                    {isRevealed ? (
-                      /* Revealed — show thumbnail */
-                      <>
-                        <div
-                          className="absolute inset-0"
-                          style={{
-                            background: `url(${work.image}) center/cover`,
-                          }}
-                        />
-                        <div
-                          className="absolute bottom-0 left-0 right-0 p-2"
-                          style={{
-                            background: `linear-gradient(transparent, ${config.branding.colors.void}ee)`,
-                          }}
-                        >
-                          <p
-                            className="text-[10px] font-bold tracking-wider uppercase"
-                            style={{ color: activeLayer.color }}
-                          >
-                            {t(work.title)}
-                          </p>
-                        </div>
-                      </>
-                    ) : (
-                      /* Sealed */
-                      <div
-                        className="absolute inset-0 flex flex-col items-center justify-center"
-                        style={{
-                          background: `linear-gradient(160deg, ${activeLayer.color}18, ${config.branding.colors.void})`,
-                        }}
-                      >
-                        <span
-                          className="text-3xl font-bold"
-                          style={{ color: activeLayer.color }}
-                        >
-                          {String(i + 1).padStart(2, "0")}
-                        </span>
-                        <span
-                          className="text-[8px] tracking-[0.3em] uppercase mt-1"
-                          style={{ color: `${activeLayer.color}55` }}
-                        >
-                          {lang === "en" ? "Sealed" : "Mühürlü"}
-                        </span>
-                      </div>
-                    )}
-                  </motion.button>
-                );
-              })}
+                    <p
+                      className="text-xs font-bold tracking-wider uppercase"
+                      style={{ color: activeLayer.color }}
+                    >
+                      {t(work.title)}
+                    </p>
+                  </div>
+                </motion.button>
+              ))}
             </div>
-          </motion.div>
-        )}
-
-        {/* ─── SCRATCHING ─── */}
-        {stage === "scratching" && activeWork && activeLayer && (
-          <motion.div
-            key="scratching"
-            className="flex-1 flex flex-col items-center px-6 pt-14 pb-8"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-          >
-            <button
-              onClick={() => setStage("works")}
-              className="absolute top-4 left-4 z-50 text-xs tracking-widest uppercase px-3 py-1.5 rounded"
-              style={{
-                color: activeLayer.color,
-                border: `1px solid ${activeLayer.color}44`,
-              }}
-            >
-              ← {lang === "en" ? "Back" : "Geri"}
-            </button>
-
-            <h2
-              className="text-base font-bold tracking-widest uppercase mb-1"
-              style={{ color: activeLayer.color }}
-            >
-              {lang === "en" ? "Scratch to reveal" : "Ortaya çıkarmak için kazıyın"}
-            </h2>
-            <p
-              className="text-xs tracking-widest mb-4"
-              style={{ color: `${activeLayer.color}66` }}
-            >
-              {t(activeLayer.label)} · {activeWork.year || ""}
-            </p>
-
-            <MuseumScratchCard
-              work={activeWork}
-              layerColor={activeLayer.color}
-              voidColor={config.branding.colors.void}
-              onRevealed={onRevealed}
-            />
           </motion.div>
         )}
 
@@ -439,7 +380,7 @@ export default function MuseumControlPage({
                 </p>
               )}
               <h3
-                className="text-xl font-bold tracking-wider uppercase"
+                className="text-2xl font-bold tracking-wider uppercase"
                 style={{ color: config.branding.colors.accent }}
               >
                 {t(activeWork.title)}
@@ -493,144 +434,5 @@ export default function MuseumControlPage({
         )}
       </AnimatePresence>
     </main>
-  );
-}
-
-/* ──────────────────────────────────────────────
-   Museum Scratch Card — local reveal, no broadcast
-   ────────────────────────────────────────────── */
-
-function MuseumScratchCard({
-  work,
-  layerColor,
-  voidColor,
-  onRevealed,
-}: {
-  work: MuseumWork;
-  layerColor: string;
-  voidColor: string;
-  onRevealed: () => void;
-}) {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  const drawing = useRef(false);
-  const cleared = useRef(false);
-  const lastCheck = useRef(0);
-  const lastPt = useRef<{ x: number; y: number } | null>(null);
-
-  useEffect(() => {
-    cleared.current = false;
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext("2d", { willReadFrequently: true });
-    if (!ctx) return;
-    const dpr = window.devicePixelRatio || 1;
-    const { width, height } = canvas.getBoundingClientRect();
-    canvas.width = width * dpr;
-    canvas.height = height * dpr;
-    ctx.scale(dpr, dpr);
-
-    const g = ctx.createLinearGradient(0, 0, width, height);
-    g.addColorStop(0, "#3a3226");
-    g.addColorStop(0.5, "#5c4a2e");
-    g.addColorStop(1, "#2e2a20");
-    ctx.fillStyle = g;
-    ctx.fillRect(0, 0, width, height);
-
-    // Patina speckle
-    for (let i = 0; i < 900; i++) {
-      ctx.fillStyle = `rgba(${180 + Math.random() * 40},${140 + Math.random() * 40},${80 + Math.random() * 30},${Math.random() * 0.08})`;
-      ctx.fillRect(Math.random() * width, Math.random() * height, 2, 2);
-    }
-
-    ctx.fillStyle = "rgba(240,217,168,0.45)";
-    ctx.font = "600 13px sans-serif";
-    ctx.textAlign = "center";
-    ctx.fillText("SCRATCH TO RESTORE", width / 2, height / 2);
-  }, [work.id]);
-
-  const scratch = (cx: number, cy: number) => {
-    const canvas = canvasRef.current;
-    if (!canvas || cleared.current) return;
-    const ctx = canvas.getContext("2d", { willReadFrequently: true });
-    if (!ctx) return;
-    const r = canvas.getBoundingClientRect();
-    const lx = cx - r.left;
-    const ly = cy - r.top;
-
-    ctx.globalCompositeOperation = "destination-out";
-    ctx.lineCap = "round";
-    ctx.lineJoin = "round";
-    ctx.lineWidth = 28;
-    const p = lastPt.current;
-    if (p) {
-      ctx.beginPath();
-      ctx.moveTo(p.x, p.y);
-      ctx.lineTo(lx, ly);
-      ctx.stroke();
-    } else {
-      ctx.beginPath();
-      ctx.arc(lx, ly, 14, 0, Math.PI * 2);
-      ctx.fill();
-    }
-    lastPt.current = { x: lx, y: ly };
-
-    const now = performance.now();
-    if (now - lastCheck.current > 200) {
-      lastCheck.current = now;
-      checkProgress(ctx, canvas);
-    }
-  };
-
-  const checkProgress = (
-    ctx: CanvasRenderingContext2D,
-    canvas: HTMLCanvasElement,
-  ) => {
-    const { width, height } = canvas;
-    const data = ctx.getImageData(0, 0, width, height).data;
-    let clear = 0;
-    let total = 0;
-    for (let i = 3; i < data.length; i += 4 * 20) {
-      total++;
-      if (data[i] === 0) clear++;
-    }
-    if (clear / total > 0.55 && !cleared.current) {
-      cleared.current = true;
-      canvas.style.transition = "opacity 0.8s ease";
-      canvas.style.opacity = "0";
-      setTimeout(onRevealed, 900);
-    }
-  };
-
-  return (
-    <div
-      className="relative w-full max-w-sm aspect-3/4 rounded-lg overflow-hidden touch-none"
-      style={{
-        border: `1.5px solid ${layerColor}`,
-        boxShadow: `inset 0 0 0 1px ${layerColor}33, 0 20px 60px rgba(0,0,0,0.5)`,
-      }}
-    >
-      {/* Pristine image beneath */}
-      <div
-        className="absolute inset-0"
-        style={{ background: `url(${work.image}) center/cover` }}
-      />
-
-      {/* Scratch layer */}
-      <canvas
-        ref={canvasRef}
-        className="absolute inset-0 w-full h-full touch-none cursor-crosshair"
-        onPointerDown={(e) => {
-          drawing.current = true;
-          lastPt.current = null;
-          e.currentTarget.setPointerCapture(e.pointerId);
-          scratch(e.clientX, e.clientY);
-        }}
-        onPointerMove={(e) => drawing.current && scratch(e.clientX, e.clientY)}
-        onPointerUp={() => {
-          drawing.current = false;
-          lastPt.current = null;
-        }}
-      />
-    </div>
   );
 }
