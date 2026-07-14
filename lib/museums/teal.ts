@@ -4,7 +4,7 @@ import type { MuseumConfig } from "./types";
 
 export const tealConfig: MuseumConfig = {
   slug: "teal",
-  name: "HMS Jackton – HMAS HMS Jackton – Teal",
+  name: "HMS Jackton – HMAS Teal",
   branding: {
     logo: "/museums/teal/logo.svg",
     colors: {
@@ -213,12 +213,12 @@ export const tealConfig: MuseumConfig = {
       id: "HMS Jackton – Teal-kyrenia-museum",
       layerId: "rebirth",
       title: {
-        en: "HMS Jackton – HMAS HMS Jackton – Teal at Kyrenia",
-        tr: "HMS Jackton – HMAS HMS Jackton – Teal Girne'de",
+        en: "HMS Jackton – HMAS Teal – Teal at Kyrenia",
+        tr: "HMS Jackton – HMAS Teal – Teal Girne'de",
       },
       description: {
-        en: "After serving in Cyprus, Tanzania, and the Caribbean, HMS Jackton – HMAS HMS Jackton – Teal was purchased by the TRNC Ministry of Public Works & Transport in 1994. She trained civilian mariners at Near East University and the University of Kyrenia before being converted into a floating museum in 2021.",
-        tr: "Kıbrıs, Tanzanya ve Karayipler'de hizmet verdikten sonra HMS Jackton – HMAS HMS Jackton – Teal, 1994'te KKTC Bayındırlık ve Ulaştırma Bakanlığı tarafından satın alınmıştır. Yakın Doğu Üniversitesi ve Girne Üniversitesi'nde sivil denizcilerin eğitiminde kullanılmış ve 2021'de yüzen müzeye dönüştürülmüştür.",
+        en: "After serving in Cyprus, Tanzania, and the Caribbean, HMS Jackton – HMAS Teal – Teal was purchased by the TRNC Ministry of Public Works & Transport in 1994. She trained civilian mariners at Near East University and the University of Kyrenia before being converted into a floating museum in 2021.",
+        tr: "Kıbrıs, Tanzanya ve Karayipler'de hizmet verdikten sonra HMS Jackton – HMAS Teal – Teal, 1994'te KKTC Bayındırlık ve Ulaştırma Bakanlığı tarafından satın alınmıştır. Yakın Doğu Üniversitesi ve Girne Üniversitesi'nde sivil denizcilerin eğitiminde kullanılmış ve 2021'de yüzen müzeye dönüştürülmüştür.",
       },
       image: "/museums/teal/teal-background.jpg",
       year: 1994,

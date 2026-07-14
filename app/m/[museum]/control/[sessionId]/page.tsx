@@ -413,15 +413,15 @@ export default function MuseumControlPage({
         )}
 
         {/* ─── CHAT (stub — built in task e/f) ─── */}
-        {stage === "chat" && activeWork && activeLayer && (
+        {stage === "chat" && (
           <motion.div key="chat" className="flex-1 flex flex-col pt-14 pb-4 h-dvh" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
             <DuxChat
               museumSlug={config.slug}
-              workId={activeWork.id}
+              workId={activeWork?.id}
               lang={lang}
-              accentColor={activeLayer.color}
+              accentColor={activeLayer?.color || config.branding.colors.accent}
               voidColor={config.branding.colors.void}
-              onClose={() => setStage("revealed")}
+              onClose={() => setStage(activeWork ? "revealed" : "layers")}
             />
           </motion.div>
         )}
