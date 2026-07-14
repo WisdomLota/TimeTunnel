@@ -22,11 +22,7 @@ export function joinAsVisitor(slug: string, sessionId: string) {
   });
 
   const updateLayer = (layerId: string | null) => {
-    if (layerId) {
-      channel.track({ sessionId, activeLayerId: layerId } as VisitorPresence);
-    } else {
-      channel.untrack();
-    }
+    channel.track({ sessionId, activeLayerId: layerId } as VisitorPresence);
   };
 
   channel.subscribe(async (status) => {

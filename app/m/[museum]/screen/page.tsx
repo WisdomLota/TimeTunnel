@@ -157,7 +157,7 @@ export default function MuseumScreenPage() {
         >
           <QRCodeSVG
             value={controlUrl}
-            size={170}
+            size={220}
             bgColor="transparent"
             fgColor={config.branding.colors.accent}
             level="M"
