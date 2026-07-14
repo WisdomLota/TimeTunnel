@@ -45,6 +45,10 @@ export function useDuxVoice() {
 
         const audio = getAudio();
         audio.src = url;
+        await new Promise<void>((r) => {
+          audio.oncanplaythrough = () => r();
+          audio.load();
+        });
         await audio.play();
 
         return new Promise<void>((resolve) => {

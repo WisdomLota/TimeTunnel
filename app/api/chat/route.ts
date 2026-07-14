@@ -51,7 +51,7 @@ export async function POST(req: Request) {
       messages: chatMessages,
       stream: true,
       temperature: 0.7,
-      max_tokens: 220,
+      max_tokens: 100,
     });
 
     const encoder = new TextEncoder();

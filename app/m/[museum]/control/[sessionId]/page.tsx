@@ -55,7 +55,7 @@ export default function MuseumControlPage({
   // Layers settle after stacking animation
   useEffect(() => {
     if (stage === "layers") {
-      const t = setTimeout(() => setLayersSettled(true), config.layers.length * 300 + 400);
+      const t = setTimeout(() => setLayersSettled(true), config.layers.length * 200 + 300);
       return () => clearTimeout(t);
     }
   }, [stage, config.layers.length]);
@@ -188,7 +188,7 @@ export default function MuseumControlPage({
                         : { opacity: 1, x: 0, scale: 1 }
                   }
                   transition={{
-                    delay: stage === "layers" ? i * 0.3 : 0,
+                    delay: stage === "layers" ? i * 0.2 : 0,
                     duration: 0.6,
                     ease: [0.16, 1, 0.3, 1],
                   }}
@@ -228,7 +228,7 @@ export default function MuseumControlPage({
                 }}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: config.layers.length * 0.3 + 0.6 }}
+                transition={{ delay: config.layers.length * 0.2 + 0.3 }}
                 whileTap={{ scale: 0.95 }}
               >
                 {lang === "en"

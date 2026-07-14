@@ -3,7 +3,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 import { useState, useRef, useEffect, useCallback } from "react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { useDuxVoice } from "@/lib/museums/useDuxVoice";
 
 interface DuxChatProps {
@@ -33,10 +33,16 @@ export default function DuxChat({
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [streaming, setStreaming] = useState(false);
-  const [recording, setRecording] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
-  const recognitionRef = useRef<any>(null);
   const { speak, stop, unlock } = useDuxVoice();
+
+  // ── Voice recording state ──
+  const [recording, setRecording] = useState(false);
+  const [recordTime, setRecordTime] = useState(0);
+  const [cancelled, setCancelled] = useState(false);
+  const recognitionRef = useRef<any>(null);
+  const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const transcriptRef = useRef("");
 
   // Setup speech recognition
   useEffect(() => {
@@ -45,31 +51,78 @@ export default function DuxChat({
       (window as any).webkitSpeechRecognition;
     if (!SR) return;
     const recognition = new SR();
-    recognition.interimResults = false;
-    recognition.maxAlternatives = 1;
+    recognition.interimResults = true;
     recognition.continuous = true;
+    recognition.maxAlternatives = 1;
     recognition.onresult = (e: any) => {
-      const transcript = e.results?.[0]?.[0]?.transcript;
-      if (transcript) setInput(transcript);
-      setRecording(false);
+      let transcript = "";
+      for (let i = 0; i < e.results.length; i++) {
+        transcript += e.results[i][0].transcript;
+      }
+      transcriptRef.current = transcript;
     };
-    recognition.onerror = () => setRecording(false);
-    recognition.onend = () => setRecording(false);
+    recognition.onerror = () => stopRecording(true);
     recognitionRef.current = recognition;
   }, []);
 
-  const toggleMic = useCallback(() => {
-    const rec = recognitionRef.current;
-    if (!rec) return;
-    if (recording) {
-      rec.stop();
-      setRecording(false);
-    } else {
-      rec.lang = lang === "tr" ? "tr-TR" : "en-US";
-      rec.start();
+  const startRecording = useCallback(
+    (_clientX?: number) => {
+      const rec = recognitionRef.current;
+      if (!rec || streaming) return;
+      unlock();
+      transcriptRef.current = "";
+      setCancelled(false);
       setRecording(true);
-    }
-  }, [recording, lang]);
+      setRecordTime(0);
+
+      rec.lang = lang === "tr" ? "tr-TR" : "en-US";
+      try {
+        rec.start();
+      } catch {
+        /* already started */
+      }
+
+      timerRef.current = setInterval(
+        () => setRecordTime((t) => t + 0.1),
+        100,
+      );
+    },
+    [streaming, lang, unlock],
+  );
+
+  const stopRecording = useCallback(
+    (cancel = false) => {
+      const rec = recognitionRef.current;
+      if (timerRef.current) {
+        clearInterval(timerRef.current);
+        timerRef.current = null;
+      }
+      setRecording(false);
+      setRecordTime(0);
+
+      try {
+        rec?.stop();
+      } catch {
+        /* not started */
+      }
+
+      if (!cancel && !cancelled) {
+        // Small delay to let final result arrive
+        setTimeout(() => {
+          const text = transcriptRef.current.trim();
+          if (text) {
+            setInput(text);
+            // Auto-send
+            setTimeout(() => {
+              sendMessage(text);
+            }, 100);
+          }
+        }, 300);
+      }
+      setCancelled(false);
+    },
+    [cancelled],
+  );
 
   // Auto-scroll
   useEffect(() => {
@@ -79,66 +132,74 @@ export default function DuxChat({
     });
   }, [messages]);
 
-  // Cleanup voice on unmount
   useEffect(() => () => stop(), [stop]);
 
-  const send = useCallback(async () => {
-    unlock();
-    const text = input.trim();
-    if (!text || streaming) return;
+  const sendMessage = useCallback(
+    async (overrideText?: string) => {
+      const text = (overrideText || input).trim();
+      if (!text || streaming) return;
+      unlock();
 
-    const userMsg: Message = { role: "user", content: text };
-    const updated = [...messages, userMsg];
-    setMessages(updated);
-    setInput("");
-    setStreaming(true);
+      const userMsg: Message = { role: "user", content: text };
+      const updated = [...messages, userMsg];
+      setMessages(updated);
+      setInput("");
+      setStreaming(true);
 
-    try {
-      const res = await fetch("/api/museum-chat", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ museumSlug, workId, messages: updated, lang }),
-      });
-
-      if (!res.ok || !res.body) throw new Error("Chat failed");
-
-      const reader = res.body.getReader();
-      const decoder = new TextDecoder();
-      let assistantText = "";
-
-      setMessages((prev) => [...prev, { role: "assistant", content: "" }]);
-
-      while (true) {
-        const { done, value } = await reader.read();
-        if (done) break;
-        assistantText += decoder.decode(value, { stream: true });
-        const captured = assistantText;
-        setMessages((prev) => {
-          const copy = [...prev];
-          copy[copy.length - 1] = { role: "assistant", content: captured };
-          return copy;
+      try {
+        const res = await fetch("/api/museum-chat", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ museumSlug, workId, messages: updated, lang }),
         });
-      }
 
-      if (voiceEnabled && assistantText) {
-        speak(assistantText, lang);
+        if (!res.ok || !res.body) throw new Error("Chat failed");
+
+        const reader = res.body.getReader();
+        const decoder = new TextDecoder();
+        let assistantText = "";
+
+        setMessages((prev) => [...prev, { role: "assistant", content: "" }]);
+
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) break;
+          assistantText += decoder.decode(value, { stream: true });
+          const captured = assistantText;
+          setMessages((prev) => {
+            const copy = [...prev];
+            copy[copy.length - 1] = { role: "assistant", content: captured };
+            return copy;
+          });
+        }
+
+        if (voiceEnabled && assistantText) {
+          speak(assistantText, lang);
+        }
+      } catch (err) {
+        console.error("Chat error:", err);
+        setMessages((prev) => [
+          ...prev,
+          {
+            role: "assistant",
+            content:
+              lang === "en"
+                ? "Sorry, I lost my train of thought. Try again?"
+                : "Üzgünüm, düşüncemi kaybettim. Tekrar dener misiniz?",
+          },
+        ]);
+      } finally {
+        setStreaming(false);
       }
-    } catch (err) {
-      console.error("Chat error:", err);
-      setMessages((prev) => [
-        ...prev,
-        {
-          role: "assistant",
-          content:
-            lang === "en"
-              ? "Sorry, I lost my train of thought. Try again?"
-              : "Üzgünüm, düşüncemi kaybettim. Tekrar dener misiniz?",
-        },
-      ]);
-    } finally {
-      setStreaming(false);
-    }
-  }, [input, streaming, messages, museumSlug, workId, lang, voiceEnabled, speak]);
+    },
+    [input, streaming, messages, museumSlug, workId, lang, voiceEnabled, speak, unlock],
+  );
+
+  const formatTime = (s: number) => {
+    const mins = Math.floor(s / 60);
+    const secs = Math.floor(s % 60);
+    return `${mins}:${secs.toString().padStart(2, "0")}`;
+  };
 
   return (
     <motion.div
@@ -243,55 +304,139 @@ export default function DuxChat({
         ))}
       </div>
 
-      {/* Input */}
-      <div className="px-4 py-3 flex gap-2">
-        <input
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-          onKeyDown={(e) => e.key === "Enter" && send()}
-          placeholder={lang === "en" ? "Ask Dux…" : "Dux'a sorun…"}
-          className="flex-1 px-3 py-2 rounded-lg text-sm outline-none"
-          style={{
-            background: `${accentColor}0a`,
-            border: `1px solid ${accentColor}22`,
-            color: accentColor,
-          }}
-          disabled={streaming || recording}
-        />
-        {/* Mic */}
-        <button
-          onClick={toggleMic}
-          disabled={streaming}
-          className="px-3 py-2 rounded-lg transition-all"
-          style={{
-            background: recording ? `${accentColor}30` : `${accentColor}10`,
-            border: `1px solid ${recording ? accentColor : `${accentColor}33`}`,
-            color: accentColor,
-            opacity: streaming ? 0.4 : 1,
-          }}
-          aria-label={recording ? "Stop recording" : "Voice input"}
-        >
-          <svg viewBox="0 0 24 24" className="w-4 h-4" fill="currentColor">
-            {recording ? (
-              <rect x="6" y="6" width="12" height="12" rx="2" />
-            ) : (
-              <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3zm-1 18.93A7 7 0 0 1 5 13h2a5 5 0 0 0 10 0h2a7 7 0 0 1-6 6.93V22h4v2H8v-2h4v-2.07z" />
-            )}
-          </svg>
-        </button>
-        <button
-          onClick={send}
-          disabled={streaming || !input.trim()}
-          className="px-4 py-2 rounded-lg text-sm font-semibold tracking-wider uppercase transition-opacity"
-          style={{
-            background: `${accentColor}20`,
-            color: accentColor,
-            border: `1px solid ${accentColor}33`,
-            opacity: streaming || !input.trim() ? 0.4 : 1,
-          }}
-        >
-          {lang === "en" ? "Send" : "Gönder"}
-        </button>
+      {/* Input area */}
+      <div className="px-4 py-3">
+        <AnimatePresence mode="wait">
+          {recording ? (
+            /* ── Recording indicator ── */
+            <motion.div
+              key="recording"
+              className="flex items-center gap-3 px-3 py-2.5 rounded-lg"
+              style={{
+                background: `${accentColor}10`,
+                border: `1px solid ${accentColor}33`,
+              }}
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.95 }}
+            >
+              {/* Pulsing red dot */}
+              <motion.div
+                className="w-3 h-3 rounded-full bg-red-500 shrink-0"
+                animate={{ opacity: [1, 0.3, 1] }}
+                transition={{ duration: 1, repeat: Infinity }}
+              />
+
+              {/* Timer */}
+              <span
+                className="text-sm font-mono tracking-wider"
+                style={{ color: accentColor }}
+              >
+                {formatTime(recordTime)}
+              </span>
+
+              {/* Waveform bars */}
+              <div className="flex items-center gap-3px flex-1 justify-center">
+                {Array.from({ length: 12 }).map((_, i) => (
+                  <motion.div
+                    key={i}
+                    className="w-3px rounded-full"
+                    style={{ background: accentColor }}
+                    animate={{
+                      height: [4, 8 + Math.random() * 14, 4],
+                    }}
+                    transition={{
+                      duration: 0.4 + Math.random() * 0.3,
+                      repeat: Infinity,
+                      delay: i * 0.05,
+                    }}
+                  />
+                ))}
+              </div>
+
+              {/* Cancel */}
+              <button
+                onClick={() => stopRecording(true)}
+                className="p-1.5 rounded-full shrink-0"
+                style={{ color: `${accentColor}66` }}
+              >
+                <svg viewBox="0 0 24 24" className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round">
+                  <line x1="18" y1="6" x2="6" y2="18" />
+                  <line x1="6" y1="6" x2="18" y2="18" />
+                </svg>
+              </button>
+
+              {/* Send voice */}
+              <button
+                onClick={() => stopRecording(false)}
+                className="p-2 rounded-full shrink-0"
+                style={{ background: accentColor }}
+              >
+                <svg viewBox="0 0 24 24" className="w-4 h-4" fill={voidColor}>
+                  <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z" />
+                </svg>
+              </button>
+            </motion.div>
+          ) : (
+            /* ── Normal input ── */
+            <motion.div
+              key="input"
+              className="flex gap-2"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+            >
+              <input
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                onKeyDown={(e) => e.key === "Enter" && sendMessage()}
+                placeholder={lang === "en" ? "Ask Dux…" : "Dux'a sorun…"}
+                className="flex-1 px-3 py-2.5 rounded-lg text-sm outline-none"
+                style={{
+                  background: `${accentColor}0a`,
+                  border: `1px solid ${accentColor}22`,
+                  color: accentColor,
+                }}
+                disabled={streaming}
+              />
+
+              {input.trim() ? (
+                /* Send button */
+                <button
+                  onClick={() => sendMessage()}
+                  disabled={streaming}
+                  className="p-2.5 rounded-lg transition-opacity"
+                  style={{
+                    background: `${accentColor}20`,
+                    border: `1px solid ${accentColor}33`,
+                    opacity: streaming ? 0.4 : 1,
+                  }}
+                >
+                  <svg viewBox="0 0 24 24" className="w-5 h-5" fill={accentColor}>
+                    <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z" />
+                  </svg>
+                </button>
+              ) : (
+                /* Mic button — tap to start */
+                <button
+                  onClick={() => startRecording(0)}
+                  disabled={streaming}
+                  className="p-2.5 rounded-lg transition-all"
+                  style={{
+                    background: `${accentColor}10`,
+                    border: `1px solid ${accentColor}33`,
+                    opacity: streaming ? 0.4 : 1,
+                  }}
+                >
+                  <svg viewBox="0 0 24 24" className="w-5 h-5" fill={accentColor}>
+                    <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z" />
+                    <path d="M19 13a7 7 0 0 1-14 0H3a9 9 0 0 0 8 8.94V24h2v-2.06A9 9 0 0 0 21 13h-2z" />
+                  </svg>
+                </button>
+              )}
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
     </motion.div>
   );

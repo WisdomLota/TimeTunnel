@@ -30,28 +30,43 @@ export default function VideoOverlay({
     config.video?.narration[lang] || [];
 
   // Schedule narration cues relative to video playback
+  const cueIndexRef = useRef(0);
+
+  const playNextCue = useCallback(() => {
+    const video = videoRef.current;
+    if (!video || video.paused) return;
+
+    const idx = cueIndexRef.current;
+    if (idx >= narrationCues.length) return;
+
+    const cue = narrationCues[idx];
+    const now = video.currentTime;
+    const delay = Math.max(0, (cue.time - now) * 1000);
+
+    const timer = setTimeout(async () => {
+      if (videoRef.current?.paused) return;
+      try {
+        await speak(cue.text, lang);
+      } catch {}
+      cueIndexRef.current = idx + 1;
+      playNextCue();
+    }, delay);
+    narrationTimers.current = [timer];
+  }, [narrationCues, lang, speak]);
+
   const scheduleNarration = useCallback(() => {
-    // Clear any existing timers
     narrationTimers.current.forEach(clearTimeout);
     narrationTimers.current = [];
 
     const video = videoRef.current;
     if (!video) return;
 
-    const currentTime = video.currentTime;
-
-    narrationCues.forEach((cue) => {
-      const delay = (cue.time - currentTime) * 1000;
-      if (delay >= 0) {
-        const timer = setTimeout(() => {
-          if (!videoRef.current?.paused) {
-            speak(cue.text, lang);
-          }
-        }, delay);
-        narrationTimers.current.push(timer);
-      }
-    });
-  }, [narrationCues, lang, speak]);
+    // Find the next cue from current time
+    const now = video.currentTime;
+    const nextIdx = narrationCues.findIndex((c) => c.time >= now);
+    cueIndexRef.current = nextIdx >= 0 ? nextIdx : narrationCues.length;
+    playNextCue();
+  }, [narrationCues, playNextCue]);
 
   const clearNarrationTimers = useCallback(() => {
     narrationTimers.current.forEach(clearTimeout);

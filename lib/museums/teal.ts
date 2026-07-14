@@ -6,7 +6,7 @@ export const tealConfig: MuseumConfig = {
   slug: "teal",
   name: "HMAS Teal",
   branding: {
-    logo: "/museums/teal/logo.png",
+    logo: "/museums/teal/logo.svg",
     colors: {
       primary: "#0d7377",    // deep teal
       void: "#040e10",       // near-black sea void
@@ -223,75 +223,76 @@ export const tealConfig: MuseumConfig = {
   video: {
     src: "/museums/teal/teal-video.mp4",
     durationSec: 120,
-    // Paste this into teal.ts, replacing the empty narration arrays in the video object.
     
+    // Time windows: 0-15(15s≈35w), 15-32(17s≈40w), 32-48(16s≈38w), 48-65(17s≈40w), 65-85(20s≈48w), 85-98(13s≈30w), 98-112(14s≈33w), 112-120(8s≈18w)
+
     narration: {
       en: [
         {
           time: 0,
-          text: "Welcome aboard. You are looking at HMAS Teal, a Ton Class minesweeper, docked here at Kyrenia Harbour. She has sailed over one hundred and eighty-two thousand nautical miles across some of the most dangerous waters on earth.",
+          text: "Welcome aboard HMAS Teal, a Ton Class minesweeper, docked here at Kyrenia Harbour. She has sailed over a hundred and eighty-two thousand nautical miles.",
         },
         {
-          time: 15,
-          text: "Notice the Australian flag flying proudly from her mast. Teal served the Royal Australian Navy for seven and a half years, from nineteen sixty-two to nineteen seventy-three. But her story begins even earlier, in a shipyard in Dartmouth, England, where she was launched in nineteen fifty-five as HMS Jackton.",
+          time: 16,
+          text: "That Australian flag tells her origin story. Teal served the Royal Australian Navy for seven and a half years, from nineteen sixty-two to seventy-three.",
         },
         {
-          time: 32,
-          text: "Here you can see her crew at work on deck. These sailors were part of a tight-knit company of thirty-eight men. Life aboard a minesweeper was demanding. The ship is small, just forty-six metres long, and every crew member had to earn their place.",
+          time: 33,
+          text: "Here you see her crew at work. Thirty-eight men lived aboard this small ship, just forty-six metres long. Every sailor earned their place.",
         },
         {
-          time: 48,
-          text: "What the sailors are examining here are samples recovered during their operations. Teal's most remarkable early mission was Operation Gardening in nineteen sixty-three, where she helped clear a channel of magnetic mines left over from the Second World War near Bougainville in the Solomon Islands.",
+          time: 49,
+          text: "The sailors are examining samples from their missions. In sixty-three, Teal cleared Second World War mines near Bougainville. The Navy's biggest sweep in sixteen years.",
         },
         {
-          time: 65,
-          text: "But Teal's true test of courage came during the Indonesian Confrontation. In December nineteen sixty-four, off the coast of Malaysia, an enemy sampan opened fire on her. Teal returned fire. Three of the seven enemy crew were killed, and the vessel surrendered. Her commanding officer, Lieutenant Keith Murray, was awarded the Distinguished Service Cross.",
+          time: 66,
+          text: "Her true test came in sixty-four, off Malaysia. An enemy sampan opened fire on Teal. She returned fire. Three enemy crew were killed and the vessel surrendered. Her captain received the Distinguished Service Cross.",
         },
         {
-          time: 85,
-          text: "These artefacts you see on deck are a tangible link to those missions. Each rock, each fragment of metal, carries a story of the seas Teal has crossed and the dangers her crew faced.",
+          time: 86,
+          text: "These artefacts on deck are links to those missions. Each rock and metal fragment carries a story of the seas she crossed.",
         },
         {
-          time: 98,
-          text: "After her final decommissioning in nineteen seventy-three, Teal began a remarkable second life. She was sold, sailed to Cyprus, then Tanzania, then the Caribbean, before returning here to the waters of Northern Cyprus in nineteen ninety-four.",
+          time: 99,
+          text: "After decommissioning in seventy-three, Teal sailed to Cyprus, Tanzania, and the Caribbean before returning here.",
         },
         {
           time: 112,
-          text: "Today, she rests here in Kyrenia as a floating museum, a living classroom where Near East University students once trained as civilian mariners. And now, she welcomes you. Step closer. Explore her memory layers. Every scratch reveals a chapter of her extraordinary voyage.",
+          text: "Now she rests in Kyrenia as a floating museum. Step closer and explore her memory layers.",
         },
       ],
       tr: [
         {
           time: 0,
-          text: "Hoş geldiniz. Girne Limanı'nda demirli olan HMAS Teal'e bakıyorsunuz. Ton Sınıfı bir mayın tarayıcı olan bu gemi, dünyanın en tehlikeli sularında yüz seksen iki binden fazla deniz mili yol almıştır.",
+          text: "HMAS Teal'e hoş geldiniz. Girne Limanı'nda demirli bu Ton Sınıfı mayın tarayıcı, yüz seksen iki bin deniz mili yol almıştır.",
         },
         {
-          time: 15,
-          text: "Direğinde dalgalanan Avustralya bayrağına dikkat edin. Teal, bin dokuz yüz altmış ikiden yetmiş üçe kadar yedi buçuk yıl boyunca Avustralya Kraliyet Donanması'na hizmet etmiştir. Ancak hikâyesi daha da eskiye, bin dokuz yüz elli beşte İngiltere Dartmouth'taki bir tersanede HMS Jackton olarak denize indirildiği güne dayanır.",
+          time: 16,
+          text: "Avustralya bayrağı kökenini anlatır. Teal, altmış ikiden yetmiş üçe kadar yedi buçuk yıl Avustralya Donanması'na hizmet etmiştir.",
         },
         {
-          time: 32,
-          text: "Burada mürettebatın güvertede çalışmasını görebilirsiniz. Bu denizciler, otuz sekiz kişilik sıkı bir ekibin parçasıydı. Bir mayın tarayıcıda yaşam zorlu idi. Gemi sadece kırk altı metre uzunluğundaydı ve her mürettebat üyesinin yerini hak etmesi gerekiyordu.",
+          time: 33,
+          text: "Mürettebatı güvertede çalışırken görüyorsunuz. Otuz sekiz kişi, kırk altı metrelik bu küçük gemide yaşadı.",
         },
         {
-          time: 48,
-          text: "Denizcilerin burada incelediği örnekler operasyonlar sırasında toplanmıştır. Teal'in en dikkat çekici erken görevi, bin dokuz yüz altmış üçte Solomon Adaları'ndaki Bougainville yakınlarında İkinci Dünya Savaşı'ndan kalma manyetik mayınları temizlediği Operasyon Gardening idi.",
+          time: 49,
+          text: "Denizciler görevlerden toplanan örnekleri inceliyor. Altmış üçte Teal, Bougainville yakınında İkinci Dünya Savaşı mayınlarını temizledi.",
         },
         {
-          time: 65,
-          text: "Ancak Teal'in gerçek cesaret sınavı Endonezya Çatışması sırasında geldi. Bin dokuz yüz altmış dört Aralık'ında Malezya kıyılarında düşman bir sampan ona ateş açtı. Teal karşılık verdi. Düşman mürettebattan üçü öldürüldü ve gemi teslim oldu. Komutanı Yüzbaşı Keith Murray, Seçkin Hizmet Haçı ile ödüllendirildi.",
+          time: 66,
+          text: "Gerçek sınavı altmış dörtte Malezya açıklarında geldi. Düşman bir sampan ateş açtı. Teal karşılık verdi. Üç düşman öldürüldü, gemi teslim oldu. Komutanı Seçkin Hizmet Haçı aldı.",
         },
         {
-          time: 85,
-          text: "Güvertede gördüğünüz bu eserler, bu görevlere somut bir bağdır. Her taş, her metal parçası, Teal'in geçtiği denizlerin ve mürettebatının karşılaştığı tehlikelerin hikâyesini taşır.",
+          time: 86,
+          text: "Güvertedeki bu eserler o görevlere bağdır. Her taş ve metal parçası geçtiği denizlerin hikâyesini taşır.",
         },
         {
-          time: 98,
-          text: "Bin dokuz yüz yetmiş üçteki son hizmetten çıkışından sonra Teal olağanüstü bir ikinci hayata başladı. Satıldı, Kıbrıs'a, ardından Tanzanya'ya, sonra Karayipler'e yelken açtı ve bin dokuz yüz doksan dörtte Kuzey Kıbrıs sularına döndü.",
+          time: 99,
+          text: "Yetmiş üçte hizmetten çıktıktan sonra Kıbrıs'a, Tanzanya'ya ve Karayipler'e yelken açtı.",
         },
         {
           time: 112,
-          text: "Bugün burada Girne'de yüzen bir müze olarak dinleniyor. Yakın Doğu Üniversitesi öğrencilerinin sivil denizci olarak eğitim gördüğü yaşayan bir sınıftı. Ve şimdi sizi ağırlıyor. Yaklaşın. Hafıza katmanlarını keşfedin. Her kazıma, onun olağanüstü yolculuğunun bir bölümünü ortaya çıkarır.",
+          text: "Şimdi Girne'de yüzen müze olarak dinleniyor. Yaklaşın ve hafıza katmanlarını keşfedin.",
         },
       ],
     },
