@@ -38,18 +38,18 @@ export default function MuseumControlPage({
     // Small delay for cinematic entry
     const t = setTimeout(() => setStage("layers"), 600);
 
-    const cleanup = () => {
-      presence.updateLayer(null);
-      presence.channel.unsubscribe();
-    };
-    window.addEventListener("beforeunload", cleanup);
-    window.addEventListener("pagehide", cleanup);
+    const handleExit = () => presence.cleanup();
+    window.addEventListener("beforeunload", handleExit);
+    window.addEventListener("pagehide", handleExit);
+    document.addEventListener("visibilitychange", () => {
+      if (document.visibilityState === "hidden") handleExit();
+    });
 
     return () => {
       clearTimeout(t);
-      window.removeEventListener("beforeunload", cleanup);
-      window.removeEventListener("pagehide", cleanup);
-      cleanup();
+      window.removeEventListener("beforeunload", handleExit);
+      window.removeEventListener("pagehide", handleExit);
+      handleExit();
     };
   }, [config.slug, sessionId]);
 

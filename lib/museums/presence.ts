@@ -1,78 +1,95 @@
 import { supabase } from "@/lib/supabase";
 
-/**
- * Shared presence channel per museum — all visitors and screens join this.
- * Presence state tracks which layer each visitor is currently in.
- */
-export const museumPresenceChannel = (slug: string) =>
-  `museum:${slug}:presence`;
-
-export interface VisitorPresence {
-  sessionId: string;
-  activeLayerId: string | null;
-}
+const channelName = (slug: string) => `museum:${slug}:activity`;
 
 /**
- * Phone: join presence and track which layer this visitor is in.
- * Returns the channel and an `updateLayer` function.
+ * Phone: broadcast which layer this visitor is in.
+ * Sends a heartbeat every 3s so the screen can detect disconnections.
  */
 export function joinAsVisitor(slug: string, sessionId: string) {
-  const channel = supabase.channel(museumPresenceChannel(slug), {
-    config: { presence: { key: sessionId } },
+  const channel = supabase.channel(channelName(slug), {
+    config: { broadcast: { self: false } },
   });
 
-  const updateLayer = (layerId: string | null) => {
-    channel.track({ sessionId, activeLayerId: layerId } as VisitorPresence);
+  let currentLayerId: string | null = null;
+  let heartbeatInterval: ReturnType<typeof setInterval> | null = null;
+
+  const sendState = () => {
+    channel.send({
+      type: "broadcast",
+      event: "visitor-state",
+      payload: { sessionId, activeLayerId: currentLayerId, ts: Date.now() },
+    });
   };
 
-  channel.subscribe(async (status) => {
+  const updateLayer = (layerId: string | null) => {
+    currentLayerId = layerId;
+    sendState();
+  };
+
+  channel.subscribe((status) => {
     if (status === "SUBSCRIBED") {
-      updateLayer(null);
+      sendState();
+      // Heartbeat every 3 seconds
+      heartbeatInterval = setInterval(sendState, 3000);
     }
   });
 
-  return { channel, updateLayer };
+  const cleanup = () => {
+    currentLayerId = null;
+    sendState();
+    if (heartbeatInterval) clearInterval(heartbeatInterval);
+    channel.unsubscribe();
+  };
+
+  return { channel, updateLayer, cleanup };
 }
 
 /**
- * Screen: subscribe to presence and call back with active layer IDs.
- * The screen must also track its own presence to participate in the
- * presence protocol and reliably receive sync/join/leave events.
- * Returns the channel for cleanup.
+ * Screen: listen for visitor broadcasts and track active layers.
+ * If a visitor hasn't sent a heartbeat in 6s, consider them gone.
  */
 export function watchPresence(
   slug: string,
   onUpdate: (activeLayers: Set<string>) => void,
 ) {
-  const screenKey = `screen-${Math.random().toString(36).slice(2, 6)}`;
+  const visitors = new Map<string, { activeLayerId: string | null; ts: number }>();
+  const TIMEOUT_MS = 6000;
 
-  const channel = supabase.channel(museumPresenceChannel(slug), {
-    config: { presence: { key: screenKey } },
-  });
-
-  const sync = () => {
-    const state = channel.presenceState();
+  const recalculate = () => {
+    const now = Date.now();
     const active = new Set<string>();
-    for (const presences of Object.values(state)) {
-      for (const p of presences as Record<string, unknown>[]) {
-        const layerId = p.activeLayerId;
-        if (typeof layerId === "string" && layerId.length > 0) {
-          active.add(layerId);
-        }
+    for (const [sid, state] of visitors) {
+      if (now - state.ts > TIMEOUT_MS) {
+        visitors.delete(sid);
+      } else if (state.activeLayerId) {
+        active.add(state.activeLayerId);
       }
     }
     onUpdate(active);
   };
 
+  const channel = supabase.channel(channelName(slug), {
+    config: { broadcast: { self: false } },
+  });
+
   channel
-    .on("presence", { event: "sync" }, sync)
-    .on("presence", { event: "join" }, sync)
-    .on("presence", { event: "leave" }, sync)
-    .subscribe(async (status) => {
-      if (status === "SUBSCRIBED") {
-        await channel.track({ role: "screen" });
-      }
-    });
+    .on("broadcast", { event: "visitor-state" }, ({ payload }) => {
+      const { sessionId, activeLayerId, ts } = payload;
+      visitors.set(sessionId, { activeLayerId, ts });
+      recalculate();
+    })
+    .subscribe();
+
+  // Cleanup stale visitors every 4 seconds
+  const cleanupInterval = setInterval(recalculate, 4000);
+
+  // Return a channel-like object with cleanup
+  const originalUnsub = channel.unsubscribe.bind(channel);
+  channel.unsubscribe = () => {
+    clearInterval(cleanupInterval);
+    return originalUnsub();
+  };
 
   return channel;
 }
