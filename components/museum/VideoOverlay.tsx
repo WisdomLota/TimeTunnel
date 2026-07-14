@@ -19,7 +19,7 @@ export default function VideoOverlay({
 }: VideoOverlayProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const narrationTimers = useRef<ReturnType<typeof setTimeout>[]>([]);
-  const { speak, stop: stopVoice, pause: pauseVoice, resume: resumeVoice } =
+  const { speak, stop: stopVoice, pause: pauseVoice, resume: resumeVoice, unlock } =
     useDuxVoice();
 
   const [playing, setPlaying] = useState(false);
@@ -42,7 +42,7 @@ export default function VideoOverlay({
 
     narrationCues.forEach((cue) => {
       const delay = (cue.time - currentTime) * 1000;
-      if (delay > 0) {
+      if (delay >= 0) {
         const timer = setTimeout(() => {
           if (!videoRef.current?.paused) {
             speak(cue.text, lang);
@@ -62,11 +62,12 @@ export default function VideoOverlay({
   const startVideo = useCallback(() => {
     const video = videoRef.current;
     if (!video) return;
+    unlock();
     video.play();
     setPlaying(true);
     setStarted(true);
     scheduleNarration();
-  }, [scheduleNarration]);
+  }, [scheduleNarration, unlock]);
 
   // Pause everything
   const pauseAll = useCallback(() => {
