@@ -33,7 +33,7 @@ export function joinAsVisitor(slug: string, _sessionId: string) {
     if (status === "SUBSCRIBED") {
       sendState();
       // Heartbeat every 3 seconds
-      heartbeatInterval = setInterval(sendState, 3000);
+      heartbeatInterval = setInterval(sendState, 2000);
     }
   });
 
@@ -56,7 +56,7 @@ export function watchPresence(
   onUpdate: (activeLayers: Set<string>) => void,
 ) {
   const visitors = new Map<string, { activeLayerId: string | null; ts: number }>();
-  const TIMEOUT_MS = 6000;
+  const TIMEOUT_MS = 5000;
 
   const recalculate = () => {
     const now = Date.now();
@@ -83,8 +83,8 @@ export function watchPresence(
     })
     .subscribe();
 
-  // Cleanup stale visitors every 4 seconds
-  const cleanupInterval = setInterval(recalculate, 4000);
+  // Cleanup stale visitors every 3 seconds
+  const cleanupInterval = setInterval(recalculate, 3000);
 
   // Return a channel-like object with cleanup
   const originalUnsub = channel.unsubscribe.bind(channel);

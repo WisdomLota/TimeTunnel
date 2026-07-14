@@ -44,7 +44,7 @@ export default function MuseumScreenPage() {
       />
 
       {/* ─── LEFT SIDE: Discover text + QR ─── */}
-      <div className="relative z-10 flex-1 flex flex-col items-center justify-center px-8">
+      <div className="relative z-10 flex-1 flex flex-col items-center justify-center pl-16 pr-4">
         <p
           className="text-lg tracking-[0.4em] uppercase opacity-60 text-white"
         >
@@ -94,10 +94,21 @@ export default function MuseumScreenPage() {
 
       {/* ─── RIGHT SIDE: Memory rings ─── */}
       <div className="relative z-10 flex-1 flex items-center justify-center">
+        {/* Ship image behind rings */}
+        <div
+          className="absolute inset-0 opacity-15"
+          style={{
+            backgroundImage: "url(/museums/teal/teal-background.jpg)",
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+            maskImage: "radial-gradient(circle at center, black 30%, transparent 70%)",
+            WebkitMaskImage: "radial-gradient(circle at center, black 30%, transparent 70%)",
+          }}
+        />
         <div className="relative flex items-center justify-center">
           {config.layers.map((layer, i) => {
             const isActive = activeLayers.has(layer.id);
-            const size = 220 + i * 70;
+            const size = 250 + i * 75;
             const radius = size / 2;
 
             return (
@@ -126,7 +137,7 @@ export default function MuseumScreenPage() {
                     r={radius - 3}
                     fill="none"
                     stroke={layer.color}
-                    strokeWidth={isActive ? 5 : 2.5}
+                    strokeWidth={isActive ? 6 : 3}
                     opacity={isActive ? 1 : 0.35}
                     filter={isActive ? `drop-shadow(0 0 12px ${layer.color})` : "none"}
                   />
@@ -140,8 +151,8 @@ export default function MuseumScreenPage() {
                   </defs>
                   <text
                     fill={layer.color}
-                    opacity={isActive ? 1 : 0.65}
-                    fontSize={13}
+                    opacity={isActive ? 1 : 0.75}
+                    fontSize={15}
                     fontFamily={config.branding.font || "Chakra Petch"}
                     fontWeight={600}
                     letterSpacing="0.2em"
@@ -152,7 +163,7 @@ export default function MuseumScreenPage() {
                       startOffset="50%"
                       textAnchor="middle"
                     >
-                      {layer.label.en.toUpperCase()} / {layer.label.tr.toUpperCase()} · {layer.yearRange[0]}–{layer.yearRange[1]}
+                      {layer.label.en.toUpperCase()} / {layer.label.tr.toLocaleUpperCase("tr")} · {layer.yearRange[0]}–{layer.yearRange[1]}
                     </textPath>
                   </text>
                 </svg>

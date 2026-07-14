@@ -21,7 +21,7 @@ export default function MuseumControlPage({
   const config = useMuseum();
 
   const [stage, setStage] = useState<Stage>("connecting");
-  const [lang, setLang] = useState<"en" | "tr">("en");
+  const [lang, setLang] = useState<"en" | "tr">("tr");
   const [layersSettled, setLayersSettled] = useState(false);
   const [activeLayer, setActiveLayer] = useState<MemoryLayer | null>(null);
   const [activeWork, setActiveWork] = useState<MuseumWork | null>(null);
@@ -196,10 +196,10 @@ export default function MuseumControlPage({
                   />
 
                   <p
-                    className="text-base font-bold tracking-wider uppercase"
+                    className="text-base font-bold tracking-wider"
                     style={{ color: layer.color }}
                   >
-                    {t(layer.label)}
+                    {lang === "en" ? t(layer.label).toUpperCase() : t(layer.label).toLocaleUpperCase("tr")}
                   </p>
                   <p
                     className="text-sm mt-0.5 tracking-widest"
