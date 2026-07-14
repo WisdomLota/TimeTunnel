@@ -6,7 +6,9 @@ const channelName = (slug: string) => `museum:${slug}:activity`;
  * Phone: broadcast which layer this visitor is in.
  * Sends a heartbeat every 3s so the screen can detect disconnections.
  */
-export function joinAsVisitor(slug: string, sessionId: string) {
+export function joinAsVisitor(slug: string, _sessionId: string) {
+  const visitorId = `${_sessionId}-${Math.random().toString(36).slice(2, 8)}`;
+
   const channel = supabase.channel(channelName(slug), {
     config: { broadcast: { self: false } },
   });
@@ -18,7 +20,7 @@ export function joinAsVisitor(slug: string, sessionId: string) {
     channel.send({
       type: "broadcast",
       event: "visitor-state",
-      payload: { sessionId, activeLayerId: currentLayerId, ts: Date.now() },
+      payload: { sessionId: visitorId, activeLayerId: currentLayerId, ts: Date.now() },
     });
   };
 
