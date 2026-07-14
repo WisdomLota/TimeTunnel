@@ -9,7 +9,7 @@ export const museumPresenceChannel = (slug: string) =>
 
 export interface VisitorPresence {
   sessionId: string;
-  activeLayerId: string | null; // null = on layer-select screen, not inside a layer
+  activeLayerId: string | null;
 }
 
 /**
@@ -36,20 +36,29 @@ export function joinAsVisitor(slug: string, sessionId: string) {
 
 /**
  * Screen: subscribe to presence and call back with active layer IDs.
+ * The screen must also track its own presence to participate in the
+ * presence protocol and reliably receive sync/join/leave events.
  * Returns the channel for cleanup.
  */
 export function watchPresence(
   slug: string,
   onUpdate: (activeLayers: Set<string>) => void,
 ) {
-  const channel = supabase.channel(museumPresenceChannel(slug));
+  const screenKey = `screen-${Math.random().toString(36).slice(2, 6)}`;
+
+  const channel = supabase.channel(museumPresenceChannel(slug), {
+    config: { presence: { key: screenKey } },
+  });
 
   const sync = () => {
-    const state = channel.presenceState<VisitorPresence>();
+    const state = channel.presenceState();
     const active = new Set<string>();
     for (const presences of Object.values(state)) {
-      for (const p of presences) {
-        if (p.activeLayerId) active.add(p.activeLayerId);
+      for (const p of presences as Record<string, unknown>[]) {
+        const layerId = p.activeLayerId;
+        if (typeof layerId === "string" && layerId.length > 0) {
+          active.add(layerId);
+        }
       }
     }
     onUpdate(active);
@@ -57,7 +66,13 @@ export function watchPresence(
 
   channel
     .on("presence", { event: "sync" }, sync)
-    .subscribe();
+    .on("presence", { event: "join" }, sync)
+    .on("presence", { event: "leave" }, sync)
+    .subscribe(async (status) => {
+      if (status === "SUBSCRIBED") {
+        await channel.track({ role: "screen" });
+      }
+    });
 
   return channel;
 }
