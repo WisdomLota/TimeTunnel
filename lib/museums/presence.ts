@@ -77,8 +77,8 @@ export function watchPresence(
 
   channel
     .on("broadcast", { event: "visitor-state" }, ({ payload }) => {
-      const { sessionId, activeLayerId, ts } = payload;
-      visitors.set(sessionId, { activeLayerId, ts });
+      const { sessionId, activeLayerId } = payload;
+      visitors.set(sessionId, { activeLayerId, ts: Date.now() });
       recalculate();
     })
     .subscribe();
