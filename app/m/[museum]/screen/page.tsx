@@ -33,13 +33,13 @@ export default function MuseumScreenPage() {
       }}
     >
       {/* Background image + tint */}
-      <div
-        className="absolute inset-0"
-        style={{
-          backgroundImage: "url(/museums/teal/teal-background.jpg)",
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-        }}
+      <video
+        className="absolute inset-0 w-full h-full object-cover"
+        src="/museums/teal/teal-video.mp4"
+        autoPlay
+        loop
+        muted
+        playsInline
       />
       <div
         className="absolute"
