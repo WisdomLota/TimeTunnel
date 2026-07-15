@@ -54,7 +54,10 @@ export const tealConfig: MuseumConfig = {
     {
       id: "ask-dux",
       label: { en: "Ask Dux", tr: "Dux'a Sor" },
-      description: { en: "Chat with Prof Dux about anything", tr: "Prof Dux ile her şey hakkında sohbet edin" },
+      description: { 
+        en: "Chat with Prof Dux about HMS Jackton - HMAS Teal", 
+        tr: "Prof Dux ile HMS Jackton - HMAS Teal hakkında sohbet edin" 
+      },
       color: "#1E8449",
     },
   ],
