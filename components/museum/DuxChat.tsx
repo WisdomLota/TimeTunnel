@@ -35,31 +35,33 @@ export default function DuxChat({
   const [streaming, setStreaming] = useState(false);
   const [recording, setRecording] = useState(false);
   const [recordTime, setRecordTime] = useState(0);
+  const [transcribing, setTranscribing] = useState(false);
 
   const scrollRef = useRef<HTMLDivElement>(null);
   const { speak, stop, unlock } = useDuxVoice();
 
-  // ALL mutable state lives in refs — zero stale closure issues
   const messagesRef = useRef<Message[]>([]);
   const streamingRef = useRef(false);
-  const recognitionRef = useRef<any>(null);
+  const mediaRecorderRef = useRef<MediaRecorder | null>(null);
+  const chunksRef = useRef<Blob[]>([]);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
-  const transcriptRef = useRef("");
-  const pendingSendRef = useRef(false);
+  const streamRef = useRef<MediaStream | null>(null);
 
-  // Auto-scroll
   useEffect(() => {
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" });
   }, [messages]);
 
-  useEffect(() => () => stop(), [stop]);
+  useEffect(() => () => {
+    stop();
+    // Cleanup media stream on unmount
+    streamRef.current?.getTracks().forEach(t => t.stop());
+  }, [stop]);
 
-  // ── SEND — plain async function, reads from refs ──
+  // ── SEND ──
   async function doSend(text: string) {
     if (!text || streamingRef.current) return;
     unlock();
 
-    // Update refs SYNCHRONOUSLY before anything async
     streamingRef.current = true;
     setStreaming(true);
 
@@ -110,62 +112,84 @@ export default function DuxChat({
     }
   }
 
-  // ── RECORDING ──
-  function startRec() {
+  // ── RECORDING with MediaRecorder + Whisper ──
+  async function startRec() {
     if (streamingRef.current) return;
     unlock();
 
-    const SR = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
-    if (!SR) return;
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      streamRef.current = stream;
 
-    const rec = new SR();
-    rec.interimResults = true;
-    rec.continuous = true;
-    rec.maxAlternatives = 1;
-    rec.lang = lang === "tr" ? "tr-TR" : "en-US";
-    rec.onresult = (e: any) => {
-      let t = "";
-      for (let i = 0; i < e.results.length; i++) t += e.results[i][0].transcript;
-      transcriptRef.current = t;
-    };
-    rec.onend = () => {
-      if (pendingSendRef.current) {
-        pendingSendRef.current = false;
-        const text = transcriptRef.current.trim();
-        if (text) doSend(text);
-      }
-    };
-    rec.onerror = () => {
-      pendingSendRef.current = false;
-      setRecording(false);
+      const mediaRecorder = new MediaRecorder(stream, {
+        mimeType: MediaRecorder.isTypeSupported("audio/webm") ? "audio/webm" : "audio/mp4",
+      });
+
+      chunksRef.current = [];
+      mediaRecorder.ondataavailable = (e) => {
+        if (e.data.size > 0) chunksRef.current.push(e.data);
+      };
+
+      mediaRecorderRef.current = mediaRecorder;
+      mediaRecorder.start();
+      setRecording(true);
       setRecordTime(0);
-      if (timerRef.current) { clearInterval(timerRef.current); timerRef.current = null; }
-    };
-    recognitionRef.current = rec;
-    transcriptRef.current = "";
-    pendingSendRef.current = false;
-    setRecording(true);
-    setRecordTime(0);
-
-    try { rec.start(); } catch {}
-    timerRef.current = setInterval(() => setRecordTime((t) => t + 0.1), 100);
+      timerRef.current = setInterval(() => setRecordTime((t) => t + 0.1), 100);
+    } catch (err) {
+      console.error("Mic access denied:", err);
+    }
   }
 
-  function stopRec(cancel: boolean) {
+  async function stopRec(cancel: boolean) {
     if (timerRef.current) { clearInterval(timerRef.current); timerRef.current = null; }
     setRecording(false);
     setRecordTime(0);
 
-    pendingSendRef.current = !cancel;
-    const rec = recognitionRef.current;
-    recognitionRef.current = null;
+    const recorder = mediaRecorderRef.current;
+    mediaRecorderRef.current = null;
 
-    if (rec) {
-      try { rec.stop(); } catch {}
-    } else if (!cancel) {
-      // Recognition already ended, send directly
-      const text = transcriptRef.current.trim();
-      if (text) doSend(text);
+    if (!recorder || recorder.state === "inactive") return;
+
+    // Wait for the recorder to finish
+    const audioBlob = await new Promise<Blob>((resolve) => {
+      recorder.onstop = () => {
+        const mimeType = recorder.mimeType || "audio/webm";
+        resolve(new Blob(chunksRef.current, { type: mimeType }));
+      };
+      recorder.stop();
+    });
+
+    // Stop mic
+    streamRef.current?.getTracks().forEach(t => t.stop());
+    streamRef.current = null;
+
+    if (cancel) return;
+
+    // Transcribe via Whisper
+    setTranscribing(true);
+    try {
+      const ext = audioBlob.type.includes("mp4") ? "mp4" : "webm";
+      const file = new File([audioBlob], `voice.${ext}`, { type: audioBlob.type });
+
+      const formData = new FormData();
+      formData.append("audio", file);
+      formData.append("lang", lang);
+
+      const res = await fetch("/api/transcribe", {
+        method: "POST",
+        body: formData,
+      });
+
+      if (!res.ok) throw new Error("Transcription failed");
+
+      const { text } = await res.json();
+      if (text && text.trim()) {
+        doSend(text.trim());
+      }
+    } catch (err) {
+      console.error("Transcription error:", err);
+    } finally {
+      setTranscribing(false);
     }
   }
 
@@ -183,11 +207,11 @@ export default function DuxChat({
         <div className="flex items-center gap-3">
           <img src="/museums/prof-dux.png" alt="Prof Dux" className="w-10 h-10 rounded-full object-cover" style={{ border: `1.5px solid ${accentColor}44` }} />
           <div>
-            <p className="text-sm font-bold tracking-widest uppercase" style={{ color: accentColor }}>Prof Dux</p>
+            <p className="text-sm font-bold tracking-widest" style={{ color: accentColor }}>PROF DUX</p>
             <p className="text-[10px] tracking-wider" style={{ color: `${accentColor}55` }}>{lang === "en" ? "Ask about Teal" : "Teal hakkında sorun"}</p>
           </div>
         </div>
-        <button onClick={() => { stop(); onClose(); }} className="text-xs tracking-widest uppercase px-3 py-1.5 rounded" style={{ color: accentColor, border: `1px solid ${accentColor}44` }}>✕</button>
+        <button onClick={() => { stop(); onClose(); }} className="text-xs tracking-widest px-3 py-1.5 rounded" style={{ color: accentColor, border: `1px solid ${accentColor}44` }}>✕</button>
       </div>
 
       {/* Messages */}
@@ -205,6 +229,17 @@ export default function DuxChat({
             </div>
           </div>
         ))}
+
+        {/* Transcribing indicator */}
+        {transcribing && (
+          <div className="flex gap-2 justify-end">
+            <div className="text-xs rounded-lg px-3 py-2" style={{ background: `${accentColor}20`, color: `${accentColor}88`, border: `1px solid ${accentColor}33` }}>
+              <motion.span animate={{ opacity: [0.4, 1, 0.4] }} transition={{ duration: 1.2, repeat: Infinity }}>
+                {lang === "en" ? "Transcribing…" : "Yazıya dönüştürülüyor…"}
+              </motion.span>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Input */}
@@ -228,13 +263,13 @@ export default function DuxChat({
             </motion.div>
           ) : (
             <motion.div key="inp" className="flex gap-2" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-              <input value={input} onChange={(e) => setInput(e.target.value)} onKeyDown={(e) => e.key === "Enter" && handleSendButton()} placeholder={lang === "en" ? "Ask Dux…" : "Dux'a sorun…"} className="flex-1 px-3 py-2.5 rounded-lg text-sm outline-none" style={{ background: `${accentColor}0a`, border: `1px solid ${accentColor}22`, color: accentColor }} disabled={streaming} />
+              <input value={input} onChange={(e) => setInput(e.target.value)} onKeyDown={(e) => e.key === "Enter" && handleSendButton()} placeholder={lang === "en" ? "Ask Dux…" : "Dux'a sorun…"} className="flex-1 px-3 py-2.5 rounded-lg text-sm outline-none" style={{ background: `${accentColor}0a`, border: `1px solid ${accentColor}22`, color: accentColor }} disabled={streaming || transcribing} />
               {input.trim() ? (
                 <button onClick={handleSendButton} disabled={streaming} className="p-2.5 rounded-lg transition-opacity" style={{ background: `${accentColor}20`, border: `1px solid ${accentColor}33`, opacity: streaming ? 0.4 : 1 }}>
                   <svg viewBox="0 0 24 24" className="w-5 h-5" fill={accentColor}><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z" /></svg>
                 </button>
               ) : (
-                <button onClick={startRec} disabled={streaming} className="p-2.5 rounded-lg transition-all" style={{ background: `${accentColor}10`, border: `1px solid ${accentColor}33`, opacity: streaming ? 0.4 : 1 }}>
+                <button onClick={startRec} disabled={streaming || transcribing} className="p-2.5 rounded-lg transition-all" style={{ background: `${accentColor}10`, border: `1px solid ${accentColor}33`, opacity: (streaming || transcribing) ? 0.4 : 1 }}>
                   <svg viewBox="0 0 24 24" className="w-5 h-5" fill={accentColor}>
                     <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z" />
                     <path d="M19 13a7 7 0 0 1-14 0H3a9 9 0 0 0 8 8.94V24h2v-2.06A9 9 0 0 0 21 13h-2z" />
