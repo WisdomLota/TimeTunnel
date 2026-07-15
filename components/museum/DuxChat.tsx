@@ -43,44 +43,43 @@ export default function DuxChat({
   const recognitionRef = useRef<any>(null);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const transcriptRef = useRef("");
-
-  // Setup speech recognition
-  useEffect(() => {
-    const SR =
-      (window as any).SpeechRecognition ||
-      (window as any).webkitSpeechRecognition;
-    if (!SR) return;
-    const recognition = new SR();
-    recognition.interimResults = true;
-    recognition.continuous = true;
-    recognition.maxAlternatives = 1;
-    recognition.onresult = (e: any) => {
-      let transcript = "";
-      for (let i = 0; i < e.results.length; i++) {
-        transcript += e.results[i][0].transcript;
-      }
-      transcriptRef.current = transcript;
-    };
-    recognition.onerror = () => stopRecording(true);
-    recognitionRef.current = recognition;
-  }, []);
+  const sendMessageRef = useRef<(text?: string) => void>(() => {});
 
   const startRecording = useCallback(
     (_clientX?: number) => {
-      const rec = recognitionRef.current;
-      if (!rec || streaming) return;
+      if (streaming) return;
       unlock();
+
+      const SR =
+        (window as any).SpeechRecognition ||
+        (window as any).webkitSpeechRecognition;
+      if (!SR) return;
+
+      const recognition = new SR();
+      recognition.interimResults = true;
+      recognition.continuous = true;
+      recognition.maxAlternatives = 1;
+      recognition.lang = lang === "tr" ? "tr-TR" : "en-US";
+      recognition.onresult = (e: any) => {
+        let transcript = "";
+        for (let i = 0; i < e.results.length; i++) {
+          transcript += e.results[i][0].transcript;
+        }
+        transcriptRef.current = transcript;
+      };
+      recognition.onerror = () => {
+        setRecording(false);
+        setRecordTime(0);
+        if (timerRef.current) clearInterval(timerRef.current);
+      };
+      recognitionRef.current = recognition;
+
       transcriptRef.current = "";
       setCancelled(false);
       setRecording(true);
       setRecordTime(0);
 
-      rec.lang = lang === "tr" ? "tr-TR" : "en-US";
-      try {
-        rec.start();
-      } catch {
-        /* already started */
-      }
+      try { recognition.start(); } catch { /* already started */ }
 
       timerRef.current = setInterval(
         () => setRecordTime((t) => t + 0.1),
@@ -89,30 +88,6 @@ export default function DuxChat({
     },
     [streaming, lang, unlock],
   );
-
-  const setupRecognition = useCallback(() => {
-    const SR =
-      (window as any).SpeechRecognition ||
-      (window as any).webkitSpeechRecognition;
-    if (!SR) return;
-    const recognition = new SR();
-    recognition.interimResults = true;
-    recognition.continuous = true;
-    recognition.maxAlternatives = 1;
-    recognition.onresult = (e: any) => {
-      let transcript = "";
-      for (let i = 0; i < e.results.length; i++) {
-        transcript += e.results[i][0].transcript;
-      }
-      transcriptRef.current = transcript;
-    };
-    recognition.onerror = () => stopRecording(true);
-    recognitionRef.current = recognition;
-  }, []);
-
-  useEffect(() => {
-    setupRecognition();
-  }, [setupRecognition]);
 
   const stopRecording = useCallback(
     (cancel = false) => {
@@ -124,25 +99,14 @@ export default function DuxChat({
       setRecording(false);
       setRecordTime(0);
 
-      try {
-        rec?.stop();
-      } catch {
-        /* not started */
-      }
-      // Reset recognition for next use
+      try { rec?.stop(); } catch { /* not started */ }
       recognitionRef.current = null;
-      setupRecognition();
 
       if (!cancel && !cancelled) {
-        // Small delay to let final result arrive
         setTimeout(() => {
           const text = transcriptRef.current.trim();
           if (text) {
-            setInput(text);
-            // Auto-send
-            setTimeout(() => {
-              sendMessage(text);
-            }, 100);
+            sendMessageRef.current(text);
           }
         }, 300);
       }
@@ -221,6 +185,9 @@ export default function DuxChat({
     },
     [input, streaming, messages, museumSlug, workId, lang, voiceEnabled, speak, unlock],
   );
+
+  // Keep ref in sync with latest sendMessage
+  sendMessageRef.current = sendMessage;
 
   const formatTime = (s: number) => {
     const mins = Math.floor(s / 60);
@@ -333,7 +300,6 @@ export default function DuxChat({
       <div className="px-4 py-3">
         <AnimatePresence mode="wait">
           {recording ? (
-            /* ── Recording indicator ── */
             <motion.div
               key="recording"
               className="flex items-center gap-3 px-3 py-2.5 rounded-lg"
@@ -345,31 +311,24 @@ export default function DuxChat({
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.95 }}
             >
-              {/* Pulsing red dot */}
               <motion.div
                 className="w-3 h-3 rounded-full bg-red-500 shrink-0"
                 animate={{ opacity: [1, 0.3, 1] }}
                 transition={{ duration: 1, repeat: Infinity }}
               />
-
-              {/* Timer */}
               <span
                 className="text-sm font-mono tracking-wider"
                 style={{ color: accentColor }}
               >
                 {formatTime(recordTime)}
               </span>
-
-              {/* Waveform bars */}
-              <div className="flex items-center gap-3px flex-1 justify-center">
+              <div className="flex items-center gap-0.75 flex-1 justify-center">
                 {Array.from({ length: 12 }).map((_, i) => (
                   <motion.div
                     key={i}
-                    className="w-3px rounded-full"
+                    className="w-3 h-3 rounded-full"
                     style={{ background: accentColor }}
-                    animate={{
-                      height: [4, 8 + Math.random() * 14, 4],
-                    }}
+                    animate={{ height: [4, 8 + Math.random() * 14, 4] }}
                     transition={{
                       duration: 0.4 + Math.random() * 0.3,
                       repeat: Infinity,
@@ -378,8 +337,6 @@ export default function DuxChat({
                   />
                 ))}
               </div>
-
-              {/* Cancel */}
               <button
                 onClick={() => stopRecording(true)}
                 className="p-1.5 rounded-full shrink-0"
@@ -390,8 +347,6 @@ export default function DuxChat({
                   <line x1="6" y1="6" x2="18" y2="18" />
                 </svg>
               </button>
-
-              {/* Send voice */}
               <button
                 onClick={() => stopRecording(false)}
                 className="p-2 rounded-full shrink-0"
@@ -403,7 +358,6 @@ export default function DuxChat({
               </button>
             </motion.div>
           ) : (
-            /* ── Normal input ── */
             <motion.div
               key="input"
               className="flex gap-2"
@@ -424,9 +378,7 @@ export default function DuxChat({
                 }}
                 disabled={streaming}
               />
-
               {input.trim() ? (
-                /* Send button */
                 <button
                   onClick={() => sendMessage()}
                   disabled={streaming}
@@ -442,7 +394,6 @@ export default function DuxChat({
                   </svg>
                 </button>
               ) : (
-                /* Mic button — tap to start */
                 <button
                   onClick={() => startRecording(0)}
                   disabled={streaming}
