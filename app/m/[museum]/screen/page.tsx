@@ -19,7 +19,7 @@ export default function MuseumScreenPage() {
   }, [config.slug]);
 
   const origin = typeof window !== "undefined" ? window.location.origin : "";
-
+  const controlUrl = `${origin}/m/${config.slug}/control/${sessionId}`;
   const categories = config.categories;
 
   return (
@@ -53,7 +53,7 @@ export default function MuseumScreenPage() {
         }}
       />
 
-      {/* ─── LEFT: Discover + QR list ─── */}
+      {/* ─── LEFT: Discover + single QR ─── */}
       <div className="relative z-10 w-[38%] flex flex-col justify-center pl-[4%] pr-2">
         <p className="text-sm tracking-[0.4em] uppercase opacity-60 text-white">
           Discover with
@@ -68,47 +68,32 @@ export default function MuseumScreenPage() {
           ile keşfet
         </p>
 
-        {/* Per-category QR codes */}
-        <div className="mt-5 flex flex-col gap-2">
-          {categories.map((cat) => (
-            <div key={cat.id} className="flex items-center gap-3">
-              {sessionId && (
-                <div
-                  className="shrink-0 rounded-md p-2 bg-white"
-                  style={{
-                    background: `${config.branding.colors.void}cc`,
-                    border: `1px solid ${cat.color}44`,
-                  }}
-                >
-                  <QRCodeSVG
-                    value={`${origin}/m/${config.slug}/c/${cat.id}/${sessionId}`}
-                    size={72}
-                    bgColor="transparent"
-                    fgColor={cat.color}
-                    level="L"
-                  />
-                </div>
-              )}
-              <div>
-                <p
-                  className="text-xs font-bold tracking-wider uppercase"
-                  style={{ color: cat.color }}
-                >
-                  {cat.label.en} / {cat.label.tr.toLocaleUpperCase("tr")}
-                </p>
-              </div>
-            </div>
-          ))}
-        </div>
+        {sessionId && (
+          <motion.div
+            className="mt-6 self-start rounded-xl p-2 bg-white"
+            style={{
+              boxShadow: `0 0 30px ${config.branding.colors.accent}33`,
+            }}
+            animate={{ scale: [1, 1.02, 1] }}
+            transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+          >
+            <QRCodeSVG
+              value={controlUrl}
+              size={140}
+              bgColor="#ffffff"
+              fgColor="#000000"
+              level="M"
+            />
+          </motion.div>
+        )}
 
         <p className="text-[9px] tracking-[0.2em] uppercase opacity-30 text-white mt-4 drop-shadow-[0_1px_3px_rgba(0,0,0,0.8)]">
-          Scan a code to explore · Keşfetmek için bir kodu tarayın
+          Scan to explore · Keşfetmek için tarayın
         </p>
       </div>
 
       {/* ─── RIGHT: Category rings ─── */}
       <div className="relative z-10 w-[62%] flex items-center justify-center">
-        {/* Ship bg behind rings */}
         <div
           className="absolute inset-0 opacity-10"
           style={{
@@ -156,7 +141,6 @@ export default function MuseumScreenPage() {
                     opacity={isActive ? 1 : 0.4}
                     filter={isActive ? `drop-shadow(0 0 10px ${cat.color})` : "none"}
                   />
-
                   <defs>
                     <path
                       id={`arc-${cat.id}`}
