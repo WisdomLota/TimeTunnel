@@ -42,6 +42,16 @@ export interface JournalPage {
   year?: number;
 }
 
+export interface JournalVolume {
+  id: string;
+  label: { en: string; tr: string };
+  description: { en: string; tr: string };
+  baseUrl: string;
+  pageCount: number;
+  padDigits: number;
+  yearRange: string;
+}
+
 export interface MuseumConfig {
   slug: string;
   name: string;
@@ -63,6 +73,7 @@ export interface MuseumConfig {
   works: MuseumWork[];
   /** Journey log pages */
   journalPages: JournalPage[];
+  journalVolumes: JournalVolume[];
   /** Floor plan image */
   floorPlan?: { image: string; label: { en: string; tr: string } };
   /** Post card images */

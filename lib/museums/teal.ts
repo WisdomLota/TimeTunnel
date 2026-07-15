@@ -251,6 +251,63 @@ export const tealConfig: MuseumConfig = {
       year: 1973,
     },
   ],
+
+  journalVolumes: [
+    {
+      id: "vol1",
+      label: { en: "Volume 1", tr: "Cilt 1" },
+      description: { en: "Commissioning & Early Operations", tr: "Hizmete Giriş ve İlk Operasyonlar" },
+      baseUrl: "https://iijnizmnabjbiqjdpvmy.supabase.co/storage/v1/object/public/teal-journal/vol1/page-",
+      pageCount: 189,
+      padDigits: 3,
+      yearRange: "Sep 1962 – May 1964",
+    },
+    {
+      id: "vol2",
+      label: { en: "Volume 2", tr: "Cilt 2" },
+      description: { en: "The Confrontation", tr: "Çatışma Dönemi" },
+      baseUrl: "https://iijnizmnabjbiqjdpvmy.supabase.co/storage/v1/object/public/teal-journal/vol2/page-",
+      pageCount: 184,
+      padDigits: 3,
+      yearRange: "Jun 1964 – Dec 1965",
+    },
+    {
+      id: "vol3",
+      label: { en: "Volume 3", tr: "Cilt 3" },
+      description: { en: "Post-Confrontation Service", tr: "Çatışma Sonrası Hizmet" },
+      baseUrl: "https://iijnizmnabjbiqjdpvmy.supabase.co/storage/v1/object/public/teal-journal/vol3/page-",
+      pageCount: 181,
+      padDigits: 3,
+      yearRange: "Jan 1966 – Dec 1967",
+    },
+    {
+      id: "vol4",
+      label: { en: "Volume 4", tr: "Cilt 4" },
+      description: { en: "Recommissionings", tr: "Yeniden Hizmete Girişler" },
+      baseUrl: "https://iijnizmnabjbiqjdpvmy.supabase.co/storage/v1/object/public/teal-journal/vol4/page-",
+      pageCount: 71,
+      padDigits: 2,
+      yearRange: "Sep 1968 – Aug 1970",
+    },
+    {
+      id: "vol5",
+      label: { en: "Volume 5", tr: "Cilt 5" },
+      description: { en: "Far East Deployment", tr: "Uzak Doğu Konuşlanması" },
+      baseUrl: "https://iijnizmnabjbiqjdpvmy.supabase.co/storage/v1/object/public/teal-journal/vol5/page-",
+      pageCount: 90,
+      padDigits: 2,
+      yearRange: "Jan – Dec 1972",
+    },
+    {
+      id: "vol6",
+      label: { en: "Volume 6", tr: "Cilt 6" },
+      description: { en: "Final Months", tr: "Son Aylar" },
+      baseUrl: "https://iijnizmnabjbiqjdpvmy.supabase.co/storage/v1/object/public/teal-journal/vol6/page-",
+      pageCount: 45,
+      padDigits: 2,
+      yearRange: "Jan – May 1973",
+    },
+  ],
  
 
   floorPlan: {

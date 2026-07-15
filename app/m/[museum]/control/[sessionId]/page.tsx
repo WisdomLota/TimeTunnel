@@ -367,50 +367,122 @@ function PostCardsView({ config, lang, color }: { config: any; lang: "en" | "tr"
 }
 
 function JourneyLogView({ config, lang, color }: { config: any; lang: "en" | "tr"; color: string }) {
-  const [pageIdx, setPageIdx] = useState(0);
+  const [selectedVolume, setSelectedVolume] = useState<any>(null);
+  const [pageNum, setPageNum] = useState(1);
   const [showChat, setShowChat] = useState(false);
-  const pages: JournalPage[] = config.journalPages;
-  if (pages.length === 0) return <Placeholder lang={lang} color={color} />;
-  const page = pages[pageIdx];
+  const [imgLoading, setImgLoading] = useState(true);
+
+  const volumes = config.journalVolumes || [];
+  if (volumes.length === 0) return <Placeholder lang={lang} color={color} />;
+
+  const getPageUrl = (vol: any, page: number) =>
+    `${vol.baseUrl}${String(page).padStart(vol.padDigits, "0")}.jpg`;
+
+  if (!selectedVolume) {
+    return (
+      <div className="flex flex-col gap-3">
+        <p className="text-xs tracking-wider mb-2" style={{ color: `${color}66` }}>
+          {lang === "en" ? "Select a volume to browse the ship's official logs" : "Geminin resmi kayıtlarına göz atmak için bir cilt seçin"}
+        </p>
+        {volumes.map((vol: any, i: number) => (
+          <motion.button
+            key={vol.id}
+            onClick={() => { setSelectedVolume(vol); setPageNum(1); setImgLoading(true); }}
+            className="w-full rounded-lg px-5 py-4 text-left overflow-hidden relative"
+            style={{ border: `1.5px solid ${color}44`, background: `linear-gradient(135deg, ${color}10, ${config.branding.colors.void})` }}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: i * 0.1 }}
+            whileTap={{ scale: 0.97 }}
+          >
+            <div className="absolute left-0 top-0 bottom-0 w-1 rounded-l-lg" style={{ background: color }} />
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-base font-bold tracking-wider" style={{ color }}>{vol.label[lang]}</p>
+                <p className="text-xs mt-0.5 tracking-wider" style={{ color: `${color}88` }}>{vol.description[lang]}</p>
+              </div>
+              <div className="text-right shrink-0 ml-3">
+                <p className="text-[10px] tracking-widest" style={{ color: `${color}55` }}>{vol.yearRange}</p>
+                <p className="text-[10px] tracking-wider" style={{ color: `${color}44` }}>{vol.pageCount} {lang === "en" ? "pages" : "sayfa"}</p>
+              </div>
+            </div>
+          </motion.button>
+        ))}
+      </div>
+    );
+  }
 
   return (
-    <div className="flex flex-col gap-4">
-      <AnimatePresence mode="wait">
-        <motion.div
-          key={page.id}
-          className="rounded-lg p-5"
-          style={{ background: `${color}08`, border: `1.5px solid ${color}33` }}
-          initial={{ opacity: 0, x: 30 }}
-          animate={{ opacity: 1, x: 0 }}
-          exit={{ opacity: 0, x: -30 }}
-        >
-          {page.year && <p className="text-xs tracking-widest uppercase mb-1" style={{ color }}>{page.year}</p>}
-          <h3 className="text-lg font-bold tracking-wider" style={{ color: config.branding.colors.accent }}>{page.title[lang]}</h3>
-          <p className="mt-3 text-sm leading-relaxed" style={{ color: `${config.branding.colors.accent}99` }}>{page.content[lang]}</p>
-          {page.image && <img src={page.image} alt="" className="w-full rounded-md mt-3" />}
-        </motion.div>
-      </AnimatePresence>
+    <div className="flex flex-col gap-3">
+      <button
+        onClick={() => { setSelectedVolume(null); setShowChat(false); }}
+        className="text-xs tracking-widest uppercase self-start px-3 py-1.5 rounded"
+        style={{ color, border: `1px solid ${color}44` }}
+      >
+        ← {lang === "en" ? "Volumes" : "Ciltler"}
+      </button>
 
+      <div className="text-center">
+        <p className="text-sm font-bold tracking-wider" style={{ color }}>{selectedVolume.label[lang]}</p>
+        <p className="text-[10px] tracking-wider" style={{ color: `${color}66` }}>{selectedVolume.description[lang]} · {selectedVolume.yearRange}</p>
+      </div>
+
+      {/* Page image — book style */}
+      <div
+        className="relative w-full rounded-lg overflow-hidden mx-auto"
+        style={{
+          border: `2px solid ${color}33`,
+          boxShadow: "4px 4px 20px rgba(0,0,0,0.4), inset 0 0 30px rgba(0,0,0,0.1)",
+          background: "#f4f0e8",
+          minHeight: 300,
+        }}
+      >
+        {imgLoading && (
+          <div className="absolute inset-0 flex items-center justify-center z-10" style={{ background: "#f4f0e8" }}>
+            <motion.p className="text-sm tracking-widest" style={{ color: `${color}88` }} animate={{ opacity: [0.3, 1, 0.3] }} transition={{ duration: 1.5, repeat: Infinity }}>
+              {lang === "en" ? "Loading page…" : "Sayfa yükleniyor…"}
+            </motion.p>
+          </div>
+        )}
+
+        <AnimatePresence mode="wait">
+          <motion.img
+            key={`${selectedVolume.id}-${pageNum}`}
+            src={getPageUrl(selectedVolume, pageNum)}
+            alt={`Page ${pageNum}`}
+            className="w-full h-auto"
+            initial={{ rotateY: 90, opacity: 0 }}
+            animate={{ rotateY: 0, opacity: 1 }}
+            exit={{ rotateY: -90, opacity: 0 }}
+            transition={{ duration: 0.35, ease: "easeInOut" }}
+            style={{ perspective: 1000, transformStyle: "preserve-3d" }}
+            onLoad={() => setImgLoading(false)}
+          />
+        </AnimatePresence>
+      </div>
+
+      {/* Flip navigation */}
       <div className="flex items-center justify-between">
         <button
-          onClick={() => setPageIdx((p) => Math.max(0, p - 1))}
-          disabled={pageIdx === 0}
-          className="px-4 py-2 rounded-lg text-xs font-semibold tracking-wider uppercase"
-          style={{ color, border: `1px solid ${color}33`, opacity: pageIdx === 0 ? 0.3 : 1 }}
+          onClick={() => { setPageNum((p) => Math.max(1, p - 1)); setImgLoading(true); }}
+          disabled={pageNum <= 1}
+          className="px-4 py-2.5 rounded-lg text-xs font-semibold tracking-wider uppercase"
+          style={{ color, border: `1.5px solid ${color}33`, opacity: pageNum <= 1 ? 0.3 : 1 }}
         >
-          ← {lang === "en" ? "Prev" : "Önceki"}
+          ◀ {lang === "en" ? "Flip" : "Çevir"}
         </button>
-        <span className="text-xs tracking-wider" style={{ color: `${color}66` }}>{pageIdx + 1} / {pages.length}</span>
+        <span className="text-xs tracking-wider" style={{ color: `${color}66` }}>{pageNum} / {selectedVolume.pageCount}</span>
         <button
-          onClick={() => setPageIdx((p) => Math.min(pages.length - 1, p + 1))}
-          disabled={pageIdx === pages.length - 1}
-          className="px-4 py-2 rounded-lg text-xs font-semibold tracking-wider uppercase"
-          style={{ color, border: `1px solid ${color}33`, opacity: pageIdx === pages.length - 1 ? 0.3 : 1 }}
+          onClick={() => { setPageNum((p) => Math.min(selectedVolume.pageCount, p + 1)); setImgLoading(true); }}
+          disabled={pageNum >= selectedVolume.pageCount}
+          className="px-4 py-2.5 rounded-lg text-xs font-semibold tracking-wider uppercase"
+          style={{ color, border: `1.5px solid ${color}33`, opacity: pageNum >= selectedVolume.pageCount ? 0.3 : 1 }}
         >
-          {lang === "en" ? "Next" : "Sonraki"} →
+          {lang === "en" ? "Flip" : "Çevir"} ▶
         </button>
       </div>
 
+      {/* Ask Dux */}
       <button
         onClick={() => setShowChat(!showChat)}
         className="px-5 py-3 rounded-lg text-sm font-semibold tracking-wider uppercase self-center"
@@ -426,14 +498,7 @@ function JourneyLogView({ config, lang, color }: { config: any; lang: "en" | "tr
       <AnimatePresence>
         {showChat && (
           <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} exit={{ opacity: 0, height: 0 }}>
-            <DuxChat
-              museumSlug={config.slug}
-              lang={lang}
-              accentColor={config.branding.colors.accent}
-              voidColor={config.branding.colors.void}
-              onClose={() => setShowChat(false)}
-              voiceEnabled={true}
-            />
+            <DuxChat museumSlug={config.slug} lang={lang} accentColor={config.branding.colors.accent} voidColor={config.branding.colors.void} onClose={() => setShowChat(false)} voiceEnabled={true} />
           </motion.div>
         )}
       </AnimatePresence>
