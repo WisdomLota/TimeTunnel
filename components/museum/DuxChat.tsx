@@ -90,6 +90,30 @@ export default function DuxChat({
     [streaming, lang, unlock],
   );
 
+  const setupRecognition = useCallback(() => {
+    const SR =
+      (window as any).SpeechRecognition ||
+      (window as any).webkitSpeechRecognition;
+    if (!SR) return;
+    const recognition = new SR();
+    recognition.interimResults = true;
+    recognition.continuous = true;
+    recognition.maxAlternatives = 1;
+    recognition.onresult = (e: any) => {
+      let transcript = "";
+      for (let i = 0; i < e.results.length; i++) {
+        transcript += e.results[i][0].transcript;
+      }
+      transcriptRef.current = transcript;
+    };
+    recognition.onerror = () => stopRecording(true);
+    recognitionRef.current = recognition;
+  }, []);
+
+  useEffect(() => {
+    setupRecognition();
+  }, [setupRecognition]);
+
   const stopRecording = useCallback(
     (cancel = false) => {
       const rec = recognitionRef.current;
@@ -105,6 +129,9 @@ export default function DuxChat({
       } catch {
         /* not started */
       }
+      // Reset recognition for next use
+      recognitionRef.current = null;
+      setupRecognition();
 
       if (!cancel && !cancelled) {
         // Small delay to let final result arrive
@@ -228,7 +255,7 @@ export default function DuxChat({
               className="text-[10px] tracking-wider"
               style={{ color: `${accentColor}55` }}
             >
-              {lang === "en" ? "Ask me anything" : "Bana her şeyi sorun"}
+              {lang === "en" ? "Ask about Teal" : "Teal hakkında sorun"}
             </p>
           </div>
         </div>
@@ -257,9 +284,7 @@ export default function DuxChat({
             className="text-xs text-center mt-8 tracking-wider"
             style={{ color: `${accentColor}44` }}
           >
-            {lang === "en"
-              ? "Ask Prof Dux about what you see…"
-              : "Gördükleriniz hakkında Prof Dux'a sorun…"}
+            {lang === "en" ? "Ask about HMS Jackton – HMAS Teal…" : "HMS Jackton – HMAS Teal hakkında sorun…"}
           </p>
         )}
         {messages.map((msg, i) => (

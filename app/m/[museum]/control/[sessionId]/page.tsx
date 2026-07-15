@@ -283,13 +283,6 @@ function CollectionView({ config, lang, color }: { config: any; lang: "en" | "tr
   if (selected) {
     return (
       <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex flex-col gap-4">
-        <button
-          onClick={() => { setSelected(null); setShowChat(false); }}
-          className="text-xs tracking-widest uppercase self-start px-3 py-1.5 rounded"
-          style={{ color, border: `1px solid ${color}44` }}
-        >
-          ← {lang === "en" ? "Back" : "Geri"}
-        </button>
         <div className="w-full aspect-4/3 rounded-lg overflow-hidden" style={{ border: `1.5px solid ${color}` }}>
           <div className="w-full h-full" style={{ background: `url(${selected.image}) center/cover` }} />
         </div>
