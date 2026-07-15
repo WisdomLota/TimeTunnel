@@ -275,25 +275,76 @@ function FloorPlanView({ config, lang, color }: { config: any; lang: "en" | "tr"
 }
 
 function CollectionView({ config, lang, color }: { config: any; lang: "en" | "tr"; color: string }) {
+  const [selected, setSelected] = useState<any>(null);
+  const [showChat, setShowChat] = useState(false);
   const works = config.works.filter((w: any) => w.categoryId === "collection");
   if (works.length === 0) return <Placeholder lang={lang} color={color} />;
+
+  if (selected) {
+    return (
+      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex flex-col gap-4">
+        <button
+          onClick={() => { setSelected(null); setShowChat(false); }}
+          className="text-xs tracking-widest uppercase self-start px-3 py-1.5 rounded"
+          style={{ color, border: `1px solid ${color}44` }}
+        >
+          ← {lang === "en" ? "Back" : "Geri"}
+        </button>
+        <div className="w-full aspect-4/3 rounded-lg overflow-hidden" style={{ border: `1.5px solid ${color}` }}>
+          <div className="w-full h-full" style={{ background: `url(${selected.image}) center/cover` }} />
+        </div>
+        {selected.year && <p className="text-xs tracking-widest uppercase" style={{ color }}>{selected.year}</p>}
+        <h3 className="text-xl font-bold tracking-wider" style={{ color: config.branding.colors.accent }}>{selected.title[lang]}</h3>
+        <p className="text-sm leading-relaxed" style={{ color: `${config.branding.colors.accent}99` }}>{selected.description[lang]}</p>
+        <button
+          onClick={() => setShowChat(!showChat)}
+          className="px-5 py-3 rounded-lg text-sm font-semibold tracking-wider uppercase self-center mt-2"
+          style={{
+            color: showChat ? config.branding.colors.void : config.branding.colors.accent,
+            background: showChat ? config.branding.colors.accent : `${config.branding.colors.accent}15`,
+            border: `1.5px solid ${config.branding.colors.accent}55`,
+          }}
+        >
+          {showChat ? (lang === "en" ? "Close Chat" : "Sohbeti Kapat") : (lang === "en" ? "Ask Prof Dux" : "Prof Dux'a Sor")}
+        </button>
+        <AnimatePresence>
+          {showChat && (
+            <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} exit={{ opacity: 0, height: 0 }}>
+              <DuxChat
+                museumSlug={config.slug}
+                workId={selected.id}
+                lang={lang}
+                accentColor={config.branding.colors.accent}
+                voidColor={config.branding.colors.void}
+                onClose={() => setShowChat(false)}
+                voiceEnabled={true}
+              />
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </motion.div>
+    );
+  }
+
   return (
     <div className="grid grid-cols-2 gap-3">
       {works.map((work: any, i: number) => (
-        <motion.div
+        <motion.button
           key={work.id}
-          className="rounded-lg overflow-hidden"
+          onClick={() => setSelected(work)}
+          className="rounded-lg overflow-hidden text-left"
           style={{ border: `1.5px solid ${color}33` }}
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: i * 0.1 }}
+          whileTap={{ scale: 0.95 }}
         >
           <div className="aspect-3/4" style={{ background: `url(${work.image}) center/cover` }} />
           <div className="p-2" style={{ background: `${config.branding.colors.void}ee` }}>
             <p className="text-xs font-bold tracking-wider" style={{ color }}>{work.title[lang]}</p>
             {work.year && <p className="text-[10px] mt-0.5" style={{ color: `${color}66` }}>{work.year}</p>}
           </div>
-        </motion.div>
+        </motion.button>
       ))}
     </div>
   );

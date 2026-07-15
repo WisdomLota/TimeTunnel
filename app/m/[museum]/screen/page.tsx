@@ -35,7 +35,7 @@ export default function MuseumScreenPage() {
         <img
           src="/museums/prof-dux.png"
           alt=""
-          className="h-[80%] w-auto object-contain opacity-60"
+          className="h-[80%] w-auto object-contain opacity-80"
           style={{
             maskImage: "linear-gradient(to top, black 50%, transparent 90%), linear-gradient(to left, transparent 0%, black 20%)",
             WebkitMaskImage: "linear-gradient(to top, black 50%, transparent 90%), linear-gradient(to left, transparent 0%, black 20%)",
@@ -49,7 +49,7 @@ export default function MuseumScreenPage() {
       <div
         className="absolute inset-0"
         style={{
-          background: `linear-gradient(to right, ${config.branding.colors.void}99 0%, ${config.branding.colors.void}cc 50%, ${config.branding.colors.void}dd 100%)`,
+          background: `linear-gradient(to right, ${config.branding.colors.void}77 0%, ${config.branding.colors.void}aa 50%, ${config.branding.colors.void}cc 100%)`,
         }}
       />
 
