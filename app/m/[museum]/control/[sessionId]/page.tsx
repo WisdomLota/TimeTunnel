@@ -175,7 +175,7 @@ export default function MuseumControlPage({
             {settled && config.video && (
               <motion.button
                 onClick={() => setShowVideo(true)}
-                className="mt-6 px-6 py-3 rounded-lg text-sm font-semibold tracking-wider uppercase"
+                className="mt-6 px-6 py-3 rounded-lg text-sm font-semibold tracking-wider"
                 style={{
                   border: `1.5px solid ${config.branding.colors.accent}55`,
                   color: config.branding.colors.accent,
@@ -204,15 +204,15 @@ export default function MuseumControlPage({
             {/* Back button */}
             <button
               onClick={exitCategory}
-              className="absolute top-4 left-4 z-50 text-xs tracking-widest uppercase px-3 py-1.5 rounded"
+              className="absolute top-4 left-4 z-50 text-xs tracking-widest px-3 py-1.5 rounded"
               style={{ color: activeCategory.color, border: `1px solid ${activeCategory.color}44` }}
             >
               ← {lang === "en" ? "Back" : "Geri"}
             </button>
 
             <div className="px-6 pb-4">
-              <h2 className="text-lg font-bold tracking-widest uppercase" style={{ color: activeCategory.color }}>
-                {t(activeCategory.label)}
+              <h2 className="text-lg font-bold tracking-widest" style={{ color: activeCategory.color }}>
+                {lang === "en" ? t(activeCategory.label).toUpperCase() : t(activeCategory.label).toLocaleUpperCase("tr")}
               </h2>
               <p className="text-xs mt-1 tracking-wider" style={{ color: `${activeCategory.color}88` }}>
                 {t(activeCategory.description)}
@@ -233,10 +233,10 @@ export default function MuseumControlPage({
           <motion.div key="chat" className="flex-1 flex flex-col pt-14 pb-4 h-dvh" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
             <button
               onClick={exitCategory}
-              className="absolute top-4 left-4 z-50 text-xs tracking-widest uppercase px-3 py-1.5 rounded"
+              className="absolute top-4 left-4 z-50 text-xs tracking-widest px-3 py-1.5 rounded"
               style={{ color: activeCategory?.color || config.branding.colors.accent, border: `1px solid ${(activeCategory?.color || config.branding.colors.accent)}44` }}
             >
-              ← {lang === "en" ? "Back" : "Geri"}
+              ← {lang === "en" ? "BACK" : "GERİ"}
             </button>
             <DuxChat
               museumSlug={config.slug}
@@ -291,7 +291,7 @@ function CollectionView({ config, lang, color }: { config: any; lang: "en" | "tr
         <p className="text-sm leading-relaxed" style={{ color: `${config.branding.colors.accent}99` }}>{selected.description[lang]}</p>
         <button
           onClick={() => setShowChat(!showChat)}
-          className="px-5 py-3 rounded-lg text-sm font-semibold tracking-wider uppercase self-center mt-2"
+          className="px-5 py-3 rounded-lg text-sm font-semibold tracking-wider self-center mt-2"
           style={{
             color: showChat ? config.branding.colors.void : config.branding.colors.accent,
             background: showChat ? config.branding.colors.accent : `${config.branding.colors.accent}15`,
@@ -428,10 +428,10 @@ function JourneyLogView({ config, lang, color }: { config: any; lang: "en" | "tr
     <div className="flex flex-col gap-3">
       <button
         onClick={() => { setSelectedVolume(null); setShowChat(false); }}
-        className="text-xs tracking-widest uppercase self-start px-3 py-1.5 rounded"
+        className="text-xs tracking-widest self-start px-3 py-1.5 rounded"
         style={{ color, border: `1px solid ${color}44` }}
       >
-        ← {lang === "en" ? "Volumes" : "Ciltler"}
+        ← {lang === "en" ? "VOLUMES" : "CİLTLER"}
       </button>
 
       <div className="text-center">
@@ -485,7 +485,7 @@ function JourneyLogView({ config, lang, color }: { config: any; lang: "en" | "tr
             img.onload = () => { setDisplayPage(next); setImgLoading(false); };
           }}
           disabled={pageNum <= 1}
-          className="px-4 py-2.5 rounded-lg text-xs font-semibold tracking-wider uppercase"
+          className="px-4 py-2.5 rounded-lg text-xs font-semibold tracking-wider"
           style={{ color, border: `1.5px solid ${color}33`, opacity: pageNum <= 1 ? 0.3 : 1 }}
         >
           <svg viewBox="0 0 24 24" className="w-4 h-4 inline mr-1" fill="currentColor"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg>
@@ -502,7 +502,7 @@ function JourneyLogView({ config, lang, color }: { config: any; lang: "en" | "tr
             img.onload = () => { setDisplayPage(next); setImgLoading(false); };
           }}
           disabled={pageNum >= selectedVolume.pageCount}
-          className="px-4 py-2.5 rounded-lg text-xs font-semibold tracking-wider uppercase"
+          className="px-4 py-2.5 rounded-lg text-xs font-semibold tracking-wider"
           style={{ color, border: `1.5px solid ${color}33`, opacity: pageNum >= selectedVolume.pageCount ? 0.3 : 1 }}
         >
           {lang === "en" ? "Flip" : "Çevir"}
@@ -513,7 +513,7 @@ function JourneyLogView({ config, lang, color }: { config: any; lang: "en" | "tr
       {/* Ask Dux */}
       <button
         onClick={() => setShowChat(!showChat)}
-        className="px-5 py-3 rounded-lg text-sm font-semibold tracking-wider uppercase self-center"
+        className="px-5 py-3 rounded-lg text-sm font-semibold tracking-wider self-center"
         style={{
           color: showChat ? config.branding.colors.void : config.branding.colors.accent,
           background: showChat ? config.branding.colors.accent : `${config.branding.colors.accent}15`,
@@ -537,7 +537,7 @@ function JourneyLogView({ config, lang, color }: { config: any; lang: "en" | "tr
 function Placeholder({ lang, color }: { lang: "en" | "tr"; color: string }) {
   return (
     <motion.div className="flex flex-col items-center justify-center py-20" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-      <p className="text-base tracking-widest uppercase" style={{ color }}>{lang === "en" ? "Coming Soon" : "Yakında"}</p>
+      <p className="text-base tracking-widest" style={{ color }}>{lang === "en" ? "COMING SOON" : "YAKINDA"}</p>
       <p className="text-xs mt-2 tracking-wider" style={{ color: `${color}55` }}>{lang === "en" ? "Content will be available shortly" : "İçerik kısa sürede eklenecektir"}</p>
     </motion.div>
   );

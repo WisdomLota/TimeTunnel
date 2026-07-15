@@ -45,6 +45,7 @@ export default function DuxChat({
   const recognitionRef = useRef<any>(null);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const transcriptRef = useRef("");
+  const pendingSendRef = useRef(false);
 
   // Auto-scroll
   useEffect(() => {
@@ -127,18 +128,26 @@ export default function DuxChat({
       for (let i = 0; i < e.results.length; i++) t += e.results[i][0].transcript;
       transcriptRef.current = t;
     };
+    rec.onend = () => {
+      if (pendingSendRef.current) {
+        pendingSendRef.current = false;
+        const text = transcriptRef.current.trim();
+        if (text) doSend(text);
+      }
+    };
     rec.onerror = () => {
+      pendingSendRef.current = false;
       setRecording(false);
       setRecordTime(0);
       if (timerRef.current) { clearInterval(timerRef.current); timerRef.current = null; }
     };
     recognitionRef.current = rec;
     transcriptRef.current = "";
+    pendingSendRef.current = false;
     setRecording(true);
     setRecordTime(0);
 
     try { rec.start(); } catch {}
-
     timerRef.current = setInterval(() => setRecordTime((t) => t + 0.1), 100);
   }
 
@@ -147,16 +156,16 @@ export default function DuxChat({
     setRecording(false);
     setRecordTime(0);
 
+    pendingSendRef.current = !cancel;
     const rec = recognitionRef.current;
-    try { rec?.stop(); } catch {}
     recognitionRef.current = null;
 
-    if (!cancel) {
-      // Give recognition time to deliver final results
-      setTimeout(() => {
-        const text = transcriptRef.current.trim();
-        if (text) doSend(text);
-      }, 500);
+    if (rec) {
+      try { rec.stop(); } catch {}
+    } else if (!cancel) {
+      // Recognition already ended, send directly
+      const text = transcriptRef.current.trim();
+      if (text) doSend(text);
     }
   }
 
