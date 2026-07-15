@@ -70,9 +70,11 @@ export default function MuseumScreenPage() {
 
         {sessionId && (
           <motion.div
-            className="mt-6 self-start rounded-xl p-2 bg-white"
+            className="mt-6 self-start rounded-xl p-2"
             style={{
-              boxShadow: `0 0 30px ${config.branding.colors.accent}33`,
+              background: `${config.branding.colors.void}cc`,
+              border: `1px solid ${config.branding.colors.accent}44`,
+              boxShadow: `0 0 40px ${config.branding.colors.accent}33`,
             }}
             animate={{ scale: [1, 1.02, 1] }}
             transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
@@ -80,8 +82,8 @@ export default function MuseumScreenPage() {
             <QRCodeSVG
               value={controlUrl}
               size={140}
-              bgColor="#ffffff"
-              fgColor="#000000"
+              bgColor="transparent"
+              fgColor={config.branding.colors.accent}
               level="M"
             />
           </motion.div>

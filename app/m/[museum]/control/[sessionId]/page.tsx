@@ -371,12 +371,24 @@ function JourneyLogView({ config, lang, color }: { config: any; lang: "en" | "tr
   const [pageNum, setPageNum] = useState(1);
   const [showChat, setShowChat] = useState(false);
   const [imgLoading, setImgLoading] = useState(true);
+  const [displayPage, setDisplayPage] = useState(1);
+  const preloadRef = useRef<HTMLImageElement | null>(null);
 
   const volumes = config.journalVolumes || [];
   if (volumes.length === 0) return <Placeholder lang={lang} color={color} />;
 
   const getPageUrl = (vol: any, page: number) =>
     `${vol.baseUrl}${String(page).padStart(vol.padDigits, "0")}.jpg`;
+
+  // Prefetch next page
+  useEffect(() => {
+    if (!selectedVolume) return;
+    const nextPage = pageNum + 1;
+    if (nextPage <= selectedVolume.pageCount) {
+      const img = new Image();
+      img.src = getPageUrl(selectedVolume, nextPage);
+    }
+  }, [pageNum, selectedVolume]);
 
   if (!selectedVolume) {
     return (
@@ -387,7 +399,7 @@ function JourneyLogView({ config, lang, color }: { config: any; lang: "en" | "tr
         {volumes.map((vol: any, i: number) => (
           <motion.button
             key={vol.id}
-            onClick={() => { setSelectedVolume(vol); setPageNum(1); setImgLoading(true); }}
+            onClick={() => { setSelectedVolume(vol); setPageNum(1); setDisplayPage(1); setImgLoading(true); }}
             className="w-full rounded-lg px-5 py-4 text-left overflow-hidden relative"
             style={{ border: `1.5px solid ${color}44`, background: `linear-gradient(135deg, ${color}10, ${config.branding.colors.void})` }}
             initial={{ opacity: 0, y: 20 }}
@@ -447,8 +459,8 @@ function JourneyLogView({ config, lang, color }: { config: any; lang: "en" | "tr
 
         <AnimatePresence mode="wait">
           <motion.img
-            key={`${selectedVolume.id}-${pageNum}`}
-            src={getPageUrl(selectedVolume, pageNum)}
+            key={`${selectedVolume.id}-${displayPage}`}
+            src={getPageUrl(selectedVolume, displayPage)}
             alt={`Page ${pageNum}`}
             className="w-full h-auto"
             initial={{ rotateY: 90, opacity: 0 }}
@@ -464,21 +476,37 @@ function JourneyLogView({ config, lang, color }: { config: any; lang: "en" | "tr
       {/* Flip navigation */}
       <div className="flex items-center justify-between">
         <button
-          onClick={() => { setPageNum((p) => Math.max(1, p - 1)); setImgLoading(true); }}
+          onClick={() => {
+            const next = Math.max(1, pageNum - 1);
+            setPageNum(next);
+            setImgLoading(true);
+            const img = new Image();
+            img.src = getPageUrl(selectedVolume, next);
+            img.onload = () => { setDisplayPage(next); setImgLoading(false); };
+          }}
           disabled={pageNum <= 1}
           className="px-4 py-2.5 rounded-lg text-xs font-semibold tracking-wider uppercase"
           style={{ color, border: `1.5px solid ${color}33`, opacity: pageNum <= 1 ? 0.3 : 1 }}
         >
-          ◀ {lang === "en" ? "Flip" : "Çevir"}
+          <svg viewBox="0 0 24 24" className="w-4 h-4 inline mr-1" fill="currentColor"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg>
+          {lang === "en" ? "Flip" : "Çevir"}
         </button>
         <span className="text-xs tracking-wider" style={{ color: `${color}66` }}>{pageNum} / {selectedVolume.pageCount}</span>
         <button
-          onClick={() => { setPageNum((p) => Math.min(selectedVolume.pageCount, p + 1)); setImgLoading(true); }}
+          onClick={() => {
+            const next = Math.min(selectedVolume.pageCount, pageNum + 1);
+            setPageNum(next);
+            setImgLoading(true);
+            const img = new Image();
+            img.src = getPageUrl(selectedVolume, next);
+            img.onload = () => { setDisplayPage(next); setImgLoading(false); };
+          }}
           disabled={pageNum >= selectedVolume.pageCount}
           className="px-4 py-2.5 rounded-lg text-xs font-semibold tracking-wider uppercase"
           style={{ color, border: `1.5px solid ${color}33`, opacity: pageNum >= selectedVolume.pageCount ? 0.3 : 1 }}
         >
-          {lang === "en" ? "Flip" : "Çevir"} ▶
+          {lang === "en" ? "Flip" : "Çevir"}
+          <svg viewBox="0 0 24 24" className="w-4 h-4 inline ml-1" fill="currentColor"><path d="M8.59 16.59L10 18l6-6-6-6-1.41 1.41L13.17 12z"/></svg>
         </button>
       </div>
 
