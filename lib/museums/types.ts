@@ -1,10 +1,18 @@
 // lib/museums/types.ts
 
 export interface NarrationCue {
-  /** Seconds into the video */
   time: number;
-  /** Text Dux speaks at this moment */
   text: string;
+}
+
+export interface MuseumCategory {
+  id: string;
+  label: { en: string; tr: string };
+  /** Short description shown on phone */
+  description: { en: string; tr: string };
+  color: string;
+  /** Icon name or emoji for display */
+  icon?: string;
 }
 
 export interface MemoryLayer {
@@ -16,13 +24,22 @@ export interface MemoryLayer {
 
 export interface MuseumWork {
   id: string;
-  layerId: string;
+  layerId?: string;
+  categoryId?: string;
   title: { en: string; tr: string };
   description: { en: string; tr: string };
   image: string;
   year?: number;
-  /** Per-work context injected into Dux system prompt when chatting about this work */
+  artist?: string;
   duxContext: { en: string; tr: string };
+}
+
+export interface JournalPage {
+  id: string;
+  title: { en: string; tr: string };
+  content: { en: string; tr: string };
+  image?: string;
+  year?: number;
 }
 
 export interface MuseumConfig {
@@ -30,6 +47,7 @@ export interface MuseumConfig {
   name: string;
   branding: {
     logo?: string;
+    museumLogo?: string;
     colors: {
       primary: string;
       void: string;
@@ -38,14 +56,22 @@ export interface MuseumConfig {
     };
     font?: string;
   };
+  /** Category-based sections (new structure) */
+  categories: MuseumCategory[];
+  /** Legacy year-based layers (optional, for backward compat) */
   layers: MemoryLayer[];
   works: MuseumWork[];
+  /** Journey log pages */
+  journalPages: JournalPage[];
+  /** Floor plan image */
+  floorPlan?: { image: string; label: { en: string; tr: string } };
+  /** Post card images */
+  postCards: { id: string; image: string; caption: { en: string; tr: string } }[];
   video?: {
     src: string;
     durationSec: number;
     narration: { en: NarrationCue[]; tr: NarrationCue[] };
   };
-  /** Base system prompt for Dux in this museum context */
   duxSystemPrompt: { en: string; tr: string };
   yearRange: [number, number];
 }

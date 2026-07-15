@@ -19,14 +19,15 @@ export default function MuseumScreenPage() {
   }, [config.slug]);
 
   const origin = typeof window !== "undefined" ? window.location.origin : "";
-  const controlUrl = `${origin}/m/${config.slug}/control/${sessionId}`;
+
+  const categories = config.categories;
 
   return (
     <div
       className="relative flex h-dvh w-full overflow-hidden"
       style={{ fontFamily: config.branding.font || "Chakra Petch" }}
     >
-      {/* Background — Prof Dux, positioned right & low to not dominate */}
+      {/* Background — Prof Dux anchored left */}
       <div
         className="absolute inset-0 flex items-end justify-start pointer-events-none"
         style={{ paddingLeft: "5%" }}
@@ -44,7 +45,7 @@ export default function MuseumScreenPage() {
         />
       </div>
 
-      {/* Dark overlay for readability */}
+      {/* Dark overlay */}
       <div
         className="absolute inset-0"
         style={{
@@ -52,53 +53,62 @@ export default function MuseumScreenPage() {
         }}
       />
 
-      {/* ─── LEFT: Discover + QR ─── */}
-      <div className="relative z-10 w-[35%] flex flex-col justify-center pl-[5%] pr-4">
-        <p className="text-base tracking-[0.4em] uppercase opacity-60 text-white">
+      {/* ─── LEFT: Discover + QR list ─── */}
+      <div className="relative z-10 w-[38%] flex flex-col justify-center pl-[4%] pr-2">
+        <p className="text-sm tracking-[0.4em] uppercase opacity-60 text-white">
           Discover with
         </p>
         <h1
-          className="text-4xl font-bold tracking-widest uppercase mt-1"
+          className="text-3xl font-bold tracking-widest uppercase mt-1"
           style={{ color: config.branding.colors.accent }}
         >
           Prof DUX
         </h1>
-        <p className="text-base tracking-[0.4em] uppercase opacity-60 text-white mt-1">
+        <p className="text-sm tracking-[0.4em] uppercase opacity-60 text-white mt-1">
           ile keşfet
         </p>
 
-        {sessionId && (
-          <motion.div
-            className="mt-6 rounded-2xl p-3 self-start"
-            style={{
-              background: `${config.branding.colors.void}cc`,
-              border: `1px solid ${config.branding.colors.accent}44`,
-              boxShadow: `0 0 30px ${config.branding.colors.accent}22`,
-            }}
-            animate={{ scale: [1, 1.02, 1] }}
-            transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-          >
-            <QRCodeSVG
-              value={controlUrl}
-              size={140}
-              bgColor="transparent"
-              fgColor={config.branding.colors.accent}
-              level="M"
-            />
-          </motion.div>
-        )}
+        {/* Per-category QR codes */}
+        <div className="mt-5 flex flex-col gap-2">
+          {categories.map((cat) => (
+            <div key={cat.id} className="flex items-center gap-3">
+              {sessionId && (
+                <div
+                  className="shrink-0 rounded-md p-1"
+                  style={{
+                    background: `${config.branding.colors.void}cc`,
+                    border: `1px solid ${cat.color}44`,
+                  }}
+                >
+                  <QRCodeSVG
+                    value={`${origin}/m/${config.slug}/c/${cat.id}/${sessionId}`}
+                    size={48}
+                    bgColor="transparent"
+                    fgColor={cat.color}
+                    level="L"
+                  />
+                </div>
+              )}
+              <div>
+                <p
+                  className="text-xs font-bold tracking-wider uppercase"
+                  style={{ color: cat.color }}
+                >
+                  {cat.label.en} / {cat.label.tr.toLocaleUpperCase("tr")}
+                </p>
+              </div>
+            </div>
+          ))}
+        </div>
 
-        <p className="text-[11px] tracking-[0.2em] uppercase opacity-40 text-white mt-4 drop-shadow-[0_1px_3px_rgba(0,0,0,0.8)]">
-          Scan to be drawn into our time tunnel
-        </p>
-        <p className="text-[9px] tracking-[0.2em] uppercase opacity-25 text-white mt-0.5 drop-shadow-[0_1px_3px_rgba(0,0,0,0.8)]">
-          Zaman tünelimize çekilmek için tarayın
+        <p className="text-[9px] tracking-[0.2em] uppercase opacity-30 text-white mt-4 drop-shadow-[0_1px_3px_rgba(0,0,0,0.8)]">
+          Scan a code to explore · Keşfetmek için bir kodu tarayın
         </p>
       </div>
 
-      {/* ─── RIGHT: Memory rings ─── */}
-      <div className="relative z-10 w-[65%] flex items-center justify-center">
-        {/* Ship image behind rings */}
+      {/* ─── RIGHT: Category rings ─── */}
+      <div className="relative z-10 w-[62%] flex items-center justify-center">
+        {/* Ship bg behind rings */}
         <div
           className="absolute inset-0 opacity-10"
           style={{
@@ -111,17 +121,16 @@ export default function MuseumScreenPage() {
         />
 
         <div className="relative flex items-center justify-center">
-          {config.layers.map((layer, i) => {
-            const isActive = activeLayers.has(layer.id);
-            // Scale rings based on viewport height for 4:3 compat
-            const size = 180 + i * 60;
+          {categories.map((cat, i) => {
+            const isActive = activeLayers.has(cat.id);
+            const size = 160 + i * 55;
             const radius = size / 2;
 
             return (
               <motion.div
-                key={layer.id}
+                key={cat.id}
                 className="absolute"
-                style={{ width: `${size}px`, height: `${size}px` }}
+                style={{ width: size, height: size }}
                 animate={{
                   opacity: isActive ? [0.7, 1, 0.7] : 1,
                   scale: isActive ? [1, 1.012, 1] : 1,
@@ -142,21 +151,21 @@ export default function MuseumScreenPage() {
                     cy={radius}
                     r={radius - 3}
                     fill="none"
-                    stroke={layer.color}
+                    stroke={cat.color}
                     strokeWidth={isActive ? 5 : 2.5}
                     opacity={isActive ? 1 : 0.4}
-                    filter={isActive ? `drop-shadow(0 0 10px ${layer.color})` : "none"}
+                    filter={isActive ? `drop-shadow(0 0 10px ${cat.color})` : "none"}
                   />
 
                   <defs>
                     <path
-                      id={`arc-${layer.id}`}
+                      id={`arc-${cat.id}`}
                       d={`M ${radius - (radius - 3)},${radius} A ${radius - 3},${radius - 3} 0 0,1 ${radius + (radius - 3)},${radius}`}
                       fill="none"
                     />
                   </defs>
                   <text
-                    fill={layer.color}
+                    fill={cat.color}
                     opacity={isActive ? 1 : 0.75}
                     fontSize={11}
                     fontFamily={config.branding.font || "Chakra Petch"}
@@ -165,11 +174,11 @@ export default function MuseumScreenPage() {
                     style={{ filter: "drop-shadow(0 0 4px rgba(0,0,0,0.9))" }}
                   >
                     <textPath
-                      href={`#arc-${layer.id}`}
+                      href={`#arc-${cat.id}`}
                       startOffset="50%"
                       textAnchor="middle"
                     >
-                      {layer.label.en.toUpperCase()} / {layer.label.tr.toLocaleUpperCase("tr")} · {layer.yearRange[0]}–{layer.yearRange[1]}
+                      {cat.label.en.toUpperCase()} / {cat.label.tr.toLocaleUpperCase("tr")}
                     </textPath>
                   </text>
                 </svg>
