@@ -74,7 +74,7 @@ export default function MuseumScreenPage() {
             <div key={cat.id} className="flex items-center gap-3">
               {sessionId && (
                 <div
-                  className="shrink-0 rounded-md p-1"
+                  className="shrink-0 rounded-md p-2 bg-white"
                   style={{
                     background: `${config.branding.colors.void}cc`,
                     border: `1px solid ${cat.color}44`,
@@ -82,7 +82,7 @@ export default function MuseumScreenPage() {
                 >
                   <QRCodeSVG
                     value={`${origin}/m/${config.slug}/c/${cat.id}/${sessionId}`}
-                    size={48}
+                    size={72}
                     bgColor="transparent"
                     fgColor={cat.color}
                     level="L"
