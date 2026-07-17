@@ -2,7 +2,7 @@
 // Time-based access gate — shared between screen (generates) and phone (validates)
 
 // Change to 300 (5 minutes) for production
-const WINDOW_SECONDS = 60;
+const WINDOW_SECONDS = 300;
 
 // Simple secret — not cryptographic, just enough to prevent casual URL sharing
 const SECRET = "teal-museum-2026";
