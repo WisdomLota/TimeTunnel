@@ -7,19 +7,21 @@ import { joinAsVisitor } from "@/lib/museums/presence";
 import DuxChat from "@/components/museum/DuxChat";
 import VideoOverlay from "@/components/museum/VideoOverlay";
 import type { MuseumCategory, JournalPage } from "@/lib/museums/types";
+import { validateGateCode } from "@/lib/museums/gate";
+import { useSearchParams } from "next/navigation";
+import { Suspense } from "react";
 
 type Stage = "connecting" | "categories" | "content" | "chat";
 
-export default function MuseumControlPage({
+function MuseumControlPageInner({
   params,
 }: {
   params: Promise<{ sessionId: string }>;
 }) {
   const { sessionId } = use(params);
   const config = useMuseum();
-
-  const [stage, setStage] = useState<Stage>("connecting");
   const [lang, setLang] = useState<"en" | "tr">("tr");
+  const [stage, setStage] = useState<Stage>("connecting");
   const [settled, setSettled] = useState(false);
   const [activeCategory, setActiveCategory] = useState<MuseumCategory | null>(null);
   const [showVideo, setShowVideo] = useState(false);
@@ -36,9 +38,6 @@ export default function MuseumControlPage({
     const handleExit = () => presence.cleanup();
     window.addEventListener("beforeunload", handleExit);
     window.addEventListener("pagehide", handleExit);
-    document.addEventListener("visibilitychange", () => {
-      if (document.visibilityState === "hidden") handleExit();
-    });
 
     return () => {
       clearTimeout(timer);
@@ -68,6 +67,38 @@ export default function MuseumControlPage({
     setActiveCategory(null);
     setStage("categories");
   }, []);
+  const searchParams = useSearchParams();
+  const gateKey = searchParams.get("k");
+  const [gateValid, setGateValid] = useState<boolean | null>(null);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    setGateValid(gateKey ? validateGateCode(gateKey) : false);
+  }, [gateKey]);
+
+  if (gateValid === null) {
+    return (
+      <main className="min-h-dvh flex items-center justify-center" style={{ background: config.branding.colors.void, fontFamily: config.branding.font }}>
+        <p className="text-lg tracking-widest" style={{ color: config.branding.colors.accent }}>...</p>
+      </main>
+    );
+  }
+
+  if (gateValid === false) {
+    return (
+      <main className="min-h-dvh flex flex-col items-center justify-center px-8 gap-4" style={{ background: config.branding.colors.void, fontFamily: config.branding.font }}>
+        <img src="/museums/prof-dux.png" alt="" className="w-20 h-20 rounded-full object-cover" style={{ border: `2px solid ${config.branding.colors.accent}44` }} />
+        <h1 className="text-xl font-bold tracking-widest text-center" style={{ color: config.branding.colors.accent }}>
+          {lang === "en" ? "QR Code Expired" : "QR Kodu Süresi Doldu"}
+        </h1>
+        <p className="text-sm text-center tracking-wider" style={{ color: `${config.branding.colors.accent}88` }}>
+          {lang === "en" ? "Please scan the QR code at the museum to explore." : "Keşfetmek için lütfen müzedeki QR kodunu tarayın."}
+        </p>
+      </main>
+    );
+  }
+
+  
 
   return (
     <main
@@ -283,8 +314,8 @@ function CollectionView({ config, lang, color }: { config: any; lang: "en" | "tr
   if (selected) {
     return (
       <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex flex-col gap-4">
-        <div className="w-full aspect-4/3 rounded-lg overflow-hidden" style={{ border: `1.5px solid ${color}` }}>
-          <div className="w-full h-full" style={{ background: `url(${selected.image}) center/cover` }} />
+        <div className="w-full rounded-lg overflow-hidden" style={{ border: `1.5px solid ${color}` }}>
+          <img src={selected.image} alt="" className="w-full h-auto" />
         </div>
         {selected.year && <p className="text-xs tracking-widest uppercase" style={{ color }}>{selected.year}</p>}
         <h3 className="text-xl font-bold tracking-wider" style={{ color: config.branding.colors.accent }}>{selected.title[lang]}</h3>
@@ -332,7 +363,7 @@ function CollectionView({ config, lang, color }: { config: any; lang: "en" | "tr
           transition={{ delay: i * 0.1 }}
           whileTap={{ scale: 0.95 }}
         >
-          <div className="aspect-3/4" style={{ background: `url(${work.image}) center/cover` }} />
+          <img src={work.image} alt="" className="w-full h-auto" />
           <div className="p-2" style={{ background: `${config.branding.colors.void}ee` }}>
             <p className="text-xs font-bold tracking-wider" style={{ color }}>{work.title[lang]}</p>
             {work.year && <p className="text-[10px] mt-0.5" style={{ color: `${color}66` }}>{work.year}</p>}
@@ -541,4 +572,8 @@ function Placeholder({ lang, color }: { lang: "en" | "tr"; color: string }) {
       <p className="text-xs mt-2 tracking-wider" style={{ color: `${color}55` }}>{lang === "en" ? "Content will be available shortly" : "İçerik kısa sürede eklenecektir"}</p>
     </motion.div>
   );
+}
+
+export default function MuseumControlPage({ params }: { params: Promise<{ sessionId: string }> }) {
+  return <Suspense><MuseumControlPageInner params={params} /></Suspense>;
 }

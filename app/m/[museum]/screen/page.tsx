@@ -6,11 +6,22 @@ import { QRCodeSVG } from "qrcode.react";
 import { useMuseum } from "@/lib/museums/context";
 import { watchPresence } from "@/lib/museums/presence";
 import { mintSession } from "@/lib/tunnel";
+import { generateGateCode } from "@/lib/museums/gate";
 
 export default function MuseumScreenPage() {
   const config = useMuseum();
   const [sessionId, setSessionId] = useState("");
-  useEffect(() => { setSessionId(mintSession()); }, []);
+  const [gateCode, setGateCode] = useState("");
+
+  useEffect(() => {
+    setSessionId(mintSession());
+    setGateCode(generateGateCode());
+    const interval = setInterval(() => {
+      setGateCode(generateGateCode());
+      setSessionId(mintSession());
+    }, 5000);
+    return () => clearInterval(interval);
+  }, []);
   const [activeLayers, setActiveLayers] = useState<Set<string>>(new Set());
 
   useEffect(() => {
@@ -19,7 +30,7 @@ export default function MuseumScreenPage() {
   }, [config.slug]);
 
   const origin = typeof window !== "undefined" ? window.location.origin : "";
-  const controlUrl = `${origin}/m/${config.slug}/control/${sessionId}`;
+  const controlUrl = `${origin}/m/${config.slug}/control/${sessionId}?k=${gateCode}`;
   const categories = config.categories;
 
   return (
@@ -27,31 +38,30 @@ export default function MuseumScreenPage() {
       className="relative flex h-dvh w-full overflow-hidden"
       style={{ fontFamily: config.branding.font || "Chakra Petch" }}
     >
-      {/* Background — Prof Dux anchored left */}
-      <div
-        className="absolute inset-0 flex items-end justify-start pointer-events-none"
-        style={{ paddingLeft: "5%" }}
-      >
-        <img
-          src="/museums/prof-dux.png"
-          alt=""
-          className="h-[80%] w-auto object-contain opacity-80"
-          style={{
-            maskImage: "linear-gradient(to top, black 50%, transparent 90%), linear-gradient(to left, transparent 0%, black 20%)",
-            WebkitMaskImage: "linear-gradient(to top, black 50%, transparent 90%), linear-gradient(to left, transparent 0%, black 20%)",
-            maskComposite: "intersect",
-            WebkitMaskComposite: "destination-in",
-          }}
-        />
-      </div>
 
       {/* Dark overlay */}
       <div
         className="absolute inset-0"
         style={{
-          background: `linear-gradient(to right, ${config.branding.colors.void}77 0%, ${config.branding.colors.void}aa 50%, ${config.branding.colors.void}cc 100%)`,
+          background: `linear-gradient(to right, ${config.branding.colors.void}44 0%, ${config.branding.colors.void}99 50%, ${config.branding.colors.void}cc 100%)`,
         }}
       />
+
+      {/* Prof Dux — above overlay, fully visible */}
+      <div
+        className="absolute inset-0 flex items-end justify-start pointer-events-none z-5"
+        style={{ paddingLeft: "5%" }}
+      >
+        <img
+          src="/museums/prof-dux.png"
+          alt=""
+          className="h-[80%] w-auto object-contain"
+          style={{
+            maskImage: "linear-gradient(to top, black 60%, transparent 95%)",
+            WebkitMaskImage: "linear-gradient(to top, black 60%, transparent 95%)",
+          }}
+        />
+      </div>
 
       {/* ─── LEFT: Discover + single QR ─── */}
       <div className="relative z-10 w-[38%] flex flex-col justify-center pl-[4%] pr-2">
@@ -89,7 +99,7 @@ export default function MuseumScreenPage() {
           </motion.div>
         )}
 
-        <p className="text-[9px] tracking-[0.2em] uppercase opacity-30 text-white mt-4 drop-shadow-[0_1px_3px_rgba(0,0,0,0.8)]">
+        <p className="text-[9px] tracking-[0.2em] uppercase mt-3 px-3 py-1 rounded-full self-start drop-shadow-[0_2px_6px_rgba(0,0,0,1)]" style={{ color: "#4A9FD9", background: `${config.branding.colors.void}aa` }}>
           Scan to explore · Keşfetmek için tarayın
         </p>
       </div>
