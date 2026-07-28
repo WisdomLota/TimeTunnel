@@ -61,7 +61,7 @@ export default function MuseumAdminPage() {
                       {config.name}
                     </p>
                     <p className="text-[11px] font-semibold tracking-wide" style={{ color: config.branding.colors.primary }}>
-                      Floating Maritime Museum
+                      Maritime Museum
                     </p>
                   </div>
                 </div>
