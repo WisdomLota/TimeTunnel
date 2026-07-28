@@ -54,7 +54,7 @@ export default function MuseumAdminPage() {
               <div className="flex items-start justify-between mb-4">
                 <div className="flex items-center gap-2">
                   {config.branding.logo && (
-                    <img src={config.branding.logo} alt="" className="h-6 w-auto" />
+                    <img src={config.branding.logo} alt="" className="h-10 w-auto" />
                   )}
                   <div className="leading-tight">
                     <p className="text-[9px] tracking-wide text-neutral-500 uppercase">

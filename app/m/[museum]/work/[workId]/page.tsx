@@ -138,7 +138,7 @@ export default function WorkPage({
       {/* Museum branding footer */}
       <div className="px-6 py-4 mt-auto flex items-center justify-between">
         {config.branding.logo && (
-          <img src={config.branding.logo} alt="" className="h-8 w-auto opacity-40" />
+          <img src={config.branding.logo} alt="" className="h-12 w-auto opacity-40" />
         )}
         <p className="text-[10px] tracking-widest uppercase" style={{ color: `${config.branding.colors.accent}33` }}>
           {config.name}

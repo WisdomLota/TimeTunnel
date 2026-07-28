@@ -189,7 +189,7 @@ export default function MuseumScreenPage() {
         <img
           src={config.branding.logo}
           alt={config.name}
-          className="absolute bottom-4 left-6 h-10 w-auto object-contain z-10"
+          className="absolute bottom-4 left-6 h-16 w-auto object-contain z-10"
         />
       )}
 
