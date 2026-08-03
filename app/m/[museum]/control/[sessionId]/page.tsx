@@ -10,7 +10,7 @@ import type { MuseumCategory, JournalPage } from "@/lib/museums/types";
 
 type Stage = "connecting" | "categories" | "content" | "chat";
 
-function MuseumControlPage({
+export default function MuseumControlPage({
   params,
 }: {
   params: Promise<{ sessionId: string }>;
