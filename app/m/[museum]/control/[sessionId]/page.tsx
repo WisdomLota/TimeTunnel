@@ -7,13 +7,10 @@ import { joinAsVisitor } from "@/lib/museums/presence";
 import DuxChat from "@/components/museum/DuxChat";
 import VideoOverlay from "@/components/museum/VideoOverlay";
 import type { MuseumCategory, JournalPage } from "@/lib/museums/types";
-import { validateGateCode } from "@/lib/museums/gate";
-import { useSearchParams } from "next/navigation";
-import { Suspense } from "react";
 
 type Stage = "connecting" | "categories" | "content" | "chat";
 
-function MuseumControlPageInner({
+function MuseumControlPage({
   params,
 }: {
   params: Promise<{ sessionId: string }>;
@@ -67,37 +64,6 @@ function MuseumControlPageInner({
     setActiveCategory(null);
     setStage("categories");
   }, []);
-  const searchParams = useSearchParams();
-  const gateKey = searchParams.get("k");
-  const [gateValid, setGateValid] = useState<boolean | null>(null);
-
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-    setGateValid(gateKey ? validateGateCode(gateKey) : false);
-  }, [gateKey]);
-
-  if (gateValid === null) {
-    return (
-      <main className="min-h-dvh flex items-center justify-center" style={{ background: config.branding.colors.void, fontFamily: config.branding.font }}>
-        <p className="text-lg tracking-widest" style={{ color: config.branding.colors.accent }}>...</p>
-      </main>
-    );
-  }
-
-  if (gateValid === false) {
-    return (
-      <main className="min-h-dvh flex flex-col items-center justify-center px-8 gap-4" style={{ background: config.branding.colors.void, fontFamily: config.branding.font }}>
-        <img src="/museums/prof-dux.png" alt="" className="w-20 h-20 rounded-full object-cover" style={{ border: `2px solid ${config.branding.colors.accent}44` }} />
-        <h1 className="text-xl font-bold tracking-widest text-center" style={{ color: config.branding.colors.accent }}>
-          {lang === "en" ? "QR Code Expired" : "QR Kodu Süresi Doldu"}
-        </h1>
-        <p className="text-sm text-center tracking-wider" style={{ color: `${config.branding.colors.accent}88` }}>
-          {lang === "en" ? "Please scan the QR code at the museum to explore." : "Keşfetmek için lütfen müzedeki QR kodunu tarayın."}
-        </p>
-      </main>
-    );
-  }
-
   
 
   return (
@@ -572,8 +538,4 @@ function Placeholder({ lang, color }: { lang: "en" | "tr"; color: string }) {
       <p className="text-xs mt-2 tracking-wider" style={{ color: `${color}55` }}>{lang === "en" ? "Content will be available shortly" : "İçerik kısa sürede eklenecektir"}</p>
     </motion.div>
   );
-}
-
-export default function MuseumControlPage({ params }: { params: Promise<{ sessionId: string }> }) {
-  return <Suspense><MuseumControlPageInner params={params} /></Suspense>;
 }

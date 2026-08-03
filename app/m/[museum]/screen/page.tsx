@@ -6,22 +6,12 @@ import { QRCodeSVG } from "qrcode.react";
 import { useMuseum } from "@/lib/museums/context";
 import { watchPresence } from "@/lib/museums/presence";
 import { mintSession } from "@/lib/tunnel";
-import { generateGateCode } from "@/lib/museums/gate";
 
 export default function MuseumScreenPage() {
   const config = useMuseum();
   const [sessionId, setSessionId] = useState("");
-  const [gateCode, setGateCode] = useState("");
 
-  useEffect(() => {
-    setSessionId(mintSession());
-    setGateCode(generateGateCode());
-    const interval = setInterval(() => {
-      setGateCode(generateGateCode());
-      setSessionId(mintSession());
-    }, 5000);
-    return () => clearInterval(interval);
-  }, []);
+  useEffect(() => { setSessionId(mintSession()); }, []);
   const [activeLayers, setActiveLayers] = useState<Set<string>>(new Set());
 
   useEffect(() => {
@@ -29,8 +19,8 @@ export default function MuseumScreenPage() {
     return () => { channel.unsubscribe(); };
   }, [config.slug]);
 
-  const origin = typeof window !== "undefined" ? window.location.origin : "";
-  const controlUrl = `${origin}/m/${config.slug}/control/${sessionId}?k=${gateCode}`;
+  const origin = process.env.NEXT_PUBLIC_SITE_URL || (typeof window !== "undefined" ? window.location.origin : "");
+  const controlUrl = `${origin}/m/${config.slug}/control/${sessionId}`;
   const categories = config.categories;
 
   return (
@@ -120,7 +110,7 @@ export default function MuseumScreenPage() {
         <div className="relative flex items-center justify-center">
           {categories.map((cat, i) => {
             const isActive = activeLayers.has(cat.id);
-            const size = 160 + i * 55;
+            const size = 200 + i * 65;
             const radius = size / 2;
 
             return (
