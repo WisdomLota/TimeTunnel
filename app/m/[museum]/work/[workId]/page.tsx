@@ -86,7 +86,7 @@ export default function WorkPage({
         </h1>
         <p
           className="mt-3 text-sm leading-relaxed"
-          style={{ color: `${config.branding.colors.accent}99` }}
+          style={{ color: "#e2e8f0" }}
         >
           {t(work.description)}
         </p>
@@ -140,7 +140,7 @@ export default function WorkPage({
         {config.branding.logo && (
           <img src={config.branding.logo} alt="" className="h-12 w-auto opacity-40" />
         )}
-        <p className="text-[10px] tracking-widest uppercase" style={{ color: `${config.branding.colors.accent}33` }}>
+        <p className="text-[10px] tracking-widest uppercase" style={{ color: `${config.branding.colors.accent}66` }}>
           {config.name}
         </p>
       </div>

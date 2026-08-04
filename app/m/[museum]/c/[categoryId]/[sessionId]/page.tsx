@@ -95,7 +95,7 @@ export default function CategoryPage({
         </h1>
         <p
           className="text-sm mt-1 tracking-wider"
-          style={{ color: `${category.color}88` }}
+          style={{ color: "#e2e8f0" }}
         >
           {t(category.description)}
         </p>
@@ -149,7 +149,7 @@ function FloorPlanView({ config, lang, category }: { config: any; lang: "en" | "
       >
         <img src={config.floorPlan.image} alt="" className="w-full h-auto" />
       </div>
-      <p className="text-xs tracking-wider" style={{ color: `${category.color}77` }}>
+      <p className="text-xs tracking-wider" style={{ color: "#e2e8f0" }}>
         {config.floorPlan.label[lang]}
       </p>
     </motion.div>
@@ -203,7 +203,7 @@ function PostCardsView({ config, lang, category }: { config: any; lang: "en" | "
         >
           <img src={card.image} alt="" className="w-full h-auto" />
           <div className="p-3" style={{ background: `${config.branding.colors.void}ee` }}>
-            <p className="text-xs tracking-wider" style={{ color: `${category.color}cc` }}>
+            <p className="text-xs tracking-wider" style={{ color: "#e2e8f0" }}>
               {card.caption[lang]}
             </p>
           </div>
@@ -247,7 +247,7 @@ function JourneyLogView({ config, lang, category }: { config: any; lang: "en" | 
           <h3 className="text-lg font-bold tracking-wider" style={{ color: config.branding.colors.accent }}>
             {page.title[lang]}
           </h3>
-          <p className="mt-3 text-sm leading-relaxed" style={{ color: `${config.branding.colors.accent}99` }}>
+          <p className="mt-3 text-sm leading-relaxed" style={{ color: "#e2e8f0" }}>
             {page.content[lang]}
           </p>
           {page.image && (
@@ -271,7 +271,7 @@ function JourneyLogView({ config, lang, category }: { config: any; lang: "en" | 
           ← {lang === "en" ? "Prev" : "Önceki"}
         </button>
 
-        <span className="text-xs tracking-wider" style={{ color: `${category.color}66` }}>
+        <span className="text-xs tracking-wider" style={{ color: `${category.color}aa` }}>
           {pageIdx + 1} / {pages.length}
         </span>
 
@@ -337,7 +337,7 @@ function Placeholder({ lang, color }: { lang: "en" | "tr"; color: string }) {
       <p className="text-base tracking-widest uppercase" style={{ color }}>
         {lang === "en" ? "Coming Soon" : "Yakında"}
       </p>
-      <p className="text-xs mt-2 tracking-wider" style={{ color: `${color}55` }}>
+      <p className="text-xs mt-2 tracking-wider" style={{ color: `${color}99` }}>
         {lang === "en" ? "Content will be available shortly" : "İçerik kısa sürede eklenecektir"}
       </p>
     </motion.div>
