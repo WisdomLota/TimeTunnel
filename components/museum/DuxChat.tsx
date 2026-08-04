@@ -208,7 +208,7 @@ export default function DuxChat({
           <img src="/museums/prof-dux.png" alt="Prof Dux" className="w-10 h-10 rounded-full object-cover" style={{ border: `1.5px solid ${accentColor}44` }} />
           <div>
             <p className="text-sm font-bold tracking-widest" style={{ color: accentColor }}>PROF DUX</p>
-            <p className="text-[10px] tracking-wider" style={{ color: `${accentColor}55` }}>{lang === "en" ? "Ask about Teal" : "Teal hakkında sorun"}</p>
+            <p className="text-[10px] tracking-wider" style={{ color: "#ffffff" }}>{lang === "en" ? "Ask about Teal" : "Teal hakkında sorun"}</p>
           </div>
         </div>
         <button onClick={() => { stop(); onClose(); }} className="text-xs tracking-widest px-3 py-1.5 rounded" style={{ color: accentColor, border: `1px solid ${accentColor}44` }}>✕</button>
@@ -217,15 +217,15 @@ export default function DuxChat({
       {/* Messages */}
       <div ref={scrollRef} className="flex-1 overflow-y-auto px-4 py-2 space-y-3">
         {messages.length === 0 && (
-          <p className="text-xs text-center mt-8 tracking-wider" style={{ color: `${accentColor}44` }}>
+          <p className="text-xs text-center mt-8 tracking-wider" style={{ color: "#ffffff88" }}>
             {lang === "en" ? "Ask about HMS Jackton – HMAS Teal…" : "HMS Jackton – HMAS Teal hakkında sorun…"}
           </p>
         )}
         {messages.map((msg, i) => (
           <div key={i} className={`flex gap-2 ${msg.role === "user" ? "justify-end" : "justify-start"}`}>
             {msg.role === "assistant" && <img src="/museums/prof-dux.png" alt="" className="w-7 h-7 rounded-full object-cover shrink-0 mt-1" style={{ border: `1px solid ${accentColor}33` }} />}
-            <div className="text-sm leading-relaxed rounded-lg px-3 py-2 max-w-[80%]" style={{ background: msg.role === "user" ? `${accentColor}20` : `${accentColor}0a`, color: msg.role === "user" ? accentColor : `${accentColor}cc`, border: `1px solid ${accentColor}${msg.role === "user" ? "33" : "15"}` }}>
-              {msg.content || <span className="inline-block animate-pulse" style={{ color: `${accentColor}55` }}>…</span>}
+            <div className="text-sm leading-relaxed rounded-lg px-3 py-2 max-w-[80%]" style={{ background: msg.role === "user" ? `${accentColor}20` : `${accentColor}0a`, color: msg.role === "user" ? accentColor : "#ffffff", border: `1px solid ${accentColor}${msg.role === "user" ? "33" : "15"}` }}>
+              {msg.content || <span className="inline-block animate-pulse" style={{ color: "#ffffff" }}>…</span>}
             </div>
           </div>
         ))}
@@ -233,7 +233,7 @@ export default function DuxChat({
         {/* Transcribing indicator */}
         {transcribing && (
           <div className="flex gap-2 justify-end">
-            <div className="text-xs rounded-lg px-3 py-2" style={{ background: `${accentColor}20`, color: `${accentColor}88`, border: `1px solid ${accentColor}33` }}>
+            <div className="text-xs rounded-lg px-3 py-2" style={{ background: `${accentColor}20`, color: "#ffffff", border: `1px solid ${accentColor}33` }}>
               <motion.span animate={{ opacity: [0.4, 1, 0.4] }} transition={{ duration: 1.2, repeat: Infinity }}>
                 {lang === "en" ? "Transcribing…" : "Yazıya dönüştürülüyor…"}
               </motion.span>

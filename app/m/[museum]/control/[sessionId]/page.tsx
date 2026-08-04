@@ -161,7 +161,7 @@ export default function MuseumControlPage({
                   <p className="text-base font-bold tracking-wider" style={{ color: cat.color }}>
                     {lang === "en" ? t(cat.label).toUpperCase() : t(cat.label).toLocaleUpperCase("tr")}
                   </p>
-                  <p className="text-xs mt-0.5 tracking-wider" style={{ color: `${cat.color}88` }}>
+                  <p className="text-xs mt-0.5 tracking-wider" style={{ color: "#ffffff" }}>
                     {t(cat.description)}
                   </p>
                 </motion.button>
@@ -211,7 +211,7 @@ export default function MuseumControlPage({
               <h2 className="text-lg font-bold tracking-widest" style={{ color: activeCategory.color }}>
                 {lang === "en" ? t(activeCategory.label).toUpperCase() : t(activeCategory.label).toLocaleUpperCase("tr")}
               </h2>
-              <p className="text-xs mt-1 tracking-wider" style={{ color: `${activeCategory.color}88` }}>
+              <p className="text-xs mt-1 tracking-wider" style={{ color: "#ffffff" }}>
                 {t(activeCategory.description)}
               </p>
             </div>
@@ -295,7 +295,7 @@ function FloorPlanView({ config, lang, color }: { config: any; lang: "en" | "tr"
                 <span className="text-sm font-semibold tracking-wide">{area.name[lang]}</span>
                 <svg
                   className="ml-auto w-4 h-4 transition-transform group-open:rotate-180"
-                  style={{ color: `${color}88` }}
+                  style={{ color: "#ffffff" }}
                   fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}
                 >
                   <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
@@ -377,7 +377,7 @@ function CollectionView({ config, lang, color }: { config: any; lang: "en" | "tr
           <img src={work.image} alt="" className="w-full h-auto" />
           <div className="p-2" style={{ background: `${config.branding.colors.void}ee` }}>
             <p className="text-xs font-bold tracking-wider" style={{ color }}>{work.title[lang]}</p>
-            {work.year && <p className="text-[10px] mt-0.5" style={{ color: `${color}66` }}>{work.year}</p>}
+            {work.year && <p className="text-[10px] mt-0.5" style={{ color: "#ffffff" }}>{work.year}</p>}
           </div>
         </motion.button>
       ))}
@@ -400,7 +400,7 @@ function PostCardsView({ config, lang, color }: { config: any; lang: "en" | "tr"
         >
           <img src={card.image} alt="" className="w-full h-auto" />
           <div className="p-3" style={{ background: `${config.branding.colors.void}ee` }}>
-            <p className="text-xs tracking-wider" style={{ color: `${color}cc` }}>{card.caption[lang]}</p>
+            <p className="text-xs tracking-wider" style={{ color: "#ffffff" }}>{card.caption[lang]}</p>
           </div>
         </motion.div>
       ))}
@@ -435,7 +435,7 @@ function JourneyLogView({ config, lang, color }: { config: any; lang: "en" | "tr
   if (!selectedVolume) {
     return (
       <div className="flex flex-col gap-3">
-        <p className="text-xs tracking-wider mb-2" style={{ color: `${color}66` }}>
+        <p className="text-xs tracking-wider mb-2" style={{ color: "#ffffff" }}>
           {lang === "en" ? "Select a volume to browse the ship's official logs" : "Geminin resmi kayıtlarına göz atmak için bir cilt seçin"}
         </p>
         {volumes.map((vol: any, i: number) => (
@@ -453,11 +453,11 @@ function JourneyLogView({ config, lang, color }: { config: any; lang: "en" | "tr
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-base font-bold tracking-wider" style={{ color }}>{vol.label[lang]}</p>
-                <p className="text-xs mt-0.5 tracking-wider" style={{ color: `${color}88` }}>{vol.description[lang]}</p>
+                <p className="text-xs mt-0.5 tracking-wider" style={{ color: "#ffffff" }}>{vol.description[lang]}</p>
               </div>
               <div className="text-right shrink-0 ml-3">
-                <p className="text-[10px] tracking-widest" style={{ color: `${color}55` }}>{vol.yearRange}</p>
-                <p className="text-[10px] tracking-wider" style={{ color: `${color}44` }}>{vol.pageCount} {lang === "en" ? "pages" : "sayfa"}</p>
+                <p className="text-[10px] tracking-widest" style={{ color: "#ffffff" }}>{vol.yearRange}</p>
+                <p className="text-[10px] tracking-wider" style={{ color: "#ffffff" }}>{vol.pageCount} {lang === "en" ? "pages" : "sayfa"}</p>
               </div>
             </div>
           </motion.button>
@@ -478,7 +478,7 @@ function JourneyLogView({ config, lang, color }: { config: any; lang: "en" | "tr
 
       <div className="text-center">
         <p className="text-sm font-bold tracking-wider" style={{ color }}>{selectedVolume.label[lang]}</p>
-        <p className="text-[10px] tracking-wider" style={{ color: `${color}66` }}>{selectedVolume.description[lang]} · {selectedVolume.yearRange}</p>
+        <p className="text-[10px] tracking-wider" style={{ color: "#ffffff" }}>{selectedVolume.description[lang]} · {selectedVolume.yearRange}</p>
       </div>
 
       {/* Page image — book style */}
@@ -493,7 +493,7 @@ function JourneyLogView({ config, lang, color }: { config: any; lang: "en" | "tr
       >
         {imgLoading && (
           <div className="absolute inset-0 flex items-center justify-center z-10" style={{ background: "#f4f0e8" }}>
-            <motion.p className="text-sm tracking-widest" style={{ color: `${color}88` }} animate={{ opacity: [0.3, 1, 0.3] }} transition={{ duration: 1.5, repeat: Infinity }}>
+            <motion.p className="text-sm tracking-widest" style={{ color: "#ffffff" }} animate={{ opacity: [0.3, 1, 0.3] }} transition={{ duration: 1.5, repeat: Infinity }}>
               {lang === "en" ? "Loading page…" : "Sayfa yükleniyor…"}
             </motion.p>
           </div>
@@ -533,7 +533,7 @@ function JourneyLogView({ config, lang, color }: { config: any; lang: "en" | "tr
           <svg viewBox="0 0 24 24" className="w-4 h-4 inline mr-1" fill="currentColor"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg>
           {lang === "en" ? "Flip" : "Çevir"}
         </button>
-        <span className="text-xs tracking-wider" style={{ color: `${color}66` }}>{pageNum} / {selectedVolume.pageCount}</span>
+        <span className="text-xs tracking-wider" style={{ color: "#ffffff" }}>{pageNum} / {selectedVolume.pageCount}</span>
         <button
           onClick={() => {
             const next = Math.min(selectedVolume.pageCount, pageNum + 1);
@@ -580,7 +580,7 @@ function Placeholder({ lang, color }: { lang: "en" | "tr"; color: string }) {
   return (
     <motion.div className="flex flex-col items-center justify-center py-20" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
       <p className="text-base tracking-widest" style={{ color }}>{lang === "en" ? "COMING SOON" : "YAKINDA"}</p>
-      <p className="text-xs mt-2 tracking-wider" style={{ color: `${color}55` }}>{lang === "en" ? "Content will be available shortly" : "İçerik kısa sürede eklenecektir"}</p>
+      <p className="text-xs mt-2 tracking-wider" style={{ color: "#ffffff" }}>{lang === "en" ? "Content will be available shortly" : "İçerik kısa sürede eklenecektir"}</p>
     </motion.div>
   );
 }
