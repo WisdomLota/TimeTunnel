@@ -86,7 +86,7 @@ export default function WorkPage({
         </h1>
         <p
           className="mt-3 text-sm leading-relaxed"
-          style={{ color: "#e2e8f0" }}
+          style={{ color: "#ffffff" }}
         >
           {t(work.description)}
         </p>

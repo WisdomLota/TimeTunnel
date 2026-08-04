@@ -95,7 +95,7 @@ export default function CategoryPage({
         </h1>
         <p
           className="text-sm mt-1 tracking-wider"
-          style={{ color: "#e2e8f0" }}
+          style={{ color: "#ffffff" }}
         >
           {t(category.description)}
         </p>
@@ -149,7 +149,7 @@ function FloorPlanView({ config, lang, category }: { config: any; lang: "en" | "
       >
         <img src={config.floorPlan.image} alt="" className="w-full h-auto" />
       </div>
-      <p className="text-xs tracking-wider" style={{ color: "#e2e8f0" }}>
+      <p className="text-xs tracking-wider" style={{ color: "#ffffff" }}>
         {config.floorPlan.label[lang]}
       </p>
     </motion.div>
@@ -203,7 +203,7 @@ function PostCardsView({ config, lang, category }: { config: any; lang: "en" | "
         >
           <img src={card.image} alt="" className="w-full h-auto" />
           <div className="p-3" style={{ background: `${config.branding.colors.void}ee` }}>
-            <p className="text-xs tracking-wider" style={{ color: "#e2e8f0" }}>
+            <p className="text-xs tracking-wider" style={{ color: "#ffffff" }}>
               {card.caption[lang]}
             </p>
           </div>
@@ -247,7 +247,7 @@ function JourneyLogView({ config, lang, category }: { config: any; lang: "en" | 
           <h3 className="text-lg font-bold tracking-wider" style={{ color: config.branding.colors.accent }}>
             {page.title[lang]}
           </h3>
-          <p className="mt-3 text-sm leading-relaxed" style={{ color: "#e2e8f0" }}>
+          <p className="mt-3 text-sm leading-relaxed" style={{ color: "#ffffff" }}>
             {page.content[lang]}
           </p>
           {page.image && (

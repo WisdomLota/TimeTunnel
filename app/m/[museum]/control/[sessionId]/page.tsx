@@ -302,7 +302,7 @@ function FloorPlanView({ config, lang, color }: { config: any; lang: "en" | "tr"
                 </svg>
               </summary>
               <div className="px-4 pb-3 pt-1">
-                <p className="text-xs leading-relaxed" style={{ color: `${color}aa` }}>
+                <p className="text-xs leading-relaxed" style={{ color: `#ffffff` }}>
                   {area.description[lang]}
                 </p>
               </div>
