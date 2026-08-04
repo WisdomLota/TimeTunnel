@@ -337,7 +337,7 @@ function Placeholder({ lang, color }: { lang: "en" | "tr"; color: string }) {
       <p className="text-base tracking-widest uppercase" style={{ color }}>
         {lang === "en" ? "Coming Soon" : "Yakında"}
       </p>
-      <p className="text-xs mt-2 tracking-wider" style={{ color: `${color}99` }}>
+      <p className="text-xs mt-2 tracking-wider" style={{ color: `#ffffff` }}>
         {lang === "en" ? "Content will be available shortly" : "İçerik kısa sürede eklenecektir"}
       </p>
     </motion.div>

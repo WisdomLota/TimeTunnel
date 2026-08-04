@@ -311,7 +311,7 @@ function FloorPlanView({ config, lang, color }: { config: any; lang: "en" | "tr"
         </div>
       )}
 
-      <p className="text-xs tracking-wider text-center" style={{ color: `${color}77` }}>{label[lang]}</p>
+      <p className="text-xs tracking-wider text-center" style={{ color: `#ffffff` }}>{label[lang]}</p>
     </motion.div>
   );
 }
