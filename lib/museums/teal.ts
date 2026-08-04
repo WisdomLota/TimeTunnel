@@ -579,8 +579,49 @@ export const tealConfig: MuseumConfig = {
  
 
   floorPlan: {
-    image: "/museums/teal/floor-plan.jpg", // placeholder — client will provide
     label: { en: "Ship Layout", tr: "Gemi Yerleşimi" },
+    areas: [
+      {
+        id: "main-deck",
+        name: { en: "Main Deck", tr: "Ana Güverte" },
+        description: {
+          en: "Scale models of historical Mediterranean and Turkish ships alongside maritime artifacts from various eras, showcasing the evolution of naval technology and maritime culture.",
+          tr: "Akdeniz ve Türk denizcilik tarihinde önemli yere sahip gemilerin ölçekli modelleri ile farklı dönemlere ait denizcilik objeleri. Denizcilik teknolojisinin gelişimini ve deniz kültürünün zengin mirasını bir araya getiren kapsamlı bir koleksiyon.",
+        },
+      },
+      {
+        id: "forecastle",
+        name: { en: "Forecastle (Crew Quarters)", tr: "Başaltı (Mürettebat Yaşam Mahali)" },
+        description: {
+          en: "Nine separate rooms, each dedicated to a different historical era, featuring photographs and original maritime objects documenting naval battles, Cyprus history, and Mediterranean seafaring heritage.",
+          tr: "Dokuz ayrı odadan oluşan bu bölümün her biri farklı bir tarihsel döneme ayrılmıştır. Deniz savaşlarını, Kıbrıs tarihini ve Akdeniz'in denizcilik geçmişini yansıtan fotoğraflar ile özgün denizcilik objeleri sergilenmektedir.",
+        },
+      },
+      {
+        id: "upper-deck",
+        name: { en: "Upper Deck", tr: "Üst Güverte" },
+        description: {
+          en: "Thirteen cabins, each named after a prominent captain who shaped Mediterranean and Cyprus maritime history. Houses historical ship models, sections of Piri Reis maps, and contemporary maritime art.",
+          tr: "13 kamaranın her biri Akdeniz ve Kıbrıs denizcilik tarihine yön vermiş önemli denizcilerin adını taşımaktadır. Tarihi gemi modelleri, Piri Reis haritalarından seçilmiş kesitler ve deniz temalı çağdaş sanat eserleri sergilenmektedir.",
+        },
+      },
+      {
+        id: "control-center",
+        name: { en: "Control Center", tr: "Kumanda Merkezi" },
+        description: {
+          en: "Photographs, archival documents, and original maritime objects documenting the ship's transformation across its military, educational, and museum roles.",
+          tr: "HMAS TEAL / HMS JACTON'ın hikayesini anlatan fotoğraflar, arşiv belgeleri ve özgün denizcilik objeleriyle geminin askeri, eğitim ve müze kimliğine uzanan dönüşümü.",
+        },
+      },
+      {
+        id: "bridge",
+        name: { en: "Bridge", tr: "Köprüüstü (Kaptan Köşkü)" },
+        description: {
+          en: "The original command area at the top of the ship, featuring navigation, communication, and control equipment from various periods of the ship's service.",
+          tr: "Geminin en üst bölümünde yer alan orijinal komuta alanı. Farklı dönemlerinde kullanılan seyir, haberleşme ve kontrol cihazları sergilenmektedir.",
+        },
+      },
+    ],
   },
 
   postCards: [

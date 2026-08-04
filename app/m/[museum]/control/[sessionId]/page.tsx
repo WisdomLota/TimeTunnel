@@ -261,12 +261,57 @@ export default function MuseumControlPage({
 
 function FloorPlanView({ config, lang, color }: { config: any; lang: "en" | "tr"; color: string }) {
   if (!config.floorPlan) return <Placeholder lang={lang} color={color} />;
+  const { areas, image, label } = config.floorPlan;
+
   return (
-    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex flex-col items-center gap-4">
-      <div className="w-full rounded-lg overflow-hidden" style={{ border: `1.5px solid ${color}44` }}>
-        <img src={config.floorPlan.image} alt="" className="w-full h-auto" />
-      </div>
-      <p className="text-xs tracking-wider" style={{ color: `${color}77` }}>{config.floorPlan.label[lang]}</p>
+    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex flex-col gap-4">
+      {image && (
+        <div className="w-full rounded-lg overflow-hidden" style={{ border: `1.5px solid ${color}44` }}>
+          <img src={image} alt="" className="w-full h-auto" />
+        </div>
+      )}
+
+      {areas && areas.length > 0 && (
+        <div className="flex flex-col gap-3">
+          {areas.map((area: any, i: number) => (
+            <motion.details
+              key={area.id}
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: i * 0.07 }}
+              className="group rounded-lg overflow-hidden"
+              style={{ border: `1px solid ${color}33`, background: `${color}0a` }}
+            >
+              <summary
+                className="flex items-center gap-3 px-4 py-3 cursor-pointer list-none select-none"
+                style={{ color }}
+              >
+                <span
+                  className="shrink-0 w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold"
+                  style={{ background: `${color}22`, color }}
+                >
+                  {i + 1}
+                </span>
+                <span className="text-sm font-semibold tracking-wide">{area.name[lang]}</span>
+                <svg
+                  className="ml-auto w-4 h-4 transition-transform group-open:rotate-180"
+                  style={{ color: `${color}88` }}
+                  fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                </svg>
+              </summary>
+              <div className="px-4 pb-3 pt-1">
+                <p className="text-xs leading-relaxed" style={{ color: `${color}aa` }}>
+                  {area.description[lang]}
+                </p>
+              </div>
+            </motion.details>
+          ))}
+        </div>
+      )}
+
+      <p className="text-xs tracking-wider text-center" style={{ color: `${color}77` }}>{label[lang]}</p>
     </motion.div>
   );
 }

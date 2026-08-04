@@ -75,7 +75,15 @@ export interface MuseumConfig {
   journalPages: JournalPage[];
   journalVolumes: JournalVolume[];
   /** Floor plan image */
-  floorPlan?: { image: string; label: { en: string; tr: string } };
+  floorPlan?: {
+    image?: string;
+    label: { en: string; tr: string };
+    areas?: {
+      id: string;
+      name: { en: string; tr: string };
+      description: { en: string; tr: string };
+    }[];
+  };
   /** Post card images */
   postCards: { id: string; image: string; caption: { en: string; tr: string } }[];
   video?: {
