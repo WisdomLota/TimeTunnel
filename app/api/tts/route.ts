@@ -15,7 +15,7 @@ export async function POST(req: NextRequest) {
 
     const speech = await openai.audio.speech.create({
       model: "gpt-4o-mini-tts",
-      voice: "onyx",
+      voice: "ash",
       input: text.slice(0, 1000),
       instructions:
         lang === "tr"
