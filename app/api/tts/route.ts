@@ -1,10 +1,9 @@
-import { MsEdgeTTS, OUTPUT_FORMAT } from "msedge-tts";
 import { NextRequest, NextResponse } from "next/server";
+import OpenAI from "openai";
 
-const VOICES = {
-  en: "en-US-ChristopherNeural",
-  tr: "tr-TR-AhmetNeural",
-} as const;
+export const runtime = "nodejs";
+
+const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY! });
 
 export async function POST(req: NextRequest) {
   try {
@@ -14,25 +13,23 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "text required" }, { status: 400 });
     }
 
-    const voice = VOICES[lang as keyof typeof VOICES] || VOICES.en;
+    const speech = await openai.audio.speech.create({
+      model: "gpt-4o-mini-tts",
+      voice: "onyx",
+      input: text.slice(0, 1000),
+      instructions:
+        lang === "tr"
+          ? "Speak in Turkish, in a warm, measured tone, like a seasoned naval historian."
+          : "Speak in English, in a warm, measured tone, like a seasoned naval historian.",
+      response_format: "mp3",
+    });
 
-    const tts = new MsEdgeTTS();
-    await tts.setMetadata(voice, OUTPUT_FORMAT.AUDIO_24KHZ_48KBITRATE_MONO_MP3);
-
-    const { audioStream } = await tts.toStream(text);
-
-    const chunks: Buffer[] = [];
-    for await (const chunk of audioStream) {
-      chunks.push(chunk);
-    }
-
-    const audioBuffer = Buffer.concat(chunks);
+    const audioBuffer = Buffer.from(await speech.arrayBuffer());
 
     return new NextResponse(audioBuffer, {
       headers: {
         "Content-Type": "audio/mpeg",
         "Content-Length": audioBuffer.length.toString(),
-        "Cache-Control": "public, max-age=86400",
       },
     });
   } catch (err) {
