@@ -82,7 +82,7 @@ export const tealConfig: MuseumConfig = {
       },
       image: "/museums/teal/captains/40499.jpg",
       duxContext: {
-        en: `This artwork depicts Turgut Reis (Dragut), also known as Dragut. Digital vector illustration (405x405mm) by Prof. Dr. Erdogan Ergün, Near East University, for the Maritime Museum.`,
+        en: `This artwork depicts Turgut Reis (Dragut), also known as Dragut. Biography: Dragut. Born: Bodrum (Muğla) 1485 - Died: Malta (St. Elmo) 1565. Known as the "Pole Star" of the Mediterranean and the Conqueror of Tripoli, he was one of the greatest strategists in Ottoman naval history and an admiral with a genius for tactics involving surf and currents. After the death of Barbaros Hayreddin Pasha he carried Turkish dominance in the Mediterranean to its peak; he was the nightmare of the Knights of Malta and the legendary leader who added Tripoli (Libya) to Ottoman lands. Digital vector illustration (405x405mm) by Prof. Dr. Erdogan Ergün, Near East University, for the Maritime Museum.`,
         tr: `Dragut Doğum: Bodrum (Muğla) 1485 - Ölüm: Malta (St. Elmo) 1565 Akdeniz'in "Kutup Yıldızı" ve Trablusgarp Fatihi Osmanlı denizcilik tarihinin en büyük stratejistlerinden, sörf ve akıntı taktiklerinin dehası amiraldir. Barbaros Hayreddin Paşa'nın vefatından sonra Akdeniz'deki Türk hakimiyetini zirveye taşıyan, Malta Şövalyeleri'nin korkulu rüyası ve Trablusgarp'ı (Libya) Osmanlı topraklarına katan efsanevi liderdir. Avrupalılar (özellikle İspanyollar, İtalyanlar ve Malta Şövalyeleri) Turgut`,
       },
     },
@@ -96,7 +96,7 @@ export const tealConfig: MuseumConfig = {
       },
       image: "/museums/teal/captains/40506.jpg",
       duxContext: {
-        en: `This artwork depicts Barbaros Hayreddin Pasha (Barbarossa), also known as Barbarossa - Red Beard. Digital vector illustration (405x405mm) by Prof. Dr. Erdogan Ergün, Near East University, for the Maritime Museum.`,
+        en: `This artwork depicts Barbaros Hayreddin Pasha (Barbarossa), also known as Barbarossa - Red Beard. Biography: Barbarossa - Red Beard. Born: Midilli 1478 - Died: Istanbul 1546. Master of the Mediterranean and the first Kaptan-ı Derya (Grand Admiral) of the Ottoman State, he was the greatest naval conqueror, statesman and admiral in Ottoman history. With the naval power he built in the Mediterranean together with his elder brother Oruç Reis, he founded a state in North Africa, then took command of the Ottoman fleet and made the Mediterranean a "Turkish Lake". His real name is Hızır. Digital vector illustration (405x405mm) by Prof. Dr. Erdogan Ergün, Near East University, for the Maritime Museum.`,
         tr: `Barbarossa - Kızıl Sakal Doğum: Midilli 1478 - Ölüm: İstanbul 1546 Akdeniz'in Hakimi ve Osmanlı Devleti'nin İlk Kaptan-ı Deryası, Osmanlı tarihinin en büyük deniz fatihi, devlet adamı ve amiralidir. Ağabeyi Oruç Reis ile birlikte Akdeniz'de kurduğu deniz gücüyle Kuzey Afrika'da bir devlet kurmuş, ardından Osmanlı donanmasının başına geçerek Akdeniz'i bir “Türk Gölü" haline getirmiştir. Asıl adı Hızır'dır. Avrupalılar, ona ve ağabeyi Oruç Reis'e kızıl renkli sakallarından dolayı İtalyanca`,
       },
     },
@@ -110,7 +110,7 @@ export const tealConfig: MuseumConfig = {
       },
       image: "/museums/teal/captains/40503.jpg",
       duxContext: {
-        en: `This artwork depicts Sinan Pasha, also known as Sinanüddin Yusuf. Digital vector illustration (405x405mm) by Prof. Dr. Erdogan Ergün, Near East University, for the Maritime Museum.`,
+        en: `This artwork depicts Sinan Pasha, also known as Sinanüddin Yusuf. Biography: Sinanüddin Yusuf. Born: Rusçuk (Bulgaria) - Died: Istanbul 1553. After the death of Barbaros Hayreddin Pasha he took command of the Ottoman fleet, and through his strong military partnership with Turgut Reis he kept Ottoman dominance in the Mediterranean at its peak. He was an honest and disciplined administrator raised in the palace. Although seafaring was not his main expertise before he was appointed Kaptan-ı Derya, his statesman's vision raised the fleet's administrative and logistical strength considerably. Digital vector illustration (405x405mm) by Prof. Dr. Erdogan Ergün, Near East University, for the Maritime Museum.`,
         tr: `Sinanüddin Yusuf Doğum: Rusçuk (Bulgaristan) - Ölüm: İstanbul 1553 Barbaros Hayreddin Paşa'nın vefatının ardından Osmanlı donanmasının komutasını üstlenmiş, Turgut Reis ile kurduğu güçlü askeri ortaklıkla Akdeniz'de Osmanlı hakimiyetini zirvede tutmuştur. Sarayda yetişmiş dürüst ve disiplinli bir idareciydi. Kaptan-ı Deryalığa getirilmeden önce asıl uzmanlığı denizcilik olmasa da, devlet adamlığı vizyonuyla donanmanın idari ve lojistik gücünü çok yukarılara taşımıştır. Gemilerdeki lojistik`,
       },
     },
@@ -124,7 +124,7 @@ export const tealConfig: MuseumConfig = {
       },
       image: "/museums/teal/captains/40504.jpg",
       duxContext: {
-        en: `This artwork depicts Kılıç Ali Pasha (Occhiali), also known as Uluç - Occhiali. Digital vector illustration (405x405mm) by Prof. Dr. Erdogan Ergün, Near East University, for the Maritime Museum.`,
+        en: `This artwork depicts Kılıç Ali Pasha (Occhiali), also known as Uluç - Occhiali. Biography: Uluç - Occhiali. Born: Calabria (Italy) 1519 - Died: Istanbul 1587. He is one of the most determined heroes of Ottoman naval history. Captured at a young age and made to row in galleys for years, he rose through his genius after converting to Islam, served as Beylerbey of Algiers and as Ottoman Kaptan-ı Derya, and went down in history as the only commander who saved the Ottoman fleet from the Lepanto defeat. He was of Italian origin (Giovan Dionigi Galeni). As a young man he converted to Islam under the name Ali El-Uluc and began serving as a levent (naval soldier). Digital vector illustration (405x405mm) by Prof. Dr. Erdogan Ergün, Near East University, for the Maritime Museum.`,
         tr: `Uluç - Occhiali Doğum: Calabria (İtalya) 1519 - Ölüm: İstanbul 1587 Osmanlı denizcilik tarihinin en azimli kahramanlarındandır. Genç yaşta esir düşüp yıllarca kadırgalarda kürek çekmiş, Müslüman olduktan sonra dehasıyla yükselerek Cezayir Beylerbeyliği ve Osmanlı Kaptan-ı Deryalığı yapmış, İnebahtı Bozgunu'ndan Osmanlı donanmasını kurtaran tek komutan olarak tarihe geçmiştir. Aslen İtalyan kökenlidir (Giovan Dionigi Galeni). Gençken Ali El-Uluc adıyla Müslüman oldu ve leventliğe başladı.`,
       },
     },
@@ -138,7 +138,7 @@ export const tealConfig: MuseumConfig = {
       },
       image: "/museums/teal/captains/40505.jpg",
       duxContext: {
-        en: `This artwork depicts Mezomorta Hüseyin Pasha, also known as Mezzomorto (The Half-Dead). Digital vector illustration (405x405mm) by Prof. Dr. Erdogan Ergün, Near East University, for the Maritime Museum.`,
+        en: `This artwork depicts Mezomorta Hüseyin Pasha, also known as Mezzomorto (The Half-Dead). Biography: Mezzomorto (Yarı Ölü, The Half-Dead). Born: Mallorca Island (Spain) - Died: Paros Island (Aegean Sea) 1701. He was one of the most extraordinary admirals of the Ottoman fleet, one who defied death. Europeans gave this brilliant admiral the nickname "Mezzomorto" (Half-Dead) because of the severe wounds he received in relentless naval wars against the Venetians; he was the greatest military reformer, moving the Ottoman fleet from oared galleys to sailing galleons. Hüseyin Pasha rose from a background in piracy. Digital vector illustration (405x405mm) by Prof. Dr. Erdogan Ergün, Near East University, for the Maritime Museum.`,
         tr: `Mezzomorto (Yarı Ölü) Doğum: Mallorca Adası (İspanya) - Ölüm: Paros Adası (Ege Denizi) 1701 Osmanlı donanmasının ölüme meydan okuyan, en sıra dışı amirallerindendir. Venediklilerle yapılan amansız deniz savaşlarında aldığı ağır yaralardan dolayı Avrupalıların "Mezzomorto" (Yarı Ölü) lakabını taktığı bu dahi amiral, Osmanlı donanmasını kürekli kadırgalardan yelkenli kalyonlara geçiren en büyük askeri ıslahatçıdır. Korsanlıktan yetişen Hüseyin Paşa, Hristiyan ittifakıyla yapılan çok şiddetli bir`,
       },
     },
@@ -152,7 +152,7 @@ export const tealConfig: MuseumConfig = {
       },
       image: "/museums/teal/captains/40502.jpg",
       duxContext: {
-        en: `This artwork depicts Cezayirli Gazi Hasan Pasha, also known as The Captain with the Lion. Digital vector illustration (405x405mm) by Prof. Dr. Erdogan Ergün, Near East University, for the Maritime Museum.`,
+        en: `This artwork depicts Cezayirli Gazi Hasan Pasha, also known as The Captain with the Lion. Biography: Palabıyık (Big Moustache) / The Captain with the Lion. Born: Rodosto (Tekirdağ) 1713 - Died: Şumnu (Bulgaria) 1790. He was the greatest military genius and statesman of Ottoman seafaring. After the Russians burned the Ottoman fleet at Çeşme, he rebuilt the navy from scratch and laid the foundation of the modern Naval War College; a legendary grand vizier and admiral, he struck fear into the enemy and gave confidence to his friends with his pet lion. In his youth he worked as a dayı (leader) and a corsair in Algiers. Digital vector illustration (405x405mm) by Prof. Dr. Erdogan Ergün, Near East University, for the Maritime Museum.`,
         tr: `Palabıyık / Aslanlı Kaptan Doğum: Rodosto (Tekirdağ) 1713 - Ölüm: Şumnu (Bulgaristan) 1790 Osmanlı denizciliğinin en büyük askeri dehası ve devlet adamıdır. Rusların Çeşme'de Osmanlı donanmasını yakmasının ardından bahriyeyi sıfırdan kuran, modern Deniz Harp Okulu'nun temelini atan ve evcil aslanıyla düşmana korku, dostuna güven veren efsanevi sadrazam ve amiraldir. Gençlik yıllarında Cezayir'de dayılık ve korsanlık yaptı. Burada yavruyken bulup büyüttüğü ve yanından hiç ayırmadığı evcil`,
       },
     },
@@ -166,7 +166,7 @@ export const tealConfig: MuseumConfig = {
       },
       image: "/museums/teal/captains/40509.jpg",
       duxContext: {
-        en: `This artwork depicts Nasuhzade Ali Pasha, also known as Kara Ali. Digital vector illustration (405x405mm) by Prof. Dr. Erdogan Ergün, Near East University, for the Maritime Museum.`,
+        en: `This artwork depicts Nasuhzade Ali Pasha, also known as Kara Ali. Biography: Kara Ali. Born: Albania / Ioannina - Died: off Chios (Sakız Island) 1822. He was a Kaptan-ı Derya who commanded the Ottoman fleet and was known for his courage and upright stance. During the Greek Revolt he fought relentlessly to maintain order at sea, and died a martyr (şehit) when his flagship was blown up. Coming from a seafaring family, Ali Pasha rose quickly in the fleet. He was put at the head of the fleet when Greek rebels attacked Turkish merchant and pilgrim ships in the Mediterranean and the Aegean. Digital vector illustration (405x405mm) by Prof. Dr. Erdogan Ergün, Near East University, for the Maritime Museum.`,
         tr: `Kara Ali Doğum: Arnavutluk / Yanya - Ölüm: Sakız Adası Açıkları 1822 Osmanlı donanmasına komuta etmiş, cesareti ve dik duruşuyla bilinen Kaptan-ı Deryadır. Yunan İsyanı (Rum İhtilali) döneminde denizlerde asayişi sağlamak için amansız bir mücadele vermiş, amiral gemisinin havaya uçurulması sonucu şehit düşmüştür. Denizci bir aileden gelen Ali Paşa, donanmada hızla yükseldi. Rum isyancıların Akdeniz ve Ege'de Türk ticaret ve hac gemilerine saldırması üzerine donanmanın başına getirildi. Mora ve`,
       },
     },
@@ -180,7 +180,7 @@ export const tealConfig: MuseumConfig = {
       },
       image: "/museums/teal/captains/40510.jpg",
       duxContext: {
-        en: `This artwork depicts Oruç Reis (Barbarossa), also known as Barbarossa - Father Oruç. Digital vector illustration (405x405mm) by Prof. Dr. Erdogan Ergün, Near East University, for the Maritime Museum.`,
+        en: `This artwork depicts Oruç Reis (Barbarossa), also known as Barbarossa - Father Oruç. Biography: Barbarossa - Red Beard - Father Oruç (Baba Oruç). Born: Midilli 1474 - Died: Tlemsen (Algeria) 1518. He was the great seaman, warrior and statesman who laid the foundation of Ottoman rule in North Africa and made the Mediterranean narrow for the Christian world. He was the elder brother and mentor of Barbaros Hayreddin Pasha. He is remembered with gratitude as "Baba Oruç" (Father Oruç) because he rescued thousands of Andalusian Muslims from Spanish persecution with his ships and carried them to Africa. Together with his brother Hızır Reis (Barbarossa) he established bases on the coasts of Tunisia and Algeria. Digital vector illustration (405x405mm) by Prof. Dr. Erdogan Ergün, Near East University, for the Maritime Museum.`,
         tr: `Barbarossa - Kızıl Sakal - Baba Oruç Doğum: Midilli 1474 - Ölüm: Tlemsen (Cezayir) 1518 Kuzey Afrika'da Osmanlı hakimiyetinin temelini atan, Hristiyan dünyasına Akdeniz'i dar eden büyük denizci, savaşçı ve devlet adamıdır. Barbaros Hayreddin Paşa'nın ağabeyi ve akıl hocasıdır. İspanyol zulmü altındaki binlerce Endülüslü Müslümanı gemileriyle kurtarıp Afrika'ya taşıdığı için minnetle "Baba Oruç" olarak anılmıştır. Kardeşi Hızır Reis (Barbaros) ile birlikte Tunus ve Cezayir kıyılarında üs kurdu.`,
       },
     },
@@ -194,7 +194,7 @@ export const tealConfig: MuseumConfig = {
       },
       image: "/museums/teal/captains/40488.jpg",
       duxContext: {
-        en: `This artwork depicts Salih Reis, also known as Governor of Algiers. Digital vector illustration (405x405mm) by Prof. Dr. Erdogan Ergün, Near East University, for the Maritime Museum.`,
+        en: `This artwork depicts Salih Reis, also known as Governor of Algiers. Biography: Beylerbey of Algiers. Born: Kazdağı (Balıkesir) 1488 - Died: Algiers 1556. He fought shoulder to shoulder with Barbaros Hayreddin Pasha and Turgut Reis and was one of the most disciplined admirals of Ottoman naval history, with outstanding tactical skill. He was at the front in the greatest victories won against the Christian alliance in the Mediterranean and protected Algiers like a fortress against Spanish attacks. In the greatest battle of Turkish naval history (the Battle of Preveza), Salih Reis was the Right Wing Commander of the Ottoman fleet. Digital vector illustration (405x405mm) by Prof. Dr. Erdogan Ergün, Near East University, for the Maritime Museum.`,
         tr: `Cezayir Beylerbeyi Doğum: Kazdağı (Balıkesir) 1488 - Ölüm: Cezayir 1556 Barbaros Hayreddin Paşa ve Turgut Reis ile omuz omuza çarpışmış, Osmanlı deniz tarihinin en disiplinli ve taktik dehası yüksek amirallerindendir. Akdeniz'de Hristiyan ittifakına karşı kazanılan en büyük zaferlerde ön saflarda yer almış, Cezayir'i İspanyol saldırılarına karşı bir kale gibi korumuştur. Türk denizcilik tarihinin en büyük savaşında (Preveze Deniz Savaşı) Salih Reis, Osmanlı donanmasının Sağ Kanat Komutanı idi.`,
       },
     },
@@ -208,7 +208,7 @@ export const tealConfig: MuseumConfig = {
       },
       image: "/museums/teal/captains/40501.jpg",
       duxContext: {
-        en: `This artwork depicts Cağaloğlu Yusuf Sinan Pasha, also known as Cığalazade / Scipione Cicala. Digital vector illustration (405x405mm) by Prof. Dr. Erdogan Ergün, Near East University, for the Maritime Museum.`,
+        en: `This artwork depicts Cağaloğlu Yusuf Sinan Pasha, also known as Cığalazade / Scipione Cicala. Biography: Cığalazade / Scipione Cicala. Born: Republic of Genoa (Italy) 1545 - Died: near Diyarbakır 1605. He is one of the most colorful and ambitious statesmen of Ottoman history, with great military talent. Originally an Italian nobleman, he was captured in a naval battle and converted to Islam; rising in the palace, he is one of the rare figures who served as Agha of the Janissaries, as Kaptan-ı Derya and as Grand Vizier. Cağaloğlu, the district that was Istanbul's press and cultural center, bears its name because of his palace and endowments there. Digital vector illustration (405x405mm) by Prof. Dr. Erdogan Ergün, Near East University, for the Maritime Museum.`,
         tr: `Cığalazade / Scipione Cicala Doğum: Cenova Cumhuriyeti (İtalya) 1545 - Ölüm: Diyarbakır civarı 1605 Osmanlı tarihinin en renkli, hırslı ve askeri dehası yüksek devlet adamlarındandır. İtalyan bir asilzadeyken deniz savaşında esir düşüp Müslüman olmuş; sarayda yükselerek hem yeniçeri ağalığı, hem Kaptan-ı Deryalık hem de Sadrazamlık yapmış ender şahsiyetlerdendir. İstanbul'un matbuat ve kültür merkezi olan Cağaloğlu semti, onun buradaki sarayından ve vakıflarından ötürü bu adı taşımaktadır.`,
       },
     },
@@ -222,7 +222,7 @@ export const tealConfig: MuseumConfig = {
       },
       image: "/museums/teal/captains/40500.jpg",
       duxContext: {
-        en: `This artwork depicts Aydın Reis (Cachidiablo), also known as Cachidiablo - The Devil Slayer. Digital vector illustration (405x405mm) by Prof. Dr. Erdogan Ergün, Near East University, for the Maritime Museum.`,
+        en: `This artwork depicts Aydın Reis (Cachidiablo), also known as Cachidiablo - The Devil Slayer. Biography: Cachidiablo - The Devil Slayer (Şeytan Döven). Born: Karaman - Died: Tunis / Halkü'l-Vadi 1535. He is one of the most powerful, brave and strategic admirals of Ottoman naval history, who made the Mediterranean a Turkish lake in the 16th century. He was the right hand of Barbaros Hayreddin Pasha and the legendary commander of the Algiers fleet. Originally from Karaman, Aydın Reis learned the science of seafaring from Kemal Reis, the legendary seaman of the time. After Kemal Reis's death he moved to North Africa. Digital vector illustration (405x405mm) by Prof. Dr. Erdogan Ergün, Near East University, for the Maritime Museum.`,
         tr: `Cachidiablo - Şeytan Döven Doğum: Karaman - Ölüm: Tunus / Halku'l-Vadi 1535 16. yüzyılda Akdeniz'i bir Türk gölü haline getiren Osmanlı denizcilik tarihinin en kudretli, cesur ve stratejist amirallerinden biridir. Barbaros Hayreddin Paşa'nın sağ kolu ve Cezayir donanmasının efsanevi komutanıdır. Aslen Karamanlı olan Aydın Reis, denizcilik ilmini dönemin efsane denizcisi Kemal Reis'in yanında öğrendi. Onun vefatından sonra Kuzey Afrika'ya geçerek Oruç Reis ve Barbaros Hayreddin Paşa'nın`,
       },
     },
@@ -236,7 +236,7 @@ export const tealConfig: MuseumConfig = {
       },
       image: "/museums/teal/captains/40507.jpg",
       duxContext: {
-        en: `This artwork depicts Piri Reis, also known as Ahmed Muhyiddin. Digital vector illustration (405x405mm) by Prof. Dr. Erdogan Ergün, Near East University, for the Maritime Museum.`,
+        en: `This artwork depicts Piri Reis, also known as Ahmed Muhyiddin. Biography: Ahmed Muhyiddin. Born: Gelibolu - Died: Cairo 1554. He was a brilliant Ottoman admiral and cartographer who wrote his name in golden letters in the history of world science with the unique world maps he drew and the geography works he wrote in the 16th century. Raised by his uncle, the famous seaman Kemal Reis, he successfully raised the Ottoman flag across a wide area from the Mediterranean to the Indian Ocean. His real name was Ahmed Muhyiddin. Digital vector illustration (405x405mm) by Prof. Dr. Erdogan Ergün, Near East University, for the Maritime Museum.`,
         tr: `Ahmed Muhyiddin Doğum: Gelibolu - Ölüm: Kahire 1554 16. yüzyılda çizdiği eşsiz dünya haritaları ve kaleme aldığı coğrafya eserleriyle dünya bilim tarihine adını altın harflerle yazdıran dahi bir Osmanlı amirali ve kartografıdır. Amcası ünlü denizci Kemal Reis'in yanında yetişerek Akdeniz'den Hint Okyanusu'na kadar uzanan geniş bir coğrafyada Osmanlı sancağını başarıyla dalgalandırmıştır. Asıl adı Ahmed Muhyiddin olan ve denizcilikteki muazzam bilgeliği sebebiyle dönemin denizcileri tarafından`,
       },
     },
@@ -250,7 +250,7 @@ export const tealConfig: MuseumConfig = {
       },
       image: "/museums/teal/captains/40512.jpg",
       duxContext: {
-        en: `This artwork depicts Çaka Bey, also known as Lord of the Sea. Digital vector illustration (405x405mm) by Prof. Dr. Erdogan Ergün, Near East University, for the Maritime Museum.`,
+        en: `This artwork depicts Çaka Bey, also known as Lord of the Sea. Biography: Derya Beyi (Lord of the Sea). Born: 11th century - Died: Çanakkale (Abydos) 1092. With the principality he founded in and around Izmir in the 11th century and the fleet he had built, he began Turkish naval history; he was the first Turkish admiral and derya bey in history. As the first leader to grasp the strategic importance of the sea during the conquest of Anatolia, he won great victories against the Byzantine Empire in the Aegean and put forward the vision of a seafaring Turkish state. Digital vector illustration (405x405mm) by Prof. Dr. Erdogan Ergün, Near East University, for the Maritime Museum.`,
         tr: `Derya Beyi Doğum: 11. yüzyıl - Ölüm: Çanakkale (Abydos) 1092 11. yüzyılda İzmir ve çevresinde kurduğu beylik ve inşa ettirdiği donanma ile Türk denizcilik tarihini başlatan, tarihteki ilk Türk amirali ve derya beyidir. Anadolu'nun fetih sürecinde denizin stratejik önemini kavrayan ilk lider olarak, Ege sularında Bizans İmparatorluğu'na karşı büyük zaferler kazanmış ve denizci bir Türk devleti vizyonunu ortaya koyarak asırlar sonra Akdeniz'e hükmedecek olan Osmanlı denizciliğinin de temellerini`,
       },
     },
@@ -264,7 +264,7 @@ export const tealConfig: MuseumConfig = {
       },
       image: "/museums/teal/captains/40513.jpg",
       duxContext: {
-        en: `This artwork depicts Karamürsel Alp, also known as Kara. Digital vector illustration (405x405mm) by Prof. Dr. Erdogan Ergün, Near East University, for the Maritime Museum.`,
+        en: `This artwork depicts Karamürsel Alp, also known as Kara. Biography: Kara. Born: 13th century - Died: Karamürsel, c. 1329. Serving in the early 14th century during the founding period of the Ottoman State, he founded the first Ottoman shipyard and took the empire's first military steps in naval history; he was a legendary raider (akıncı), shipbuilder and the first Ottoman derya bey. As one of the most trusted commanders of Osman Gazi and Orhan Gazi, he played a vital role in the conquest of the Kocaeli Peninsula and the southern shores of the Gulf of Izmit. His real name was Mürsel. Digital vector illustration (405x405mm) by Prof. Dr. Erdogan Ergün, Near East University, for the Maritime Museum.`,
         tr: `Kara Doğum: 13. yüzyıl - Ölüm: Karamürsel - ca. 1329 14. yüzyılın başlarında Osmanlı Devleti'nin kuruluş döneminde görev yapmış, ilk Osmanlı tersanesini kurarak imparatorluğun denizcilik tarihindeki ilk askeri adımlarını atan efsanevi akıncı, gemi inşaatçısı ve ilk Osmanlı derya beyidir. Osman Gazi ve Orhan Gazi'nin en güvenilir komutanlarından biri olarak, Kocaeli Yarımadası ve İzmit Körfezi'nin güney kıyılarının fethinde hayati bir rol oynamıştır. Asıl adı Mürsel olan ve cesareti, gözü`,
       },
     },
@@ -278,7 +278,7 @@ export const tealConfig: MuseumConfig = {
       },
       image: "/museums/teal/captains/40490.jpg",
       duxContext: {
-        en: `This artwork depicts Kemal Reis, also known as Göke. Digital vector illustration (405x405mm) by Prof. Dr. Erdogan Ergün, Near East University, for the Maritime Museum.`,
+        en: `This artwork depicts Kemal Reis, also known as Göke. Biography: Göke. Born: Gelibolu (c. 1451) - Died: Aegean Sea 1511. A legendary admiral and naval ghazi who laid the foundations of Ottoman naval power in the Mediterranean and, with his victories against the Christian world, shaped the empire's first true overseas naval warfare strategies. Coming from independent seafaring activities in the Mediterranean, he took command of the Ottoman fleet and was a great naval genius who trained the famous cartographer Piri Reis. Digital vector illustration (405x405mm) by Prof. Dr. Erdogan Ergün, Near East University, for the Maritime Museum.`,
         tr: `Göke Doğum: Gelibolu (ca. 1451) - Ölüm: Ege Denizi 1511 16. yüzyılın sonlarında Akdeniz'de Osmanlı deniz gücünün temellerini atan, Hristiyan dünyasına karşı kazandığı zaferlerle imparatorluğun ilk gerçek deniz aşırı deniz harp stratejilerini şekillendiren efsanevi amiral ve deniz gazisidir. Akdeniz'deki bağımsız denizcilik faaliyetlerinden gelerek Osmanlı donanmasının başına geçen ve ünlü kartograf Piri Reis'i yetiştiren büyük bir deniz dehasıdır. Genç yaşta Gelibolu'da denizciliğe başlayan ve`,
       },
     },
@@ -292,7 +292,7 @@ export const tealConfig: MuseumConfig = {
       },
       image: "/museums/teal/captains/40491.jpg",
       duxContext: {
-        en: `This artwork depicts Sinan Reis, also known as Çiphut. Digital vector illustration (405x405mm) by Prof. Dr. Erdogan Ergün, Near East University, for the Maritime Museum.`,
+        en: `This artwork depicts Sinan Reis, also known as Çiphut. Biography: Çiphut. Born: Spain (c. 1490) - Died: Istanbul 1546. One of the most brilliant tactical minds of the Ottoman fleet, a legendary pilot and admiral who specialized in naval astronomy. As the most trusted staff officer, right hand and virtually the brain at sea of Kaptan-ı Derya Barbaros Hayreddin Pasha, he wrote his name in golden letters in Ottoman naval history. He belonged to a Sephardic Jewish family that had fled the Inquisition in Spain and taken refuge in the Ottoman Empire. Digital vector illustration (405x405mm) by Prof. Dr. Erdogan Ergün, Near East University, for the Maritime Museum.`,
         tr: `Çiphut Doğum: İspanya (ca. 1490) - Ölüm: İstanbul 1546 15. yüzyılda Akdeniz'de fırtınalar estiren Osmanlı donanmasının en parlak taktik dehalarından, deniz astronomisinde uzmanlaşmış efsanevi kılavuz ve amiraldir. Kaptan-ı Derya Barbaros Hayreddin Paşa'nın en güvendiği kurmayı, sağ kolu ve adeta denizlerdeki beyni olarak Osmanlı denizcilik tarihine adını altın harflerle yazdırmıştır. İspanya'daki Engizisyon zulmünden kaçarak Osmanlı İmparatorluğu'na sığınan Sefarad Yahudisi bir aileye mensup`,
       },
     },
@@ -306,7 +306,7 @@ export const tealConfig: MuseumConfig = {
       },
       image: "/museums/teal/captains/40489.jpg",
       duxContext: {
-        en: `This artwork depicts Kara Hasan Pasha, also known as Son of Barbarossa. Digital vector illustration (405x405mm) by Prof. Dr. Erdogan Ergün, Near East University, for the Maritime Museum.`,
+        en: `This artwork depicts Kara Hasan Pasha, also known as Son of Barbarossa. Biography: Hasan Paşazade (Son of Barbarossa). Born: Algiers (c. 1517) - Died: Istanbul 1572. A legendary admiral and statesman who consolidated Ottoman dominance in the Mediterranean in the 16th century; he was the own son of Kaptan-ı Derya Barbaros Hayreddin Pasha and the greatest bearer of his seafaring legacy. Hasan Pasha, Barbarossa's son by a woman from Algiers, learned seafaring and state administration firsthand at his father's side from childhood. Digital vector illustration (405x405mm) by Prof. Dr. Erdogan Ergün, Near East University, for the Maritime Museum.`,
         tr: `Hasan Paşazade Doğum: Cezayir (ca. 1517) - Ölüm: İstanbul 1572 16. yüzyılda yüzyılda Akdeniz'de Osmanlı hakimiyetini pekiştiren, Kaptan-ı Derya Barbaros Hayreddin Paşa'nın öz oğlu ve onun denizci mirasının en büyük taşıyıcısı olan efsanevi amiral ve devlet adamıdır. Barbaros'un Cezayirli bir hanımdan dünyaya gelen oğlu Hasan Paşa, çocukluk yıllarından itibaren babasının yanında denizciliği ve devlet idaresini bizzat yaşayarak öğrenmiştir. Hayatındaki en büyük dönüm noktası, Kanuni Sultan`,
       },
     },
@@ -320,7 +320,7 @@ export const tealConfig: MuseumConfig = {
       },
       image: "/museums/teal/captains/40492.jpg",
       duxContext: {
-        en: `This artwork depicts Çakırcı Hamza Bey, also known as The Falconer. Digital vector illustration (405x405mm) by Prof. Dr. Erdogan Ergün, Near East University, for the Maritime Museum.`,
+        en: `This artwork depicts Çakırcı Hamza Bey, also known as The Falconer. Biography: Çakırcı (The Falconer). Born: late 14th century - Died: Gelibolu (c. 1461). Serving in the mid-15th century, he was one of the most critical figures on the naval flank of the conquest of Istanbul and the first seaman in Ottoman history to officially hold the title "Kaptan-ı Derya" (Derya Beyi). During the reign of Mehmed the Conqueror he played a vital role in the institutionalization of the Ottoman fleet and in turning the Gelibolu Shipyard into the empire's first major naval base. Digital vector illustration (405x405mm) by Prof. Dr. Erdogan Ergün, Near East University, for the Maritime Museum.`,
         tr: `Çakırcı Doğum: 14. Yüzyıl sonu - Ölüm: Gelibolu (ca. 1461) 15. yüzyılın ortalarında görev yapmış, İstanbul'un fethinin deniz kanadındaki en kritik aktörlerinden biri olan ve Osmanlı İmparatorluğu tarihinde resmi olarak "Kaptan-ı Derya" (Derya Beyi) unvanını taşıyan ilk denizcidir. Fatih Sultan Mehmed döneminde Osmanlı donanmasının kurumsallaşmasında ve Gelibolu Tersanesi'nin imparatorluğun ilk büyük deniz üssü haline getirilmesinde hayati bir rol oynamıştır. Sarayda yırtıcı av kuşlarının`,
       },
     },
@@ -334,7 +334,7 @@ export const tealConfig: MuseumConfig = {
       },
       image: "/museums/teal/captains/40496.jpg",
       duxContext: {
-        en: `This artwork depicts Arnaut Mami, also known as The Albanian. Digital vector illustration (405x405mm) by Prof. Dr. Erdogan Ergün, Near East University, for the Maritime Museum.`,
+        en: `This artwork depicts Arnaut Mami, also known as The Albanian. Biography: Arnavut (The Albanian). Born: Albania (c. 1540) - Died: Algiers (c. 1600). A legendary Ottoman seaman, admiral and Algerian corsair who stirred up storms in the Mediterranean in the late 16th century, known for his daring, his superior intelligence in naval tactics and the naval ambushes he devised. Because of his Albanian origin he became famous in naval history and in Western sources as "Arnaut Mami". He was one of the most loyal followers of the school started by Barbaros Hayreddin Pasha. Digital vector illustration (405x405mm) by Prof. Dr. Erdogan Ergün, Near East University, for the Maritime Museum.`,
         tr: `Arnavut Doğum: Arnavutluk (ca. 1540) - Ölüm: Cezayir (ca. 1600) 16. yüzyılın sonlarında Akdeniz'de fırtınalar estiren, gözü pekliği, deniz taktiklerindeki üstün zekası ve kurguladığı deniz pusularıyla tanınan efsanevi Osmanlı denizcisi, amirali ve Cezayir korsanıdır. Arnavut kökenli olmasından dolayı denizcilik tarihinde ve Batı kaynaklarında "Arnaut Mami" olarak şöhret kazanmıştır. Barbaros Hayreddin Paşa'nın başlattığı ekolün en sadık takipçilerinden biri olan Arnaut Mami, Cezayir ocaklarında`,
       },
     },
@@ -348,7 +348,7 @@ export const tealConfig: MuseumConfig = {
       },
       image: "/museums/teal/captains/40497.jpg",
       duxContext: {
-        en: `This artwork depicts Has Yunus Bey, also known as The Trusted. Digital vector illustration (405x405mm) by Prof. Dr. Erdogan Ergün, Near East University, for the Maritime Museum.`,
+        en: `This artwork depicts Has Yunus Bey, also known as The Trusted. Biography: Has (The Trusted). Born: early 15th century - Died: Gelibolu 1456. A legendary seaman and Kaptan-ı Derya who served in the Ottoman fleet in the mid-15th century and rendered great service in the critical naval operations during the conquest of Istanbul and afterwards in the conquest of the Aegean Islands. One of the palace bureaucrats and commanders Mehmed the Conqueror trusted most, Yunus Bey was honored by the sultan himself with the title "Has" for his loyalty and outstanding service. He had received a palace education. Digital vector illustration (405x405mm) by Prof. Dr. Erdogan Ergün, Near East University, for the Maritime Museum.`,
         tr: `Has Doğum: 15. Yüzyıl başı - Ölüm: Gelibolu 1456 15. yüzyılın ortalarında Osmanlı donanmasında görev yapmış, İstanbul'un fethi sırasındaki kritik deniz operasyonlarında ve ardından Ege Adaları'nın fethinde büyük yararlılıklar göstermiş efsanevi bir denizci ve Kaptan-ı Derya'dır. Fatih Sultan Mehmed'in en güvendiği saray bürokratlarından ve komutanlarından biri olan Yunus Bey, sadakati ve üstün hizmetleri nedeniyle bizzat padişah tarafından "Has" unvanıyla onurlandırılmıştır. Saray eğitimi almış`,
       },
     },
@@ -362,7 +362,7 @@ export const tealConfig: MuseumConfig = {
       },
       image: "/museums/teal/captains/40498.jpg",
       duxContext: {
-        en: `This artwork depicts Seydi Ali Reis, also known as The Writer of Anatolia. Digital vector illustration (405x405mm) by Prof. Dr. Erdogan Ergün, Near East University, for the Maritime Museum.`,
+        en: `This artwork depicts Seydi Ali Reis, also known as The Writer of Anatolia. Biography: Katib-i Rum (The Writer of Anatolia). Born: Istanbul (c. 1498) - Died: Istanbul 1562. One of the most intellectual, versatile and extraordinary admirals of 16th-century Ottoman naval history. He was not only a soldier who fought the winds and waves, but also a brilliant scholar and writer who produced world-class works in geography, astronomy, mathematics and literature. Because of his skill in palace correspondence and his poetry, he became famous even beyond the Ottoman borders under the nickname "Kâtib-i Rum" (Anatolian Writer / Scribe). Digital vector illustration (405x405mm) by Prof. Dr. Erdogan Ergün, Near East University, for the Maritime Museum.`,
         tr: `Katib-i Rum Doğum: İstanbul (ca. 1498) - Ölüm: İstanbul 1562 16. yüzyıl Osmanlı denizcilik tarihinin en entelektüel, çok yönlü ve sıra dışı amirallerinden biridir. Sadece rüzgarlarla ve dalgalarla savaşan bir asker değil; aynı zamanda coğrafya, astronomi, matematik ve edebiyat alanında dünya çapında eserler vermiş dahi bir bilim insanı ve yazardır. Sarayda yazı işlerindeki ustalığı ve şairliği sebebiyle Osmanlı sınırları dışında dahi “Kâtib-i Rum" (Anadolu Yazarı/Kâtibi) lakabıyla şöhret`,
       },
     },
@@ -376,7 +376,7 @@ export const tealConfig: MuseumConfig = {
       },
       image: "/museums/teal/captains/40494.jpg",
       duxContext: {
-        en: `This artwork depicts Kurdoğlu Muslihiddin Reis, also known as Son of the Wolf. Digital vector illustration (405x405mm) by Prof. Dr. Erdogan Ergün, Near East University, for the Maritime Museum.`,
+        en: `This artwork depicts Kurdoğlu Muslihiddin Reis, also known as Son of the Wolf. Biography: Kurdoğlu (Son of the Wolf). Born: Isparta / Eğirdir (c. 1487) - Died: Rhodes (c. 1535). A legendary admiral who raised the Ottoman flag in the Mediterranean and the Indian Ocean, known for his brilliant naval tactics and his daring siege skills. He became famous in naval history by the nickname "Kurdoğlu" because of his father Kurt Bey, and joined the Ottoman fleet after independent ghazi activities in the Mediterranean. Digital vector illustration (405x405mm) by Prof. Dr. Erdogan Ergün, Near East University, for the Maritime Museum.`,
         tr: `Kurdoğlu Doğum: Isparta / Eğirdir (ca. 1487) - Ölüm: Rodos (ca. 1535) 15. yüzyılın başlarında Akdeniz ve Hint Okyanusu'nda Osmanlı sancağını dalgalandıran, parlak deniz taktikleri ve gözü pek kuşatma yeteneğiyle tanınan efsanevi bir amiraldir. Babası Kurt Bey'den ötürü denizcilik tarihinde "Kurdoğlu" lakabıyla şöhret bulmuş, Akdeniz'deki bağımsız gazilik faaliyetlerinin ardından Osmanlı donanmasına katılmıştır. Devletin resmi hizmetine girmeden önce Ege ve Akdeniz sularında serbest bir Türk`,
       },
     },
@@ -390,7 +390,7 @@ export const tealConfig: MuseumConfig = {
       },
       image: "/museums/teal/captains/40511.jpg",
       duxContext: {
-        en: `This artwork depicts Burak Reis, also known as Barak. Digital vector illustration (405x405mm) by Prof. Dr. Erdogan Ergün, Near East University, for the Maritime Museum.`,
+        en: `This artwork depicts Burak Reis, also known as Barak. Biography: Barak (Burak Reis). Born: mid-15th century - Died: near Sapienza Island 1499. A brilliant reis and admiral, one of the most respected and brave commanders of the Ottoman fleet in the Mediterranean in the late 15th century, who became a symbol of heroism in Turkish naval history through his unparalleled self-sacrifice on the battlefield. He is also referred to as "Barak Reis" in the sources and archival documents of the period. He was one of the most distinguished ghazis of the Ottoman fleet that grew stronger during the reign of Bayezid II. Digital vector illustration (405x405mm) by Prof. Dr. Erdogan Ergün, Near East University, for the Maritime Museum.`,
         tr: `Barak Doğum: 15. Yüzyıl ortası - Ölüm: Sapienza Adası yakınları 1499 15. yüzyılın sonlarında Osmanlı donanmasının Akdeniz'deki en saygın ve cesur komutanlarından biri olan, savaş meydanında gösterdiği emsalsiz fedakarlıkla Türk denizcilik tarihinde bir kahramanlık sembolüne dönüşen dahi reis ve amiraldir. Dönemin kaynaklarında ve arşiv belgelerinde "Barak Reis" adıyla da anılmaktadır.Il. Bayezid döneminde güçlenen Osmanlı donanmasının en seçkin gazilerinden olan Burak Reis, 1499 yılında`,
       },
     },
@@ -404,7 +404,7 @@ export const tealConfig: MuseumConfig = {
       },
       image: "/museums/teal/captains/40495.jpg",
       duxContext: {
-        en: `This artwork depicts Saruca Bey, also known as Saruca. Digital vector illustration (405x405mm) by Prof. Dr. Erdogan Ergün, Near East University, for the Maritime Museum.`,
+        en: `This artwork depicts Saruca Bey, also known as Saruca. Biography: Saruca. Born: mid-14th century - Died: Gelibolu (c. 1402). A legendary seaman and statesman who laid the institutional foundations of naval activity in the founding period of the Ottoman Empire and began regular Ottoman naval power by building the state's first major shipyard. With his lineage, which bore his name, and his naval school, he shaped early Ottoman naval history. Digital vector illustration (405x405mm) by Prof. Dr. Erdogan Ergün, Near East University, for the Maritime Museum.`,
         tr: `Saruca Doğum: 14. Yüzyıl ortası - Ölüm: Gelibolu (ca. 1402) Osmanlı İmparatorluğu'nun kuruluş döneminde denizcilik faaliyetlerinin kurumsal temellerini atan, devletin ilk büyük tersanesinin inşasını gerçekleştirerek düzenli Osmanlı deniz gücünü başlatan efsanevi denizci ve devlet adamıdır. İsmini taşıyan soyu ve denizcilik ekolüyle erken dönem Osmanlı deniz tarihine yön vermiştirYıldırım Bayezid'in en güvendiği komutanlardan biri olan Saruca Bey, Çanakkale Boğazı ve Ege sularının stratejik`,
       },
     },
@@ -418,7 +418,7 @@ export const tealConfig: MuseumConfig = {
       },
       image: "/museums/teal/captains/40493.jpg",
       duxContext: {
-        en: `This artwork depicts Selman Reis, also known as Conqueror of the Red Sea. Digital vector illustration (405x405mm) by Prof. Dr. Erdogan Ergün, Near East University, for the Maritime Museum.`,
+        en: `This artwork depicts Selman Reis, also known as Conqueror of the Red Sea. Biography: Kızıldeniz Fatihi (Conqueror of the Red Sea). Born: Gelibolu c. 1475 - Died: Yemen / Sana'a 1528. A military strategist, brilliant admiral and artillery expert who fought epic struggles in the Indian Ocean and the Red Sea in the early 16th century against the Portuguese Empire, which was trying to seize the global sea trade routes. He was an impregnable shield protecting the holy lands of the Islamic world against colonial threats from the south. He was raised in Gelibolu. Digital vector illustration (405x405mm) by Prof. Dr. Erdogan Ergün, Near East University, for the Maritime Museum.`,
         tr: `Kızıldeniz Fatihi Doğum: Gelibolu ca. 1475 - Ölüm: Yemen / San'a 1528 16. yüzyılın başlarında küresel deniz ticaret yollarını ele geçirmeye çalışan Portekiz İmparatorluğu'na karşı Hint Okyanusu ve Kızıldeniz'de destansı mücadeleler veren, askeri stratejist, dahi amiral ve topçu uzmanıdır. İslam coğrafyasının kutsal topraklarını güneyden gelen sömürgeci tehditlere karşı koruyan aşılmaz bir kalkan olmuştur.Gelibolu'da yetişen ve başlangıçta Memlük Devleti'nin Portekiz baskısı karşısında`,
       },
     },
@@ -432,7 +432,7 @@ export const tealConfig: MuseumConfig = {
       },
       image: "/museums/teal/captains/40508.jpg",
       duxContext: {
-        en: `This artwork depicts Gazi Umur Bey, also known as Father of Good. Digital vector illustration (405x405mm) by Prof. Dr. Erdogan Ergün, Near East University, for the Maritime Museum.`,
+        en: `This artwork depicts Gazi Umur Bey, also known as Father of Good. Biography: Hayır Babası (Father of Good) - First Eagle of the Sea of Islands. Born: Aydın-Birgi (c. 1309) - Died: Izmir 1348. A legendary Turkish bey, naval ghazi and poet, known for the absolute naval dominance he established in the Aegean Sea (the Sea of Islands) in the 14th century and for the brilliant naval victories that shook the entire Christian world, from Byzantium to the Crusader alliances. He was the second ruler of the Principality of Aydın and is regarded as the first great military genius and admiral of the Turks at sea. Digital vector illustration (405x405mm) by Prof. Dr. Erdogan Ergün, Near East University, for the Maritime Museum.`,
         tr: `Hayır Babası - Adalar Denizi'nin İlk Kartalı Doğum: Aydın-Birgi (ca. 1309) - Ölüm: İzmir 1348 14. yüzyılda Ege Denizi'nde (Adalar Denizi) kurduğu mutlak deniz hakimiyeti ve Bizans'tan Haçlı ittifaklarına kadar tüm Hristiyan dünyasını sarsan parlak deniz zaferleriyle tanınan efsanevi Türk beyi, deniz gazisi ve şairdir. Aydınoğulları Beyliği'nin ikinci hükümdarı olup, Türklerin denizlerdeki ilk büyük askeri dehası ve amirali kabul edilir. Cömertliği, adaleti ve fütüvvet anlayışı sebebiyle halk`,
       },
     },
